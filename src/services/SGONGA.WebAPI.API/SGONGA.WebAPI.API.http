@@ -1,0 +1,6 @@
+# @SGONGA.WebAPI.API_HostAddress = http://localhost:5173
+
+# GET {{SGONGA.WebAPI.API_HostAddress}}/weatherforecast/
+# Accept: application/json
+
+###
