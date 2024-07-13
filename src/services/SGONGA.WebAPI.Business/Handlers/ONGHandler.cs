@@ -108,7 +108,7 @@ public class ONGHandler : BaseHandler, IONGHandler
             ongDb.SetChavePix(request.ChavePix);
             ongDb.SetEndereco(request.Rua, request.Cidade, request.Estado, request.CEP, request.Complemento);
 
-            await _unitOfWork.ONGRepository.UpdateAsync(ongDb);
+            _unitOfWork.ONGRepository.UpdateAsync(ongDb);
 
             await _unitOfWork.CommitAsync();
             return;
@@ -130,7 +130,7 @@ public class ONGHandler : BaseHandler, IONGHandler
                 return;
             }
 
-            await _unitOfWork.ONGRepository.DeleteAsync(request.Id);
+            _unitOfWork.ONGRepository.DeleteAsync(request.Id);
 
             await _unitOfWork.CommitAsync();
             return;

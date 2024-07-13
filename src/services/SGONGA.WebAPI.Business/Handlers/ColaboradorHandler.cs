@@ -105,7 +105,7 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
                 colaboradorDb.SetEmail(request.Email);
             }
 
-            await _unitOfWork.ColaboradorRepository.UpdateAsync(colaboradorDb);
+            _unitOfWork.ColaboradorRepository.UpdateAsync(colaboradorDb);
 
             await _unitOfWork.CommitAsync();
             return;
@@ -129,7 +129,7 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
                 return;
             }
 
-            await _unitOfWork.ColaboradorRepository.DeleteAsync(request.Id);
+            _unitOfWork.ColaboradorRepository.DeleteAsync(request.Id);
 
             await _unitOfWork.CommitAsync();
             return;
