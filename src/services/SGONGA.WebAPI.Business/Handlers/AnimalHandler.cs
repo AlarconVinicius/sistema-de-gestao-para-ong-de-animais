@@ -99,7 +99,8 @@ public class AnimalHandler : BaseHandler, IAnimalHandler
             animalDb.SetChavePix(request.ChavePix);
             animalDb.SetPorte(request.Porte);
             animalDb.SetFotos(request.Fotos);
-            await _unitOfWork.AnimalRepository.UpdateAsync(animalDb);
+
+            _unitOfWork.AnimalRepository.UpdateAsync(animalDb);
 
             await _unitOfWork.CommitAsync();
             return;
@@ -123,7 +124,7 @@ public class AnimalHandler : BaseHandler, IAnimalHandler
                 return;
             }
 
-            await _unitOfWork.AnimalRepository.DeleteAsync(request.Id);
+            _unitOfWork.AnimalRepository.DeleteAsync(request.Id);
 
             await _unitOfWork.CommitAsync();
             return;

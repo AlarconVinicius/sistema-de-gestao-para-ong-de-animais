@@ -6,7 +6,7 @@ namespace SGONGA.WebAPI.Business.Configurations;
 
 public static class DependencyInjectionConfig
 {
-    public static IServiceCollection RegisterCoreServices(this IServiceCollection services)
+    public static IServiceCollection RegisterBusinessServices(this IServiceCollection services)
     {
         services.AddScoped<IONGHandler, ONGHandler>();
         services.AddScoped<IAnimalHandler, AnimalHandler>();

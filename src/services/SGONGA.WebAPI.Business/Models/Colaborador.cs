@@ -12,7 +12,7 @@ public class Colaborador : Entity
     [ForeignKey(nameof(TenantId))]
     public virtual ONG? ONG { get; private set; }
 
-    protected Colaborador() { }
+    public Colaborador() { }
 
     public Colaborador(Guid tenantId, string email) : base()
     {
