@@ -6,8 +6,4 @@
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\..\building blocks\SGONGA.Core\SGONGA.Core.csproj" />
-	</ItemGroup>
-
 </Project>
