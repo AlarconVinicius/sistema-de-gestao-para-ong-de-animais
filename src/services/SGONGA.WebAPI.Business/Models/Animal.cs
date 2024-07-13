@@ -54,6 +54,37 @@ public class Animal : Entity
         Fotos = fotos;
     }
 
+    public Animal(Guid id, Guid tenantId, string nome, string especie, string raca, string cor, string porte, string descricao, string observacao, List<string> fotos, string chavePix = "") : base(id)
+    {
+        if (tenantId == Guid.Empty)
+            throw new ArgumentException("TenantId não pode ser vazio.");
+        if (string.IsNullOrWhiteSpace(nome))
+            throw new ArgumentException("Nome não pode ser nulo ou vazio.");
+        if (string.IsNullOrWhiteSpace(especie))
+            throw new ArgumentException("Espécie não pode ser nula ou vazia.");
+        if (string.IsNullOrWhiteSpace(raca))
+            throw new ArgumentException("Raça não pode ser nula ou vazia.");
+        if (string.IsNullOrWhiteSpace(cor))
+            throw new ArgumentException("Cor não pode ser nula ou vazia.");
+        if (string.IsNullOrWhiteSpace(porte))
+            throw new ArgumentException("Porte não pode ser nulo ou vazio.");
+        if (string.IsNullOrWhiteSpace(descricao))
+            throw new ArgumentException("Descrição não pode ser nula ou vazia.");
+        if (string.IsNullOrWhiteSpace(observacao))
+            throw new ArgumentException("Observação não pode ser nula ou vazia.");
+        ValidarFotos(fotos);
+
+        TenantId = tenantId;
+        Nome = nome;
+        Especie = especie;
+        Raca = raca;
+        Cor = cor;
+        Porte = porte;
+        Descricao = descricao;
+        Observacao = observacao;
+        ChavePix = chavePix;
+        Fotos = fotos;
+    }
 
     private static void ValidarFotos(List<string> fotos)
     {
