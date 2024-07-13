@@ -20,7 +20,7 @@ public class Animal : Entity
     [ForeignKey(nameof(TenantId))]
     public virtual ONG? ONG { get; private set; }
 
-    protected Animal() { }
+    public Animal() { }
 
     public Animal(Guid tenantId, string nome, string especie, string raca, string cor, string porte, string descricao, string observacao, List<string> fotos, string chavePix = "") : base()
     {

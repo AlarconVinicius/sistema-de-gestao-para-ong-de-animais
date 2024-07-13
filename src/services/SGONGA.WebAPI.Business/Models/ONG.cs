@@ -13,7 +13,7 @@ public class ONG : Entity
     public List<Animal> Animais { get; private set; } = new List<Animal>();
     public List<Colaborador> Colaboradores { get; private set; } = new List<Colaborador>();
 
-    protected ONG() { }
+    public ONG() { }
 
     public ONG(string nome, string descricao, string telefone, string email, string chavePix = "") : base()
     {
