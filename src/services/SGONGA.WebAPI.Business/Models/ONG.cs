@@ -15,7 +15,7 @@ public class ONG : Entity
 
     protected ONG() { }
 
-    public ONG(string nome, string descricao, string telefone, string email, string rua, string cidade, string estado, string cep, string complemento = "", string chavePix = "") : base()
+    public ONG(string nome, string descricao, string telefone, string email, string chavePix = "") : base()
     {
         if (string.IsNullOrWhiteSpace(nome))
             throw new ArgumentException("Nome não pode ser nulo ou vazio.");
@@ -26,7 +26,19 @@ public class ONG : Entity
         Descricao = descricao;
         ChavePix = chavePix;
         Contato = new Contato(telefone, email);
-        Endereco = new Endereco(rua, cidade, estado, cep, complemento);
+    }
+
+    public ONG(Guid id, string nome, string descricao, string telefone, string email, string chavePix = "") : base(id)
+    {
+        if (string.IsNullOrWhiteSpace(nome))
+            throw new ArgumentException("Nome não pode ser nulo ou vazio.");
+        if (string.IsNullOrWhiteSpace(descricao))
+            throw new ArgumentException("Descrição não pode ser nula ou vazia.");
+
+        Nome = nome;
+        Descricao = descricao;
+        ChavePix = chavePix;
+        Contato = new Contato(telefone, email);
     }
 
     public void AddAnimal(Animal animal)
