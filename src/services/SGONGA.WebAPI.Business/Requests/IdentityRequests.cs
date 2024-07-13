@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using SGONGA.WebAPI.Business.Responses;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace SGONGA.WebAPI.Business.Requests;
@@ -104,6 +105,23 @@ public class UpdateUserPasswordRequest : Request
         SenhaAntiga = senhaAntiga;
         NovaSenha = novaSenha;
         ConfirmarNovaSenha = confirmarNovaSenha;
+    }
+}
+
+public class AddOrUpdateUserClaimRequest : Request
+{
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    public Guid Id { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    public UserClaim NewClaim { get; set; } = null!;
+
+    public AddOrUpdateUserClaimRequest() { }
+
+    public AddOrUpdateUserClaimRequest(Guid id, UserClaim newClaim)
+    {
+        Id = id;
+        NewClaim = newClaim;
     }
 }
 
