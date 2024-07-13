@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Data.Context;
+using SGONGA.WebAPI.Data.Repositories;
 
 namespace SGONGA.WebAPI.Data.Configurations;
 
@@ -14,6 +16,10 @@ public static class DependencyInjectionConfig
                 throw new InvalidOperationException("Connection String is not found")));
 
         services.AddScoped<ONGDbContext>();
+
+        services.AddScoped<IONGRepository, ONGRepository>();
+        services.AddScoped<IColaboradorRepository, ColaboradorRepository>();
+        services.AddScoped<IAnimalRepository, AnimalRepository>();
 
         return services;
     }
