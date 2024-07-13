@@ -21,7 +21,11 @@ public class ONGHandler : BaseHandler, IONGHandler
     {
         try
         {
-            if (!ONGExiste(request.Id)) return null!;
+            if (!ONGExiste(request.Id))
+            {
+                Notify("ONG não encontrada.");
+                return null!;
+            }
             var ong = await _unitOfWork.ONGRepository.GetByIdAsync(request.Id);
 
             return ong.MapDomainToResponse();
