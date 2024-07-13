@@ -90,10 +90,18 @@ public class ONGHandler : BaseHandler, IONGHandler
 
         try
         {
+            if (request.Email != ongDb.Contato.Email.Endereco)
+            {
+                if (EmailEmUso(request.Email))
+                {
+                    Notify("E-mail em uso.");
+                    return;
+                }
+                ongDb.SetContato(request.Telefone, request.Email);
+            }
             ongDb.SetNome(request.Nome);
             ongDb.SetDescricao(request.Descricao);
             ongDb.SetChavePix(request.ChavePix);
-            ongDb.SetContato(request.Telefone, request.Email);
             ongDb.SetEndereco(request.Rua, request.Cidade, request.Estado, request.CEP, request.Complemento);
 
             await _unitOfWork.ONGRepository.UpdateAsync(ongDb);
