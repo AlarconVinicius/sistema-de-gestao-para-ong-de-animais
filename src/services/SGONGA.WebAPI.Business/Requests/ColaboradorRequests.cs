@@ -5,6 +5,9 @@ namespace SGONGA.WebAPI.Business.Requests;
 
 public class CreateColaboradorRequest : Request
 {
+    [DisplayName("Tenant Id")]
+    public Guid TenantId { get; set; }
+
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [EmailAddress(ErrorMessage = "O campo {0} não é válido.")]
     [StringLength(254, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]

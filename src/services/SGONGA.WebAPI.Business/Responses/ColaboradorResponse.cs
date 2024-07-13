@@ -8,6 +8,9 @@ public class ColaboradorResponse : Response
     [DisplayName("Id")]
     public Guid Id { get; set; }
 
+    [DisplayName("Tenant Id")]
+    public Guid TenantId { get; set; }
+
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [DisplayName("E-mail")]
     public string Email { get; set; } = string.Empty;
@@ -20,9 +23,10 @@ public class ColaboradorResponse : Response
 
     public ColaboradorResponse() { }
 
-    public ColaboradorResponse(Guid id, string email, DateTime createdAt, DateTime updatedAt)
+    public ColaboradorResponse(Guid id, Guid tenantId, string email, DateTime createdAt, DateTime updatedAt)
     {
         Id = id;
+        TenantId = tenantId;
         Email = email;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
