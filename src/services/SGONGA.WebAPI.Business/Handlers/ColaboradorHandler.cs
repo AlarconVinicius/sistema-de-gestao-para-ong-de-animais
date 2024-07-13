@@ -47,7 +47,7 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
         }
         catch
         {
-            Notify("Não foi possível recuperar as colaboradores.");
+            Notify("Não foi possível recuperar os colaboradores.");
             return null!;
         }
     }
@@ -136,7 +136,7 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
         }
         catch
         {
-            Notify("Não foi possível deletar o Colaborador.");
+            Notify("Não foi possível deletar o colaborador.");
             return;
         }
     }
