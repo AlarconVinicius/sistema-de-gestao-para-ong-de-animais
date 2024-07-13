@@ -5,6 +5,9 @@ namespace SGONGA.WebAPI.Business.Requests;
 
 public class CreateAnimalRequest : Request
 {
+    [DisplayName("Tenant Id")]
+    public Guid TenantId { get; set; }
+
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
     [DisplayName("Nome")]

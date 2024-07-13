@@ -9,6 +9,9 @@ public class AnimalResponse : Response
     [DisplayName("Id")]
     public Guid Id { get; set; }
 
+    [DisplayName("Tenant Id")]
+    public Guid TenantId { get; set; }
+
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [DisplayName("Nome")]
     public string Nome { get; set; } = string.Empty;
@@ -52,9 +55,10 @@ public class AnimalResponse : Response
 
     public AnimalResponse() { }
 
-    public AnimalResponse(Guid id, string nome, string especie, string raca, string cor, string porte, string descricao, string observacao, string chavePix, List<string> fotos, DateTime createdAt, DateTime updatedAt)
+    public AnimalResponse(Guid id, Guid tenantId, string nome, string especie, string raca, string cor, string porte, string descricao, string observacao, string chavePix, List<string> fotos, DateTime createdAt, DateTime updatedAt)
     {
         Id = id;
+        TenantId = tenantId;
         Nome = nome;
         Especie = especie;
         Raca = raca;
