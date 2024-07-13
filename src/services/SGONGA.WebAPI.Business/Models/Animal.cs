@@ -137,15 +137,11 @@ public class Animal : Entity
 
     public void SetObservacao(string observacao)
     {
-        if (string.IsNullOrWhiteSpace(observacao))
-            throw new DomainException("Observação não pode ser nula ou vazia.");
         Observacao = observacao;
     }
 
     public void SetChavePix(string chavePix)
     {
-        if (string.IsNullOrWhiteSpace(chavePix))
-            throw new DomainException("Chave Pix não pode ser nula ou vazia.");
         ChavePix = chavePix;
     }
 
