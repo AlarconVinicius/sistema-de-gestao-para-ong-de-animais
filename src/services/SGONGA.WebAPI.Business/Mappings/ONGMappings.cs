@@ -43,6 +43,6 @@ public static class ONGMappings
             return null!;
         }
 
-        return new ONG(request.Nome, request.Descricao, request.Telefone, request.Email, request.ChavePix);
+        return new ONG(request.Nome, request.Descricao, request.Telefone, request.Email, request.Rua, request.Cidade, request.Estado, request.CEP, request.Complemento, request.ChavePix);
     }
 }

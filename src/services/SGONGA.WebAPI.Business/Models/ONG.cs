@@ -41,6 +41,20 @@ public class ONG : Entity
         Contato = new Contato(telefone, email);
     }
 
+    public ONG(string nome, string descricao, string telefone, string email, string rua, string cidade, string estado, string cep, string complemento = "", string chavePix = "") : base()
+    {
+        if (string.IsNullOrWhiteSpace(nome))
+            throw new ArgumentException("Nome não pode ser nulo ou vazio.");
+        if (string.IsNullOrWhiteSpace(descricao))
+            throw new ArgumentException("Descrição não pode ser nula ou vazia.");
+
+        Nome = nome;
+        Descricao = descricao;
+        ChavePix = chavePix;
+        Contato = new Contato(telefone, email);
+        Endereco = new Endereco(rua, cidade, estado, cep, complemento);
+    }
+
     public void AddAnimal(Animal animal)
     {
         ArgumentNullException.ThrowIfNull(animal);
