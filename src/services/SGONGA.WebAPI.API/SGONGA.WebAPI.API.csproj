@@ -15,10 +15,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Controllers\" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\..\building blocks\SGONGA.Core\SGONGA.Core.csproj" />
 		<ProjectReference Include="..\SGONGA.WebAPI.Business\SGONGA.WebAPI.Business.csproj" />
 		<ProjectReference Include="..\SGONGA.WebAPI.Data\SGONGA.WebAPI.Data.csproj" />
