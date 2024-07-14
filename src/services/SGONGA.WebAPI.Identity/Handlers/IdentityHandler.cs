@@ -102,7 +102,7 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
             Notify("Usuário não encontrado.");
             return;
         }
-        userDb.UserName = request.NovoEmail;
+        userDb!.UserName = request.NovoEmail;
         userDb.NormalizedUserName = request.NovoEmail.ToUpper();
         userDb.Email = request.NovoEmail;
         userDb.NormalizedEmail = request.NovoEmail.ToUpper();
