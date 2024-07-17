@@ -5,9 +5,11 @@ using SGONGA.Core.Notifications;
 using SGONGA.WebAPI.API.Controllers.Shared;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Requests;
+using SGONGA.Core.Extensions;
 
 namespace SGONGA.WebAPI.API.Controllers;
 
+[Authorize]
 [Route("api/v1/ongs/")]
 public class ONGsController : ApiController
 {
@@ -17,35 +19,38 @@ public class ONGsController : ApiController
         _ongHandler = ongHandler;
     }
 
+    [AllowAnonymous]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<IActionResult> GetById(Guid id, bool tenantFiltro = false)
     {
-        GetONGByIdRequest request = new(id);
+        GetONGByIdRequest request = new(id, tenantFiltro);
         var result = await _ongHandler.GetByIdAsync(request);
 
         return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
 
     }
 
+    [AllowAnonymous]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null)
+    public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, bool tenantFiltro = false)
     {
         GetAllONGsRequest request = new()
         {
             PageSize = ps,
             PageNumber = page,
-            Query = q
+            Query = q,
+            TenantFiltro = tenantFiltro
         };
         var result = await _ongHandler.GetAllAsync(request);
 
         return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
     }
 
-    [Authorize]
+    [ClaimsAuthorize("Permissions", "SuperAdmin")]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
     [HttpPost]
@@ -60,7 +65,6 @@ public class ONGsController : ApiController
         return IsOperationValid() ? ResponseCreated() : ResponseBadRequest();
     }
 
-    [Authorize]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
     [HttpPut("{id:guid}")]
@@ -77,7 +81,7 @@ public class ONGsController : ApiController
         return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
     }
 
-    [Authorize]
+    [ClaimsAuthorize("Permissions", "SuperAdmin")]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
     [HttpDelete("{id:guid}")]
