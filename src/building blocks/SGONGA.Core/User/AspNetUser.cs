@@ -13,6 +13,7 @@ public interface IAspNetUser
     string GetUserToken();
     bool IsAuthenticated();
     bool HasRole(string role);
+    bool HasClaim(string claimType, string claimValue);
     IEnumerable<Claim> GetClaims();
     HttpContext GetHttpContext();
 }
@@ -58,7 +59,18 @@ public class AspNetUser : IAspNetUser
 
     public bool HasRole(string role)
     {
-        return HttpContext!.User.IsInRole(role);
+        return IsAuthenticated() ? HttpContext!.User.IsInRole(role) : false;
+    }
+
+    public bool HasClaim(string claimType, string claimValue)
+    {
+        if (!IsAuthenticated()) return false;
+
+        var claim = HttpContext!.User.Claims.FirstOrDefault(c => c.Type == claimType);
+        if (claim == null) return false;
+
+        var values = claim.Value.Split(',');
+        return values.Contains(claimValue);
     }
 
     public IEnumerable<Claim> GetClaims()
