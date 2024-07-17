@@ -148,23 +148,26 @@ public class UpdateONGRequest : Request
 
 public class GetAllONGsRequest : PagedRequest
 {
+    public bool TenantFiltro { get; set; }
     public GetAllONGsRequest() { }
 
-    public GetAllONGsRequest(int pageSize = 50, int pageNumber = 1, string? query = null, bool returnAll = false) : base(pageSize, pageNumber, query, returnAll)
+    public GetAllONGsRequest(int pageSize = 50, int pageNumber = 1, string? query = null, bool returnAll = false, bool tenantFiltro = false) : base(pageSize, pageNumber, query, returnAll)
     {
-
+        TenantFiltro = tenantFiltro;
     }
 }
 
 public class GetONGByIdRequest : Request
 {
+    public bool TenantFiltro { get; set; }
     public Guid Id { get; set; }
 
     public GetONGByIdRequest() { }
 
-    public GetONGByIdRequest(Guid id)
+    public GetONGByIdRequest(Guid id, bool tenantFiltro = false)
     {
         Id = id;
+        TenantFiltro = tenantFiltro;
     }
 }
 
