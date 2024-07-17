@@ -55,15 +55,17 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
     public async Task CreateAsync(CreateColaboradorRequest request)
     {
         //if (!ExecuteValidation(new ColaboradorValidation(), colaborador)) return;
-
-        if (TenantIsEmpty()) return;
+        if (!EhSuperAdmin())
+        {
+            Notify("Você não tem permissão para adicionar.");
+            return;
+        }
 
         if (EmailEmUso(request.Email))
         {
             Notify("E-mail em uso.");
             return;
         }
-        request.TenantId = TenantId;
         var colaboradorMapped = request.MapRequestToDomain();
         try
         {
@@ -84,6 +86,11 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
         //if (!ExecuteValidation(new ColaboradorValidation(), colaborador)) return;
 
         if (TenantIsEmpty()) return;
+        if(AppUser.GetUserId() != request.Id)
+        {
+            Notify("Colaborador não encontrado.");
+            return;
+        }
 
         if (!ColaboradorExiste(request.Id))
         {
@@ -95,7 +102,7 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
 
         try
         {
-            if(request.Email != colaboradorDb.Email.Endereco)
+            if (request.Email != colaboradorDb.Email.Endereco)
             {
                 if (EmailEmUso(request.Email))
                 {
@@ -119,11 +126,14 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
 
     public async Task DeleteAsync(DeleteColaboradorRequest request)
     {
-        if (TenantIsEmpty()) return;
-
+        if (!EhSuperAdmin())
+        {
+            Notify("Você não tem permissão para deletar.");
+            return;
+        }
         try
         {
-            if (!ColaboradorExiste(request.Id))
+            if (!_unitOfWork.ColaboradorRepository.SearchAsync(f => f.Id == request.Id && f.TenantId == request.TenantId).Result.Any())
             {
                 Notify("Colaborador não encontrado.");
                 return;
@@ -156,6 +166,15 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
         {
             return true;
         };
+        return false;
+    }
+
+    private bool EhSuperAdmin()
+    {
+        if (AppUser.HasClaim("Permissions", "SuperAdmin"))
+        {
+            return true;
+        }
         return false;
     }
 }
