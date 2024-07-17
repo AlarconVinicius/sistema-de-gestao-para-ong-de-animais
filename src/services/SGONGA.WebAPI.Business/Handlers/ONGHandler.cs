@@ -21,6 +21,11 @@ public class ONGHandler : BaseHandler, IONGHandler
     {
         try
         {
+            if (request.TenantFiltro)
+            {
+                if (TenantIsEmpty()) return null!;
+                request.Id = TenantId;
+            }
             if (!ONGExiste(request.Id))
             {
                 Notify("ONG não encontrada.");
@@ -41,6 +46,11 @@ public class ONGHandler : BaseHandler, IONGHandler
     {
         try
         {
+            if (request.TenantFiltro)
+            {
+                if (TenantIsEmpty()) return null!;
+                return (await _unitOfWork.ONGRepository.GetAllPagedAsync(o => o.Id == TenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
+            }
             return (await _unitOfWork.ONGRepository.GetAllPagedAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
         }
         catch
@@ -54,10 +64,15 @@ public class ONGHandler : BaseHandler, IONGHandler
     {
         //if (!ExecuteValidation(new ONGValidation(), ong)) return;
 
+        if (!EhSuperAdmin())
+        {
+            Notify("Você não tem permissão para adicionar.");
+            return;
+        }
         if (NomeEmUso(request.Nome))
         {
             Notify("Nome em uso.");
-            return; 
+            return;
         }
 
         if (EmailEmUso(request.Email))
@@ -83,7 +98,12 @@ public class ONGHandler : BaseHandler, IONGHandler
     public async Task UpdateAsync(UpdateONGRequest request)
     {
         //if (!ExecuteValidation(new ONGValidation(), ong)) return;
-
+        if (TenantIsEmpty()) return;
+        if (request.Id != TenantId)
+        {
+            Notify("ONG não encontrada.");
+            return;
+        }
         if (!ONGExiste(request.Id))
         {
             Notify("ONG não encontrada.");
@@ -124,6 +144,11 @@ public class ONGHandler : BaseHandler, IONGHandler
     {
         try
         {
+            if (!EhSuperAdmin())
+            {
+                Notify("Você não tem permissão para deletar.");
+                return;
+            }
             if (!ONGExiste(request.Id))
             {
                 Notify("ONG não encontrada.");
@@ -166,6 +191,15 @@ public class ONGHandler : BaseHandler, IONGHandler
         {
             return true;
         };
+        return false;
+    }
+
+    private bool EhSuperAdmin()
+    {
+        if (AppUser.HasClaim("Permissions", "SuperAdmin"))
+        {
+            return true;
+        }
         return false;
     }
 }
