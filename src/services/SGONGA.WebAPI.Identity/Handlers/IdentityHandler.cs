@@ -55,6 +55,11 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
 
     public async Task<LoginUserResponse> CreateAsync(CreateUserRequest request)
     {
+        if (!EhSuperAdmin())
+        {
+            Notify("Você não tem permissão para adicionar.");
+            return null!;
+        }
         if (request.Senha != request.ConfirmarSenha)
         {
             Notify("As senhas não conferem.");
@@ -150,6 +155,11 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
 
     public async Task DeleteAsync(DeleteUserRequest request)
     {
+        if (!EhSuperAdmin())
+        {
+            Notify("Você não tem permissão para deletar.");
+            return;
+        }
         var userId = request.Id.ToString();
         var userDb = await _userManager.FindByIdAsync(userId);
         if (!await UserExists(userId))
@@ -201,6 +211,15 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
     public Task<PagedResponse<UserResponse>> GetAllAsync(GetAllUsersRequest request)
     {
         throw new NotImplementedException();
+    }
+
+    private bool EhSuperAdmin()
+    {
+        if (AppUser.HasClaim("Permissions", "SuperAdmin"))
+        {
+            return true;
+        }
+        return false;
     }
 
     #region IdentityHelpers
