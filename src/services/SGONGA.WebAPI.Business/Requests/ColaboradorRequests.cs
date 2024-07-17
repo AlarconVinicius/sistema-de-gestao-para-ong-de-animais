@@ -5,6 +5,7 @@ namespace SGONGA.WebAPI.Business.Requests;
 
 public class CreateColaboradorRequest : Request
 {
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [DisplayName("Tenant Id")]
     public Guid TenantId { get; set; }
 
@@ -16,8 +17,9 @@ public class CreateColaboradorRequest : Request
 
     public CreateColaboradorRequest() { }
 
-    public CreateColaboradorRequest(string email)
+    public CreateColaboradorRequest(Guid tenantId, string email)
     {
+        TenantId = tenantId;
         Email = email;
     }
 }
@@ -67,12 +69,16 @@ public class GetColaboradorByIdRequest : Request
 
 public class DeleteColaboradorRequest : Request
 {
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [DisplayName("Tenant Id")]
+    public Guid TenantId { get; set; }
     public Guid Id { get; set; }
 
     public DeleteColaboradorRequest() { }
 
-    public DeleteColaboradorRequest(Guid id)
+    public DeleteColaboradorRequest(Guid id, Guid tenantId)
     {
         Id = id;
+        TenantId = tenantId;
     }
 }
