@@ -38,8 +38,6 @@ public class Animal : Entity
             throw new ArgumentException("Porte não pode ser nulo ou vazio.");
         if (string.IsNullOrWhiteSpace(descricao))
             throw new ArgumentException("Descrição não pode ser nula ou vazia.");
-        if (string.IsNullOrWhiteSpace(observacao))
-            throw new ArgumentException("Observação não pode ser nula ou vazia.");
         ValidarFotos(fotos);
 
         TenantId = tenantId;
