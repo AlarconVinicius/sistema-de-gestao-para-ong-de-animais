@@ -3,6 +3,7 @@ using SGONGA.Core.User;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Mappings;
+using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
 
@@ -19,16 +20,20 @@ public class AnimalHandler : BaseHandler, IAnimalHandler
 
     public async Task<AnimalResponse> GetByIdAsync(GetAnimalByIdRequest request)
     {
-        if (TenantIsEmpty()) return null!;
         try
         {
-            if (!AnimalExiste(request.Id))
+            var animal = new Animal();
+            if (request.TenantFiltro)
             {
-                Notify("Animal não encontrado.");
-                return null!;
+                if (TenantIsEmpty()) return null!;
+                animal = await _unitOfWork.AnimalRepository.GetByIdAsync(request.Id, TenantId);
+                if (animal is null) return null!;
             }
-            var animal = await _unitOfWork.AnimalRepository.GetByIdAsync(request.Id, TenantId);
-
+            else
+            {
+                animal = await _unitOfWork.AnimalRepository.GetByIdAsync(request.Id);
+                if (animal is null) return null!;
+            }
             return animal.MapDomainToResponse();
         }
         catch
@@ -43,7 +48,12 @@ public class AnimalHandler : BaseHandler, IAnimalHandler
         if (TenantIsEmpty()) return null!;
         try
         {
-            return (await _unitOfWork.AnimalRepository.GetAllPagedAsync(f => f.TenantId == TenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
+            if (request.TenantFiltro)
+            {
+                if (TenantIsEmpty()) return null!;
+                return (await _unitOfWork.AnimalRepository.GetAllPagedAsync(o => o.TenantId == TenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
+            }
+            return (await _unitOfWork.AnimalRepository.GetAllPagedAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
         }
         catch
         {
@@ -86,7 +96,7 @@ public class AnimalHandler : BaseHandler, IAnimalHandler
             return;
         }
 
-        var animalDb = await _unitOfWork.AnimalRepository.GetByIdAsync(request.Id);
+        var animalDb = await _unitOfWork.AnimalRepository.GetByIdAsync(request.Id, TenantId);
 
         try
         {
