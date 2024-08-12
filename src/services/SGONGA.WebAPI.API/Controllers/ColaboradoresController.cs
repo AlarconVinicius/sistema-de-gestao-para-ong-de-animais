@@ -34,7 +34,7 @@ public class ColaboradoresController : ApiController
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null)
+    public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!)
     {
         GetAllColaboradoresRequest request = new()
         {
@@ -81,10 +81,10 @@ public class ColaboradoresController : ApiController
     [ClaimsAuthorize("Permissions", "SuperAdmin")]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpDelete("{id:guid}/ong/{tenantId:guid}")]
-    public async Task<IActionResult> Delete(Guid id, Guid tenantId)
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
     {
-        await _colaboradorHandler.DeleteAsync(new DeleteColaboradorRequest(id, tenantId));
+        await _colaboradorHandler.DeleteAsync(new DeleteColaboradorRequest(id));
 
         return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
     }

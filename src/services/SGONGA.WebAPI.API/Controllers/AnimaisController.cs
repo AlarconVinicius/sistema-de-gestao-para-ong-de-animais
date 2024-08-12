@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SGONGA.Core.Configurations;
 using SGONGA.Core.Notifications;
+using SGONGA.Core.User;
 using SGONGA.WebAPI.API.Controllers.Shared;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Requests;
@@ -13,9 +14,11 @@ namespace SGONGA.WebAPI.API.Controllers;
 public class AnimaisController : ApiController
 {
     public readonly IAnimalHandler _animalHandler;
-    public AnimaisController(INotifier notifier, IAnimalHandler animalHandler) : base(notifier)
+    private readonly IAspNetUser _appUser;
+    public AnimaisController(INotifier notifier, IAnimalHandler animalHandler, IAspNetUser appUser) : base(notifier)
     {
         _animalHandler = animalHandler;
+        _appUser = appUser;
     }
 
     [AllowAnonymous]
@@ -24,6 +27,10 @@ public class AnimaisController : ApiController
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById(Guid id, bool tenantFiltro = false)
     {
+        if (tenantFiltro && !_appUser.IsAuthenticated())
+        {
+            return Unauthorized();
+        }
         GetAnimalByIdRequest request = new(id, tenantFiltro);
         var result = await _animalHandler.GetByIdAsync(request);
 
@@ -37,6 +44,11 @@ public class AnimaisController : ApiController
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, bool tenantFiltro = false)
     {
+        if (tenantFiltro && !_appUser.IsAuthenticated())
+        {
+            return Unauthorized();
+        }
+
         GetAllAnimaisRequest request = new()
         {
             PageSize = ps,

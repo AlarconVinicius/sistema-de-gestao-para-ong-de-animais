@@ -14,14 +14,11 @@ public class Colaborador : Entity
 
     public Colaborador() { }
 
-    public Colaborador(Guid tenantId, string email) : base()
+    public Colaborador(Guid id, string email) : base(id)
     {
-        if (tenantId == Guid.Empty)
-            throw new ArgumentException("TenantId não pode ser vazio.");
         if (string.IsNullOrWhiteSpace(email))
             throw new ArgumentException("Email não pode ser nulo ou vazio.");
 
-        TenantId = tenantId;
         Email = new Email(email);
     }
 

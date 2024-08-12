@@ -43,6 +43,6 @@ public static class ColaboradorMappings
             return null!;
         }
 
-        return new Colaborador(request.TenantId, request.Email);
+        return new Colaborador(request.Id, request.Email);
     }
 }

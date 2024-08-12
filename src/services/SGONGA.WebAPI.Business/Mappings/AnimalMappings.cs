@@ -43,6 +43,6 @@ public static class AnimalMappings
             return null!;
         }
 
-        return new Animal(request.TenantId, request.Nome, request.Especie, request.Raca, request.Cor, request.Porte, request.Descricao, request.Observacao, request.Fotos, request.ChavePix);
+        return new Animal(request.Nome, request.Especie, request.Raca, request.Cor, request.Porte, request.Descricao, request.Observacao, request.Fotos, request.ChavePix);
     }
 }

@@ -25,13 +25,12 @@ public class AnimalHandler : BaseHandler, IAnimalHandler
             var animal = new Animal();
             if (request.TenantFiltro)
             {
-                if (TenantIsEmpty()) return null!;
-                animal = await _unitOfWork.AnimalRepository.GetByIdAsync(request.Id, TenantId);
+                animal = await _unitOfWork.AnimalRepository.GetByIdAsync(request.Id);
                 if (animal is null) return null!;
             }
             else
             {
-                animal = await _unitOfWork.AnimalRepository.GetByIdAsync(request.Id);
+                animal = await _unitOfWork.AnimalRepository.GetByIdWithoutTenantAsync(request.Id);
                 if (animal is null) return null!;
             }
             return animal.MapDomainToResponse();
@@ -45,15 +44,13 @@ public class AnimalHandler : BaseHandler, IAnimalHandler
 
     public async Task<PagedResponse<AnimalResponse>> GetAllAsync(GetAllAnimaisRequest request)
     {
-        if (TenantIsEmpty()) return null!;
         try
         {
             if (request.TenantFiltro)
             {
-                if (TenantIsEmpty()) return null!;
-                return (await _unitOfWork.AnimalRepository.GetAllPagedAsync(o => o.TenantId == TenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
+                return (await _unitOfWork.AnimalRepository.GetAllPagedAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
             }
-            return (await _unitOfWork.AnimalRepository.GetAllPagedAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
+            return (await _unitOfWork.AnimalRepository.GetAllPagedWithoutTenantAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
         }
         catch
         {
@@ -66,15 +63,18 @@ public class AnimalHandler : BaseHandler, IAnimalHandler
     {
         //if (!ExecuteValidation(new AnimalValidation(), animal)) return;
 
-        if (TenantIsEmpty()) return;
-
-        request.TenantId = TenantId;
         var animalMapped = request.MapRequestToDomain();
         try
         {
             await _unitOfWork.AnimalRepository.AddAsync(animalMapped);
 
             await _unitOfWork.CommitAsync();
+            return;
+        }
+        catch(InvalidOperationException ex)
+        {
+            Notify("Não foi possível criar o animal.");
+            Notify($"Erro: {ex.Message}");
             return;
         }
         catch
@@ -88,15 +88,13 @@ public class AnimalHandler : BaseHandler, IAnimalHandler
     {
         //if (!ExecuteValidation(new AnimalValidation(), animal)) return;
 
-        if (TenantIsEmpty()) return;
-
         if (!AnimalExiste(request.Id))
         {
             Notify("Animal não encontrado.");
             return;
         }
 
-        var animalDb = await _unitOfWork.AnimalRepository.GetByIdAsync(request.Id, TenantId);
+        var animalDb = await _unitOfWork.AnimalRepository.GetByIdAsync(request.Id);
 
         try
         {
@@ -124,8 +122,6 @@ public class AnimalHandler : BaseHandler, IAnimalHandler
 
     public async Task DeleteAsync(DeleteAnimalRequest request)
     {
-        if (TenantIsEmpty()) return;
-
         try
         {
             if (!AnimalExiste(request.Id))
@@ -148,7 +144,7 @@ public class AnimalHandler : BaseHandler, IAnimalHandler
 
     private bool AnimalExiste(Guid id)
     {
-        if (_unitOfWork.AnimalRepository.SearchAsync(f => f.Id == id && f.TenantId == TenantId).Result.Any())
+        if (_unitOfWork.AnimalRepository.SearchAsync(f => f.Id == id).Result.Any())
         {
             return true;
         };
