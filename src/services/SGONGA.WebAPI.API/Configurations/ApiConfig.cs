@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SGONGA.Core.Configurations;
+using SGONGA.WebAPI.API.Middlewares;
 using SGONGA.WebAPI.Data.Context;
 using SGONGA.WebAPI.Identity.Context;
 
@@ -34,7 +35,9 @@ public static class ApiConfig
             app.UseHsts();
         }
 
-        app.UseHttpsRedirection();
+        app.UseHttpsRedirection(); 
+
+        app.UseMiddleware<TenantIdentifierMiddleware>();
 
         app.UseRouting();
 
