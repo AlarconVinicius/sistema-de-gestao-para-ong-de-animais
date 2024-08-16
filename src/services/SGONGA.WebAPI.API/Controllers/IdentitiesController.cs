@@ -38,7 +38,7 @@ public class IdentitiesController : ApiController
     [ClaimsAuthorize("Permissions", "SuperAdmin")]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpPost("create")]
+    [HttpPost("cadastrar")]
     public async Task<IActionResult> Create(CreateUserRequest request)
     {
         if (!ModelState.IsValid)
@@ -52,7 +52,7 @@ public class IdentitiesController : ApiController
 
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpPut("update/email")]
+    [HttpPut("atualizar/email")]
     public async Task<IActionResult> UpdateUserEmail(UpdateUserEmailRequest request)
     {
         if (!ModelState.IsValid)
@@ -66,7 +66,7 @@ public class IdentitiesController : ApiController
 
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpPut("update/password")]
+    [HttpPut("atualizar/senha")]
     public async Task<IActionResult> UpdateUserPassword(UpdateUserPasswordRequest request)
     {
         if (!ModelState.IsValid)
@@ -110,7 +110,7 @@ public class IdentitiesController : ApiController
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null)
+    public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!)
     {
         GetAllUsersRequest request = new()
         {

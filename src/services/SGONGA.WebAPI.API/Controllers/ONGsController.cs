@@ -10,7 +10,7 @@ using SGONGA.Core.Extensions;
 namespace SGONGA.WebAPI.API.Controllers;
 
 [Authorize]
-[Route("api/v1/ongs/")]
+[Route("api/v1/ongs/admin/")]
 public class ONGsController : ApiController
 {
     public readonly IONGHandler _ongHandler;
@@ -19,13 +19,14 @@ public class ONGsController : ApiController
         _ongHandler = ongHandler;
     }
 
+    #region Public Methods
     [AllowAnonymous]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(Guid id, bool tenantFiltro = false)
+    [HttpGet("/api/v1/ongs/{id:guid}")]
+    public async Task<IActionResult> GetByIdPublic(Guid id)
     {
-        GetONGByIdRequest request = new(id, tenantFiltro);
+        GetONGByIdRequest request = new(id, false);
         var result = await _ongHandler.GetByIdAsync(request);
 
         return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
@@ -35,21 +36,51 @@ public class ONGsController : ApiController
     [AllowAnonymous]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, bool tenantFiltro = false)
+    [HttpGet("/api/v1/ongs")]
+    public async Task<IActionResult> GetAllPublic([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!)
     {
         GetAllONGsRequest request = new()
         {
             PageSize = ps,
             PageNumber = page,
             Query = q,
-            TenantFiltro = tenantFiltro
+            TenantFiltro = false
         };
         var result = await _ongHandler.GetAllAsync(request);
 
         return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
     }
+    #endregion
 
+    #region Admin Methods
+    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        GetONGByIdRequest request = new(id, true);
+        var result = await _ongHandler.GetByIdAsync(request);
+
+        return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
+
+    }
+
+    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    [HttpGet]
+    public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!)
+    {
+        GetAllONGsRequest request = new()
+        {
+            PageSize = ps,
+            PageNumber = page,
+            Query = q,
+            TenantFiltro = true
+        };
+        var result = await _ongHandler.GetAllAsync(request);
+
+        return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
+    }
     [ClaimsAuthorize("Permissions", "SuperAdmin")]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
@@ -91,4 +122,5 @@ public class ONGsController : ApiController
 
         return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
     }
+    #endregion
 }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SGONGA.Core.Configurations;
 using SGONGA.Core.Notifications;
-using SGONGA.Core.User;
 using SGONGA.WebAPI.API.Controllers.Shared;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Requests;
@@ -10,28 +9,23 @@ using SGONGA.WebAPI.Business.Requests;
 namespace SGONGA.WebAPI.API.Controllers;
 
 [Authorize]
-[Route("api/v1/animais/")]
+[Route("api/v1/animais/admin/")]
 public class AnimaisController : ApiController
 {
     public readonly IAnimalHandler _animalHandler;
-    private readonly IAspNetUser _appUser;
-    public AnimaisController(INotifier notifier, IAnimalHandler animalHandler, IAspNetUser appUser) : base(notifier)
+    public AnimaisController(INotifier notifier, IAnimalHandler animalHandler) : base(notifier)
     {
         _animalHandler = animalHandler;
-        _appUser = appUser;
     }
 
+    #region Public Methods
     [AllowAnonymous]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(Guid id, bool tenantFiltro = false)
+    [HttpGet("/api/v1/animais/{id:guid}")]
+    public async Task<IActionResult> GetByIdPublic(Guid id)
     {
-        if (tenantFiltro && !_appUser.IsAuthenticated())
-        {
-            return Unauthorized();
-        }
-        GetAnimalByIdRequest request = new(id, tenantFiltro);
+        GetAnimalByIdRequest request = new(id, false);
         var result = await _animalHandler.GetByIdAsync(request);
 
         return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
@@ -41,20 +35,46 @@ public class AnimaisController : ApiController
     [AllowAnonymous]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, bool tenantFiltro = false)
+    [HttpGet("/api/v1/animais")]
+    public async Task<IActionResult> GetAllPublic([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!)
     {
-        if (tenantFiltro && !_appUser.IsAuthenticated())
-        {
-            return Unauthorized();
-        }
-
         GetAllAnimaisRequest request = new()
         {
             PageSize = ps,
             PageNumber = page,
             Query = q,
-            TenantFiltro = tenantFiltro
+            TenantFiltro = false
+        };
+        var result = await _animalHandler.GetAllAsync(request);
+
+        return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
+    }
+    #endregion
+
+    #region Admin Methods
+    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetById(Guid id)
+    {
+        GetAnimalByIdRequest request = new(id, true);
+        var result = await _animalHandler.GetByIdAsync(request);
+
+        return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
+
+    }
+
+    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    [HttpGet]
+    public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!)
+    {
+        GetAllAnimaisRequest request = new()
+        {
+            PageSize = ps,
+            PageNumber = page,
+            Query = q,
+            TenantFiltro = true
         };
         var result = await _animalHandler.GetAllAsync(request);
 
@@ -100,4 +120,5 @@ public class AnimaisController : ApiController
 
         return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
     }
+    #endregion
 }

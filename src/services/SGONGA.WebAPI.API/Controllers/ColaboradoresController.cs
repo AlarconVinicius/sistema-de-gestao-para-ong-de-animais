@@ -10,7 +10,7 @@ using SGONGA.WebAPI.Business.Requests;
 namespace SGONGA.WebAPI.API.Controllers;
 
 [Authorize]
-[Route("api/v1/colaboradores/")]
+[Route("api/v1/colaboradores/admin/")]
 public class ColaboradoresController : ApiController
 {
     public readonly IColaboradorHandler _colaboradorHandler;
@@ -19,6 +19,7 @@ public class ColaboradoresController : ApiController
         _colaboradorHandler = colaboradorHandler;
     }
 
+    #region Admin Methods
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
     [HttpGet("{id:guid}")]
@@ -88,4 +89,5 @@ public class ColaboradoresController : ApiController
 
         return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
     }
+#endregion
 }
