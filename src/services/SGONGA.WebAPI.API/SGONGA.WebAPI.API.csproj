@@ -16,6 +16,7 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\building blocks\SGONGA.Core\SGONGA.Core.csproj" />
+		<ProjectReference Include="..\..\infrastructure\SGONGA.ServiceDefaults\SGONGA.ServiceDefaults.csproj" />
 		<ProjectReference Include="..\SGONGA.WebAPI.Business\SGONGA.WebAPI.Business.csproj" />
 		<ProjectReference Include="..\SGONGA.WebAPI.Data\SGONGA.WebAPI.Data.csproj" />
 		<ProjectReference Include="..\SGONGA.WebAPI.Identity\SGONGA.WebAPI.Identity.csproj" />

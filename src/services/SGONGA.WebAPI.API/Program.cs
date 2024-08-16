@@ -6,6 +6,8 @@ using SGONGA.WebAPI.Identity.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.Services.AddApiConfig();
 
 builder.Services.RegisterApiServices()
@@ -18,6 +20,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfig();
 
 var app = builder.Build();
+
+app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
