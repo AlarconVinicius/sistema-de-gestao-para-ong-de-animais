@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using SGONGA.WebAPI.Business.Requests.Shared;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace SGONGA.WebAPI.Business.Requests;
@@ -12,63 +13,32 @@ public class CreateONGRequest : Request
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [StringLength(500, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Descrição")]
-    public string Descricao { get; set; } = string.Empty;
+    [DisplayName("Instagram")]
+    public string Instagram { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [StringLength(11, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
+    [DisplayName("Documento")]
+    public string Documento { get; set; } = string.Empty;
 
     [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
     [DisplayName("Chave Pix")]
-    public string ChavePix { get; set; } = string.Empty;
+    public string? ChavePix { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [Phone(ErrorMessage = "O campo {0} não é válido.")]
-    [StringLength(15, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Telefone")]
-    public string Telefone { get; set; } = string.Empty;
+    public ContatoRequest Contato { get; set; } = null!;
 
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [EmailAddress(ErrorMessage = "O campo {0} não é válido.")]
-    [StringLength(254, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("E-mail")]
-    public string Email { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [StringLength(200, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Rua")]
-    public string Rua { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Cidade")]
-    public string Cidade { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [StringLength(2, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Estado")]
-    public string Estado { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [StringLength(9, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("CEP")]
-    public string CEP { get; set; } = string.Empty;
-
-    [StringLength(200, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Complemento")]
-    public string Complemento { get; set; } = string.Empty;
+    public EnderecoRequest Endereco { get; set; } = null!;
 
     public CreateONGRequest() { }
 
-    public CreateONGRequest(string nome, string descricao, string chavePix, string telefone, string email, string rua, string cidade, string estado, string cep, string complemento)
+    public CreateONGRequest(string nome, string instagram, string documento, string? chavePix, ContatoRequest contato, EnderecoRequest endereco)
     {
         Nome = nome;
-        Descricao = descricao;
+        Instagram = instagram;
+        Documento = documento;
         ChavePix = chavePix;
-        Telefone = telefone;
-        Email = email;
-        Rua = rua;
-        Cidade = cidade;
-        Estado = estado;
-        CEP = cep;
-        Complemento = complemento;
+        Contato = contato;
+        Endereco = endereco;
     }
 }
 
@@ -85,64 +55,27 @@ public class UpdateONGRequest : Request
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [StringLength(500, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Descrição")]
-    public string Descricao { get; set; } = string.Empty;
+    [DisplayName("Instagram")]
+    public string Instagram { get; set; } = string.Empty;
 
     [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
     [DisplayName("Chave Pix")]
-    public string ChavePix { get; set; } = string.Empty;
+    public string? ChavePix { get; set; }
 
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [Phone(ErrorMessage = "O campo {0} não é válido.")]
-    [StringLength(15, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Telefone")]
-    public string Telefone { get; set; } = string.Empty;
+    public ContatoRequest Contato { get; set; } = null!;
 
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [EmailAddress(ErrorMessage = "O campo {0} não é válido.")]
-    [StringLength(254, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("E-mail")]
-    public string Email { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [StringLength(200, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Rua")]
-    public string Rua { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Cidade")]
-    public string Cidade { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [StringLength(2, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Estado")]
-    public string Estado { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [StringLength(9, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("CEP")]
-    public string CEP { get; set; } = string.Empty;
-
-    [StringLength(200, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Complemento")]
-    public string Complemento { get; set; } = string.Empty;
+    public EnderecoRequest Endereco { get; set; } = null!;
 
     public UpdateONGRequest() { }
 
-    public UpdateONGRequest(Guid id, string nome, string descricao, string chavePix, string telefone, string email, string rua, string cidade, string estado, string cep, string complemento)
+    public UpdateONGRequest(Guid id, string nome, string instagram, string? chavePix, ContatoRequest contato, EnderecoRequest endereco)
     {
         Id = id;
         Nome = nome;
-        Descricao = descricao;
+        Instagram = instagram;
         ChavePix = chavePix;
-        Telefone = telefone;
-        Email = email;
-        Rua = rua;
-        Cidade = cidade;
-        Estado = estado;
-        CEP = cep;
-        Complemento = complemento;
+        Contato = contato;
+        Endereco = endereco;
     }
 }
 

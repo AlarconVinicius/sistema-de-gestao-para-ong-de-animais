@@ -4,34 +4,40 @@ namespace SGONGA.WebAPI.Business.Models.DomainObjects;
 
 public class Endereco
 {
-    public const int ComprimentoMaxRua = 100;
+    public const int ComprimentoMaxLogradouro = 100;
     public const int ComprimentoMaxCidade = 50;
     public const int ComprimentoMaxEstado = 50;
     public const int ComprimentoMaxCEP = 10;
 
-    public string Rua { get; private set; } = string.Empty;
     public string Cidade { get; private set; } = string.Empty;
     public string Estado { get; private set; } = string.Empty;
     public string CEP { get; private set; } = string.Empty;
-    public string Complemento { get; private set; } = string.Empty;
+    public string Logradouro { get; private set; } = string.Empty;
+    public string Bairro { get; private set; } = string.Empty;
+    public int Numero { get; private set; }
+    public string? Complemento { get; private set; }
+    public string? Referencia { get; private set; }
 
     protected Endereco() { }
 
-    public Endereco(string rua, string cidade, string estado, string cep, string complemento = "")
+    public Endereco(string cidade, string estado, string cep, string logradouro, string bairro, int numero, string? complemento, string? referencia)
     {
-        if (string.IsNullOrEmpty(rua) ||
-                string.IsNullOrEmpty(cidade) ||
-                string.IsNullOrEmpty(estado) ||
-                !ValidarCEP(cep))
+        if(string.IsNullOrEmpty(cidade) ||
+            string.IsNullOrEmpty(estado) ||
+            string.IsNullOrEmpty(logradouro) ||
+            string.IsNullOrEmpty(bairro) ||
+            !ValidarCEP(cep))
         {
             throw new ArgumentException("Dados de endereço inválidos.");
         }
-
-        Rua = rua;
         Cidade = cidade;
         Estado = estado;
         CEP = cep;
+        Logradouro = logradouro;
+        Bairro = bairro;
+        Numero = numero;
         Complemento = complemento;
+        Referencia = referencia;
     }
 
     public static bool ValidarCEP(string cep)

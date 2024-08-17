@@ -3,6 +3,7 @@ using SGONGA.Core.User;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Mappings;
+using SGONGA.WebAPI.Business.Models.DomainObjects;
 using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
 
@@ -59,7 +60,7 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
             return;
         }
 
-        if (EmailEmUso(request.Email))
+        if (EmailEmUso(request.Contato.Email))
         {
             Notify("E-mail em uso.");
             return;
@@ -99,15 +100,23 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
 
         try
         {
-            if (request.Email != colaboradorDb.Email.Endereco)
+            string newEmail;
+
+            if (request.Contato.Email != colaboradorDb.Contato.Email.Endereco)
             {
-                if (EmailEmUso(request.Email))
+                if (EmailEmUso(request.Contato.Email))
                 {
                     Notify("E-mail em uso.");
                     return;
                 }
-                colaboradorDb.SetEmail(request.Email);
+                newEmail = colaboradorDb.Contato.Email.Endereco;
             }
+            else
+            {
+                newEmail = request.Contato.Email;
+            }
+            colaboradorDb.SetNome(request.Nome);
+            colaboradorDb.SetContato(new Contato(request.Contato.Telefone,newEmail));
 
             _unitOfWork.ColaboradorRepository.UpdateAsync(colaboradorDb);
 
@@ -159,7 +168,7 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
 
     private bool EmailEmUso(string email)
     {
-        if (_unitOfWork.ColaboradorRepository.SearchAsync(f => f.Email.Endereco == email).Result.Any())
+        if (_unitOfWork.ColaboradorRepository.SearchAsync(f => f.Contato.Email.Endereco == email).Result.Any())
         {
             return true;
         };

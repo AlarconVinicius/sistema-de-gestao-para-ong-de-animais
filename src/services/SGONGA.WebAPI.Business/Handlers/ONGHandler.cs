@@ -3,6 +3,8 @@ using SGONGA.Core.User;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Mappings;
+using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Models.DomainObjects;
 using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
 
@@ -21,17 +23,23 @@ public class ONGHandler : BaseHandler, IONGHandler
     {
         try
         {
-            if (request.TenantFiltro)
-            {
-                if (TenantIsEmpty()) return null!;
-                request.Id = TenantId;
-            }
+            ONG ong;
+
             if (!ONGExiste(request.Id))
             {
                 Notify("ONG não encontrada.");
                 return null!;
             }
-            var ong = await _unitOfWork.ONGRepository.GetByIdAsync(request.Id);
+            if (request.TenantFiltro)
+            {
+                ong = await _unitOfWork.ONGRepository.GetByIdAsync(request.Id);
+                if (ong is null) return null!;
+            }
+            else
+            {
+                ong = await _unitOfWork.ONGRepository.GetByIdWithoutTenantAsync(request.Id);
+                if (ong is null) return null!;
+            }
 
             return ong.MapDomainToResponse();
         }
@@ -48,10 +56,9 @@ public class ONGHandler : BaseHandler, IONGHandler
         {
             if (request.TenantFiltro)
             {
-                if (TenantIsEmpty()) return null!;
-                return (await _unitOfWork.ONGRepository.GetAllPagedAsync(o => o.Id == TenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
+                return (await _unitOfWork.ONGRepository.GetAllPagedAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
             }
-            return (await _unitOfWork.ONGRepository.GetAllPagedAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
+            return (await _unitOfWork.ONGRepository.GetAllPagedWithoutTenantAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
         }
         catch
         {
@@ -75,7 +82,7 @@ public class ONGHandler : BaseHandler, IONGHandler
             return;
         }
 
-        if (EmailEmUso(request.Email))
+        if (EmailEmUso(request.Contato.Email))
         {
             Notify("E-mail em uso.");
             return;
@@ -114,19 +121,19 @@ public class ONGHandler : BaseHandler, IONGHandler
 
         try
         {
-            if (request.Email != ongDb.Contato.Email.Endereco)
+            if (request.Contato.Email != ongDb.Contato.Email.Endereco)
             {
-                if (EmailEmUso(request.Email))
+                if (EmailEmUso(request.Contato.Email))
                 {
                     Notify("E-mail em uso.");
                     return;
                 }
-                ongDb.SetContato(request.Telefone, request.Email);
+                ongDb.SetContato(new Contato(request.Contato.Telefone, request.Contato.Email));
             }
             ongDb.SetNome(request.Nome);
-            ongDb.SetDescricao(request.Descricao);
+            ongDb.SetInstagram(request.Instagram);
             ongDb.SetChavePix(request.ChavePix);
-            ongDb.SetEndereco(request.Rua, request.Cidade, request.Estado, request.CEP, request.Complemento);
+            ongDb.SetEndereco(new Endereco(request.Endereco.Cidade, request.Endereco.Estado, request.Endereco.CEP, request.Endereco.Logradouro, request.Endereco.Bairro, request.Endereco.Numero, request.Endereco.Complemento, request.Endereco.Referencia));
 
             _unitOfWork.ONGRepository.UpdateAsync(ongDb);
 

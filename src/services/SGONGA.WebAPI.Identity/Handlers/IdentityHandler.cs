@@ -65,7 +65,7 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
             Notify("As senhas não conferem.");
             return null!;
         }
-        var employeeDb = await _colaboradorRepository.GetByIdAsync(request.Id);
+        var employeeDb = await _colaboradorRepository.GetByIdWithoutTenantAsync(request.Id);
         if (employeeDb is null)
         {
             Notify("Colaborador não encontrado.");

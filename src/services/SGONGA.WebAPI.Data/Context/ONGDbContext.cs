@@ -30,6 +30,10 @@ public class ONGDbContext : DbContext
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 
         modelBuilder
+            .Entity<ONG>()
+            .HasQueryFilter(x => x.Id == _tenantId);
+
+        modelBuilder
             .Entity<Colaborador>()
             .HasQueryFilter(x => x.TenantId == _tenantId);
 

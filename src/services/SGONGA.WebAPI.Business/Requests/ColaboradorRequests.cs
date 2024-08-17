@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using SGONGA.WebAPI.Business.Models.DomainObjects;
+using SGONGA.WebAPI.Business.Requests.Shared;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace SGONGA.WebAPI.Business.Requests;
@@ -9,21 +11,37 @@ public class CreateColaboradorRequest : Request
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [EmailAddress(ErrorMessage = "O campo {0} não é válido.")]
-    [StringLength(254, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("E-mail")]
-    public string Email { get; set; } = string.Empty;
+    [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
+    [DisplayName("Nome")]
+    public string Nome { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [StringLength(11, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
+    [DisplayName("Documento")]
+    public string Documento { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [DisplayName("Data de Nascimento")]
+    public DateTime DataNascimento { get; set; }
+
+    public ContatoRequest Contato { get; set; } = null!;
 
     public CreateColaboradorRequest() { }
 
-    public CreateColaboradorRequest(Guid id, string email)
+    public CreateColaboradorRequest(Guid id, string nome, string documento, DateTime dataNascimento, ContatoRequest contato)
     {
         Id = id;
-        Email = email;
+        Nome = nome;
+        Documento = documento;
+        DataNascimento = dataNascimento;
+        Contato = contato;
     }
-    public CreateColaboradorRequest(string email)
+    public CreateColaboradorRequest(string nome, string documento, DateTime dataNascimento, ContatoRequest contato)
     {
-        Email = email;
+        Nome = nome; 
+        Documento = documento;
+        DataNascimento = dataNascimento;
+        Contato = contato;
     }
 }
 
@@ -33,18 +51,17 @@ public class UpdateColaboradorRequest : Request
     [DisplayName("Id")]
     public Guid Id { get; set; }
 
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [EmailAddress(ErrorMessage = "O campo {0} não é válido.")]
-    [StringLength(254, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("E-mail")]
-    public string Email { get; set; } = string.Empty;
+    [DisplayName("Nome")]
+    public string Nome { get; set; } = string.Empty;
+    public ContatoRequest Contato { get; set; } = null!;
 
     public UpdateColaboradorRequest() { }
 
-    public UpdateColaboradorRequest(Guid id, string email)
+    public UpdateColaboradorRequest(Guid id, string nome, ContatoRequest contato)
     {
         Id = id;
-        Email = email;
+        Nome = nome;
+        Contato = contato;
     }
 }
 

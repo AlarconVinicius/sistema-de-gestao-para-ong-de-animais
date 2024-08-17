@@ -18,11 +18,23 @@ public class ONGMapping : IEntityTypeConfiguration<ONG>
 
         builder.Property(o => o.Nome)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(100)
+            .HasColumnType("varchar(100)");
 
-        builder.Property(o => o.Descricao)
+        builder.Property(o => o.Instagram)
             .IsRequired()
-            .HasMaxLength(500);
+            .HasMaxLength(200)
+            .HasColumnType("varchar(200)");
+
+        builder.Property(c => c.Documento)
+                .IsRequired()
+                .HasMaxLength(11)
+                .HasColumnType("varchar(11)");
+
+        builder.Property(o => o.ChavePix)
+               .IsRequired(false)
+               .HasMaxLength(100)
+               .HasColumnType("varchar(100)");
 
         builder.OwnsOne(o => o.Contato, c =>
         {
@@ -30,8 +42,10 @@ public class ONGMapping : IEntityTypeConfiguration<ONG>
             {
                 t.Property(t => t.Numero)
                     .HasColumnName("Telefone")
+                    .HasColumnType("Telefone")
                     .IsRequired()
-                    .HasMaxLength(Telefone.ComprimentoMaxNumero);
+                    .HasMaxLength(Telefone.ComprimentoMaxNumero)
+                    .HasColumnType($"varchar({Telefone.ComprimentoMaxNumero})");
             });
 
             c.OwnsOne(c => c.Email, t =>
@@ -39,34 +53,51 @@ public class ONGMapping : IEntityTypeConfiguration<ONG>
                 t.Property(t => t.Endereco)
                     .HasColumnName("Email")
                     .IsRequired()
-                    .HasMaxLength(Email.ComprimentoMaxEndereco);
+                    .HasMaxLength(Email.ComprimentoMaxEndereco)
+                    .HasColumnType($"varchar({Email.ComprimentoMaxEndereco})");
             });
         });
 
         builder.OwnsOne(o => o.Endereco, e =>
         {
-            e.Property(e => e.Rua)
-                .IsRequired()
-                .HasMaxLength(100);
-
             e.Property(e => e.Cidade)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .HasColumnType("varchar(50)");
 
             e.Property(e => e.Estado)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(50)
+                .HasColumnType("varchar(50)");
 
             e.Property(e => e.CEP)
                 .IsRequired()
-                .HasMaxLength(20);
+                .HasMaxLength(20)
+                .HasColumnType("varchar(20)");
+
+            e.Property(e => e.Logradouro)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnType("varchar(100)");
+
+            e.Property(e => e.Bairro)
+                .IsRequired()
+                .HasMaxLength(100)
+                .HasColumnType("varchar(100)");
+
+            e.Property(e => e.Numero)
+                .IsRequired();
 
             e.Property(e => e.Complemento)
-                .HasMaxLength(100);
-        });
+                .IsRequired(false)
+                .HasMaxLength(100)
+                .HasColumnType("varchar(100)");
 
-        builder.Property(o => o.ChavePix)
-            .HasMaxLength(100);
+            e.Property(e => e.Referencia)
+                .IsRequired(false)
+                .HasMaxLength(100)
+                .HasColumnType("varchar(100)");
+        });
 
         builder.HasMany(o => o.Animais)
             .WithOne(a => a.ONG)

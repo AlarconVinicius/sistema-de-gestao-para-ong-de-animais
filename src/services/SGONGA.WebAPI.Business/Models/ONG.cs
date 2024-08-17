@@ -5,54 +5,49 @@ namespace SGONGA.WebAPI.Business.Models;
 public class ONG : Entity
 {
     public string Nome { get; private set; } = string.Empty;
-    public string Descricao { get; private set; } = string.Empty;
+    public string Instagram { get; private set; } = string.Empty;
+    public string Documento { get; private set; } = string.Empty;
     public Contato Contato { get; private set; } = null!;
     public Endereco Endereco { get; private set; } = null!;
-    public string ChavePix { get; set; } = string.Empty;
+    public string? ChavePix { get; set; } = string.Empty;
     
     public List<Animal> Animais { get; private set; } = new List<Animal>();
     public List<Colaborador> Colaboradores { get; private set; } = new List<Colaborador>();
 
     public ONG() { }
 
-    public ONG(string nome, string descricao, string telefone, string email, string chavePix = "") : base()
+    public ONG(string nome, string instagram, string documento, Contato contato, Endereco endereco, string? chavePix) : base()
     {
         if (string.IsNullOrWhiteSpace(nome))
             throw new ArgumentException("Nome não pode ser nulo ou vazio.");
-        if (string.IsNullOrWhiteSpace(descricao))
-            throw new ArgumentException("Descrição não pode ser nula ou vazia.");
+        if (string.IsNullOrWhiteSpace(instagram))
+            throw new ArgumentException("Instagram não pode ser nulo ou vazio.");
+        if (string.IsNullOrWhiteSpace(documento))
+            throw new ArgumentException("Documento não pode ser nulo ou vazio.");
 
         Nome = nome;
-        Descricao = descricao;
+        Instagram = instagram;
+        Documento = documento;
         ChavePix = chavePix;
-        Contato = new Contato(telefone, email);
+        Contato = contato;
+        Endereco = endereco;
     }
 
-    public ONG(Guid id, string nome, string descricao, string telefone, string email, string chavePix = "") : base(id)
+    public ONG(Guid id, string nome, string instagram, string documento, Contato contato, Endereco endereco, string? chavePix) : base(id)
     {
         if (string.IsNullOrWhiteSpace(nome))
             throw new ArgumentException("Nome não pode ser nulo ou vazio.");
-        if (string.IsNullOrWhiteSpace(descricao))
-            throw new ArgumentException("Descrição não pode ser nula ou vazia.");
+        if (string.IsNullOrWhiteSpace(instagram))
+            throw new ArgumentException("Instagram não pode ser nulo ou vazio.");
+        if (string.IsNullOrWhiteSpace(documento))
+            throw new ArgumentException("Documento não pode ser nulo ou vazio.");
 
         Nome = nome;
-        Descricao = descricao;
+        Instagram = instagram;
+        Documento = documento;
         ChavePix = chavePix;
-        Contato = new Contato(telefone, email);
-    }
-
-    public ONG(string nome, string descricao, string telefone, string email, string rua, string cidade, string estado, string cep, string complemento = "", string chavePix = "") : base()
-    {
-        if (string.IsNullOrWhiteSpace(nome))
-            throw new ArgumentException("Nome não pode ser nulo ou vazio.");
-        if (string.IsNullOrWhiteSpace(descricao))
-            throw new ArgumentException("Descrição não pode ser nula ou vazia.");
-
-        Nome = nome;
-        Descricao = descricao;
-        ChavePix = chavePix;
-        Contato = new Contato(telefone, email);
-        Endereco = new Endereco(rua, cidade, estado, cep, complemento);
+        Contato = contato;
+        Endereco = endereco;
     }
 
     public void AddAnimal(Animal animal)
@@ -78,36 +73,27 @@ public class ONG : Entity
         Nome = nome;
     }
 
-    public void SetDescricao(string descricao)
+    public void SetInstagram(string instagram)
     {
-        if (string.IsNullOrWhiteSpace(descricao))
-            throw new ArgumentException("Descrição não pode ser nula ou vazia.");
+        if (string.IsNullOrWhiteSpace(instagram))
+            throw new ArgumentException("Instagram não pode ser nulo ou vazio.");
 
-        Descricao = descricao;
+        Instagram = instagram;
     }
 
-    public void SetChavePix(string chavePix)
+    public void SetChavePix(string? chavePix)
     {
-        if (string.IsNullOrWhiteSpace(chavePix))
-            throw new ArgumentException("Chave Pix não pode ser nula ou vazia.");
-
         ChavePix = chavePix;
     }
 
-    public void SetContato(string telefone, string email)
+    public void SetContato(Contato contato)
     {
-        if (string.IsNullOrWhiteSpace(telefone) || string.IsNullOrWhiteSpace(email))
-            throw new ArgumentException("Telefone e Email não podem ser nulos ou vazios.");
-
-        Contato = new Contato(telefone, email);
+        Contato = contato;
     }
 
-    public void SetEndereco(string rua, string cidade, string estado, string cep, string complemento = "")
+    public void SetEndereco(Endereco endereco)
     {
-        if (string.IsNullOrWhiteSpace(rua) || string.IsNullOrWhiteSpace(cidade) || string.IsNullOrWhiteSpace(estado) || string.IsNullOrWhiteSpace(cep))
-            throw new ArgumentException("Rua, Cidade, Estado e CEP não podem ser nulos ou vazios.");
-
-        Endereco = new Endereco(rua, cidade, estado, cep, complemento);
+        Endereco = endereco;
     }
     #endregion
 }

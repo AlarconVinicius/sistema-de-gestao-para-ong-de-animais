@@ -35,6 +35,22 @@ public class CreateUserRequest : Request
     }
 }
 
+public class RequestCreateUserRequest : Request
+{
+    public CreateONGRequest ONG { get; set; } = null!;
+
+    public CreateColaboradorRequest Responsavel { get; set; } = null!;
+
+
+    public RequestCreateUserRequest() { }
+
+    public RequestCreateUserRequest(CreateONGRequest ong, CreateColaboradorRequest responsavel)
+    {
+        ONG = ONG;
+        Responsavel = responsavel;
+    }
+}
+
 public class LoginUserRequest : Request
 {
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]

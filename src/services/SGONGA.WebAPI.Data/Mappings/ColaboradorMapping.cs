@@ -19,12 +19,39 @@ public class ColaboradorMapping : IEntityTypeConfiguration<Colaborador>
         builder.Property(a => a.TenantId)
             .IsRequired();
 
-        builder.OwnsOne(o => o.Email, c =>
-        {
-            c.Property(c => c.Endereco)
-                .HasColumnName("Email")
+        builder.Property(o => o.Nome)
+            .IsRequired()
+            .HasMaxLength(100)
+            .HasColumnType("varchar(100)");
+
+        builder.Property(c => c.Documento)
                 .IsRequired()
-                .HasMaxLength(Email.ComprimentoMaxEndereco);
+                .HasMaxLength(11)
+                .HasColumnType("varchar(11)");
+
+        builder.Property(c => c.DataNascimento)
+                .IsRequired();
+
+        builder.OwnsOne(o => o.Contato, c =>
+        {
+            c.OwnsOne(c => c.Telefone, t =>
+            {
+                t.Property(t => t.Numero)
+                    .HasColumnName("Telefone")
+                    .HasColumnType("Telefone")
+                    .IsRequired()
+                    .HasMaxLength(Telefone.ComprimentoMaxNumero)
+                    .HasColumnType($"varchar({Telefone.ComprimentoMaxNumero})");
+            });
+
+            c.OwnsOne(c => c.Email, t =>
+            {
+                t.Property(t => t.Endereco)
+                    .HasColumnName("Email")
+                    .IsRequired()
+                    .HasMaxLength(Email.ComprimentoMaxEndereco)
+                    .HasColumnType($"varchar({Email.ComprimentoMaxEndereco})");
+            });
         });
 
         builder.HasOne(a => a.ONG)
