@@ -104,6 +104,7 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
             await _unitOfWork.ColaboradorRepository.AddAsync(colaboradorMapped);
 
             await _unitOfWork.CommitAsync();
+            _solicitacaoCadastroProvider.ColaboradorId = colaboradorMapped.Id;
             return;
         }
         catch
