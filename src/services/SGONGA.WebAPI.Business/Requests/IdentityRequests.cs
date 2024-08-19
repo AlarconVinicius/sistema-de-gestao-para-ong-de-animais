@@ -46,7 +46,7 @@ public class RequestCreateUserRequest : Request
 
     public RequestCreateUserRequest(CreateONGRequest ong, CreateColaboradorRequest responsavel)
     {
-        ONG = ONG;
+        ONG = ong;
         Responsavel = responsavel;
     }
 }
