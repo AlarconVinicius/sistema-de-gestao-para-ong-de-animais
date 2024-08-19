@@ -3,6 +3,7 @@ using SGONGA.Core.User;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Mappings;
+using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.Models.DomainObjects;
 using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
@@ -12,10 +13,12 @@ namespace SGONGA.WebAPI.Business.Handlers;
 public class ColaboradorHandler : BaseHandler, IColaboradorHandler
 {
     public readonly IUnitOfWork _unitOfWork;
+    public readonly SolicitacaoCadastroProvider _solicitacaoCadastroProvider;
 
-    public ColaboradorHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork unitOfWork) : base(notifier, appUser)
+    public ColaboradorHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork unitOfWork, SolicitacaoCadastroProvider solicitacaoCadastroProvider) : base(notifier, appUser)
     {
         _unitOfWork = unitOfWork;
+        _solicitacaoCadastroProvider = solicitacaoCadastroProvider;
     }
 
     public async Task<ColaboradorResponse> GetByIdAsync(GetColaboradorByIdRequest request)
@@ -66,6 +69,36 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
             return;
         }
         var colaboradorMapped = request.MapRequestToDomain();
+        try
+        {
+            await _unitOfWork.ColaboradorRepository.AddAsync(colaboradorMapped);
+
+            await _unitOfWork.CommitAsync();
+            return;
+        }
+        catch
+        {
+            Notify("Não foi possível criar o colaborador.");
+            return;
+        }
+    }
+
+    public async Task CreateAsync(CreateColaboradorRequest request, Guid tenantId)
+    {
+        //if (!ExecuteValidation(new ColaboradorValidation(), colaborador)) return;
+        if (!EhSuperAdmin())
+        {
+            Notify("Você não tem permissão para adicionar.");
+            return;
+        }
+
+        if (EmailEmUso(request.Contato.Email))
+        {
+            Notify("E-mail em uso.");
+            return;
+        }
+        var colaboradorMapped = request.MapRequestToDomain();
+        colaboradorMapped.SetTenant(tenantId);
         try
         {
             await _unitOfWork.ColaboradorRepository.AddAsync(colaboradorMapped);

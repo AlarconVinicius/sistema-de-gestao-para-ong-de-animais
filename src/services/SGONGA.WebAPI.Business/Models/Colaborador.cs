@@ -54,5 +54,9 @@ public class Colaborador : Entity
     {
         Contato = contato;
     }
+    public void SetTenant(Guid tenantId)
+    {
+        TenantId = tenantId;
+    }
     #endregion
 }

@@ -51,7 +51,7 @@ public class ONGDbContext : DbContext
             var tenantProperty = entry.Properties.FirstOrDefault(p => p.Metadata.Name == "TenantId");
 
             //if (tenantProperty != null && tenantProperty.CurrentValue == null)
-            if (tenantProperty != null && entry.State == EntityState.Added)
+            if (tenantProperty != null && tenantProperty.CurrentValue == null && entry.State == EntityState.Added)
             {
                 if (_tenantId is null) 
                     throw new InvalidOperationException("TenantId cannot be null when saving entities with the TenantId property.");

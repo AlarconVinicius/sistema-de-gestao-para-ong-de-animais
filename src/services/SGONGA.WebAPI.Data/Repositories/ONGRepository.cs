@@ -45,4 +45,9 @@ public class ONGRepository : Repository<ONG>, IONGRepository
             Query = query
         };
     }
+
+    public override async Task<IEnumerable<ONG>> SearchAsync(Expression<Func<ONG, bool>> predicate)
+    {
+        return await DbSet.AsNoTracking().IgnoreQueryFilters().Where(predicate).ToListAsync();
+    }
 }

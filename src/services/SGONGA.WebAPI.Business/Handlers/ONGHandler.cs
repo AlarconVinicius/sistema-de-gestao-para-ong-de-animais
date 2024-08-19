@@ -13,10 +13,12 @@ namespace SGONGA.WebAPI.Business.Handlers;
 public class ONGHandler : BaseHandler, IONGHandler
 {
     public readonly IUnitOfWork _unitOfWork;
+    public readonly SolicitacaoCadastroProvider _solicitacaoCadastroProvider;
 
-    public ONGHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork unitOfWork) : base(notifier, appUser)
+    public ONGHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork unitOfWork, SolicitacaoCadastroProvider solicitacaoCadastroProvider) : base(notifier, appUser)
     {
         _unitOfWork = unitOfWork;
+        _solicitacaoCadastroProvider = solicitacaoCadastroProvider;
     }
 
     public async Task<ONGResponse> GetByIdAsync(GetONGByIdRequest request)
@@ -93,6 +95,7 @@ public class ONGHandler : BaseHandler, IONGHandler
             await _unitOfWork.ONGRepository.AddAsync(ongMapped);
 
             await _unitOfWork.CommitAsync();
+            _solicitacaoCadastroProvider.OngId = ongMapped.Id;
             return;
         }
         catch
