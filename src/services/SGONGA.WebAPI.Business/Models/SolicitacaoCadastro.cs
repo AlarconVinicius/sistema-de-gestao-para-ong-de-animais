@@ -15,10 +15,11 @@ public class SolicitacaoCadastro : Entity
     public string DocumentoResponsavel { get; private set; } = string.Empty;
     public Contato ContatoResponsavel { get; private set; } = null!;
     public DateTime DataNascimentoResponsavel { get; private set; }
+    public EStatus Status { get; private set; }
 
     public SolicitacaoCadastro() { }
 
-    public SolicitacaoCadastro(Guid idOng, string nomeOng, string instagramOng, string documentoOng, Contato contatoOng, Endereco enderecoOng, string? chavePixOng, Guid idResponsavel, string nomeResponsavel, string documentoResponsavel, Contato contatoResponsavel, DateTime dataNascimentoResponsavel)
+    public SolicitacaoCadastro(Guid idOng, string nomeOng, string instagramOng, string documentoOng, Contato contatoOng, Endereco enderecoOng, string? chavePixOng, Guid idResponsavel, string nomeResponsavel, string documentoResponsavel, Contato contatoResponsavel, DateTime dataNascimentoResponsavel, EStatus status = EStatus.Pendente)
     {
         IdOng = idOng;
         NomeOng = nomeOng;
@@ -31,6 +32,7 @@ public class SolicitacaoCadastro : Entity
         DocumentoResponsavel = documentoResponsavel;
         ContatoResponsavel = contatoResponsavel;
         DataNascimentoResponsavel = dataNascimentoResponsavel;
+        Status = status;
     }
 
     public string GeneratePassword()
@@ -47,6 +49,10 @@ public class SolicitacaoCadastro : Entity
         return senhaGerada;
     }
 
+    public void SetStatus(EStatus status)
+    {
+        Status = status;
+    }
 }
 
 public sealed class SolicitacaoCadastroProvider
