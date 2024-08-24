@@ -31,5 +31,6 @@ if (app.Environment.IsDevelopment())
 app.UseApiConfig(app.Environment);
 
 app.CheckAndApplyDatabaseMigrations(app.Services);
+app.RunSeeds(app.Services);
 
 app.Run();

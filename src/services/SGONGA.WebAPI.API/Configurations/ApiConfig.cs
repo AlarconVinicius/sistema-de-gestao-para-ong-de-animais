@@ -3,7 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using SGONGA.Core.Configurations;
 using SGONGA.WebAPI.API.Middlewares;
 using SGONGA.WebAPI.Data.Context;
+using SGONGA.WebAPI.Data.Seed;
 using SGONGA.WebAPI.Identity.Context;
+using SGONGA.WebAPI.Identity.Seed;
 
 namespace SGONGA.WebAPI.API.Configurations;
 public static class ApiConfig
@@ -70,6 +72,13 @@ public static class ApiConfig
         {
             emsDbContext.Database.Migrate();
         }
+    }
+
+    public static void RunSeeds(this IApplicationBuilder app, IServiceProvider serviceProvider)
+    {
+        SeedONGData.SeedONGAndColaborador(serviceProvider);
+
+        SeedIdentityDataAsync.SeedIdentityAsync(serviceProvider).GetAwaiter().GetResult();
     }
 
 
