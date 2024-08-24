@@ -1,6 +1,5 @@
 ﻿using SGONGA.WebAPI.Business.Requests.Shared;
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace SGONGA.WebAPI.Business.Responses;
 

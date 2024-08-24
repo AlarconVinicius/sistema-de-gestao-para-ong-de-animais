@@ -6,6 +6,9 @@ namespace SGONGA.WebAPI.Business.Requests;
 
 public class CreateONGRequest : Request
 {
+    [DisplayName("Id")]
+    public Guid Id { get; set; } = Guid.NewGuid();
+
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
     [DisplayName("Nome")]
@@ -31,8 +34,9 @@ public class CreateONGRequest : Request
 
     public CreateONGRequest() { }
 
-    public CreateONGRequest(string nome, string instagram, string documento, string? chavePix, ContatoRequest contato, EnderecoRequest endereco)
+    public CreateONGRequest(Guid id, string nome, string instagram, string documento, string? chavePix, ContatoRequest contato, EnderecoRequest endereco)
     {
+        Id = id;
         Nome = nome;
         Instagram = instagram;
         Documento = documento;

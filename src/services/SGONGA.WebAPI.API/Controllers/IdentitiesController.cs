@@ -35,21 +35,6 @@ public class IdentitiesController : ApiController
         return IsOperationValid() ? ResponseOk(response) : ResponseBadRequest();
     }
 
-    [AllowAnonymous]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpPost("solicitar-registro")]
-    public async Task<IActionResult> Create(RequestCreateUserRequest request)
-    {
-        if (!ModelState.IsValid)
-        {
-            return ResponseBadRequest(ModelState);
-        }
-        //var response = await _identityHandler.CreateAsync(request);
-
-        return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
-    }
-
     [ClaimsAuthorize("Permissions", "SuperAdmin")]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]

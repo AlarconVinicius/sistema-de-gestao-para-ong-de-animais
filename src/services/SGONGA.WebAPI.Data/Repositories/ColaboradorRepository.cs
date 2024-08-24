@@ -2,6 +2,7 @@
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Data.Context;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace SGONGA.WebAPI.Data.Repositories;
@@ -44,5 +45,10 @@ public class ColaboradorRepository : Repository<Colaborador>, IColaboradorReposi
             PageSize = pageSize,
             Query = query
         };
+    }
+
+    public async Task<IEnumerable<Colaborador>> SearchWithoutTenantAsync(Expression<Func<Colaborador, bool>> predicate)
+    {
+        return await DbSet.AsNoTracking().IgnoreQueryFilters().Where(predicate).ToListAsync();
     }
 }
