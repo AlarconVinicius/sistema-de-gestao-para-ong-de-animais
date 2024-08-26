@@ -28,6 +28,7 @@ public class SolicitacaoCadastro : Entity
         ContatoOng = contatoOng;
         EnderecoOng = enderecoOng;
         ChavePixOng = chavePixOng;
+        IdResponsavel = idResponsavel;
         NomeResponsavel = nomeResponsavel;
         DocumentoResponsavel = documentoResponsavel;
         ContatoResponsavel = contatoResponsavel;

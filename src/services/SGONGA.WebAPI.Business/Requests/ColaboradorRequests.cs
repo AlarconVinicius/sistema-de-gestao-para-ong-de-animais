@@ -10,6 +10,9 @@ public class CreateColaboradorRequest : Request
     [DisplayName("Id")]
     public Guid Id { get; set; } = Guid.NewGuid();
 
+    [DisplayName("Tenant Id")]
+    public Guid TenantId { get; set; } = Guid.Empty;
+
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
     [DisplayName("Nome")]
@@ -28,9 +31,10 @@ public class CreateColaboradorRequest : Request
 
     public CreateColaboradorRequest() { }
 
-    public CreateColaboradorRequest(Guid id, string nome, string documento, DateTime dataNascimento, ContatoRequest contato)
+    public CreateColaboradorRequest(Guid id, Guid tenantId, string nome, string documento, DateTime dataNascimento, ContatoRequest contato)
     {
         Id = id;
+        TenantId = tenantId;
         Nome = nome;
         Documento = documento;
         DataNascimento = dataNascimento;

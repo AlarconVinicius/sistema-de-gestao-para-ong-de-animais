@@ -83,37 +83,6 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
         }
     }
 
-    public async Task CreateAsync(CreateColaboradorRequest request, Guid tenantId)
-    {
-        //if (!ExecuteValidation(new ColaboradorValidation(), colaborador)) return;
-        if (!EhSuperAdmin())
-        {
-            Notify("Você não tem permissão para adicionar.");
-            return;
-        }
-
-        if (EmailEmUso(request.Contato.Email))
-        {
-            Notify("E-mail em uso.");
-            return;
-        }
-        var colaboradorMapped = request.MapRequestToDomain();
-        colaboradorMapped.SetTenant(tenantId);
-        try
-        {
-            await _unitOfWork.ColaboradorRepository.AddAsync(colaboradorMapped);
-
-            await _unitOfWork.CommitAsync();
-            _solicitacaoCadastroProvider.ColaboradorId = colaboradorMapped.Id;
-            return;
-        }
-        catch
-        {
-            Notify("Não foi possível criar o colaborador.");
-            return;
-        }
-    }
-
     public async Task UpdateAsync(UpdateColaboradorRequest request)
     {
         //if (!ExecuteValidation(new ColaboradorValidation(), colaborador)) return;

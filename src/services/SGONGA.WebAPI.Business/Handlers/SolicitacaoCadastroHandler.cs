@@ -29,7 +29,7 @@ public class SolicitacaoCadastroHandler : BaseHandler, ISolicitacaoCadastroHandl
     {
         try
         {
-            if (SolicitacaoCadastroExiste(request.Id))
+            if (!SolicitacaoCadastroExiste(request.Id))
             {
                 Notify("Não foi possível encontrar a solicitação de cadastro.");
                 return null!;
@@ -102,7 +102,7 @@ public class SolicitacaoCadastroHandler : BaseHandler, ISolicitacaoCadastroHandl
             Notify("Você não tem permissão para atualizar o status da solicitação de cadastro..");
             return;
         }
-        if(SolicitacaoCadastroExiste(request.Id))
+        if(!SolicitacaoCadastroExiste(request.Id))
         {
             Notify("Não foi possível encontrar a solicitação de cadastro.");
             return;
@@ -137,7 +137,7 @@ public class SolicitacaoCadastroHandler : BaseHandler, ISolicitacaoCadastroHandl
             };
 
             //Cadastrar Colaborador
-            await _colaboradorHandler.CreateAsync(new CreateColaboradorRequest(colaboradorId, request.Responsavel.Nome, request.Responsavel.Documento, request.Responsavel.DataNascimento, request.Responsavel.Contato), ongId);
+            await _colaboradorHandler.CreateAsync(new CreateColaboradorRequest(colaboradorId, ongId, request.Responsavel.Nome, request.Responsavel.Documento, request.Responsavel.DataNascimento, request.Responsavel.Contato));
             if (!IsOperationValid())
             {
                 await _ongHandler.DeleteAsync(new DeleteONGRequest(ongId));

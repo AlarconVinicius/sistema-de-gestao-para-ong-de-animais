@@ -1,4 +1,5 @@
-﻿using SGONGA.WebAPI.Business.Requests;
+﻿using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Requests;
 using System.ComponentModel;
 
 namespace SGONGA.WebAPI.Business.Responses;
@@ -10,6 +11,8 @@ public class SolicitacaoCadastroResponse : Response
 
     public CreateColaboradorRequest Responsavel { get; set; } = null!;
 
+    public EStatus Status { get; set; }
+
     [DisplayName("Data de Cadastro")]
     public DateTime CreatedAt { get; set; }
 
@@ -19,11 +22,12 @@ public class SolicitacaoCadastroResponse : Response
 
     public SolicitacaoCadastroResponse() { }
 
-    public SolicitacaoCadastroResponse(Guid id, CreateONGRequest ong, CreateColaboradorRequest responsavel, DateTime createdAt, DateTime updatedAt)
+    public SolicitacaoCadastroResponse(Guid id, CreateONGRequest ong, CreateColaboradorRequest responsavel, EStatus status, DateTime createdAt, DateTime updatedAt)
     {
         Id = id;
         ONG = ong;
         Responsavel = responsavel;
+        Status = status;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }

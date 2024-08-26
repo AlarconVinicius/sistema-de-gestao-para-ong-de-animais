@@ -12,6 +12,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<IONGHandler, ONGHandler>();
         services.AddScoped<IAnimalHandler, AnimalHandler>();
         services.AddScoped<IColaboradorHandler, ColaboradorHandler>();
+        services.AddScoped<ISolicitacaoCadastroHandler, SolicitacaoCadastroHandler>();
         services.AddScoped<SolicitacaoCadastroProvider>();
 
         return services;

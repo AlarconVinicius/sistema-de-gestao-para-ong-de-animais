@@ -18,8 +18,8 @@ public static class SolicitacaoCadastroMappings
         CreateONGRequest ong = new CreateONGRequest(request.IdOng, request.NomeOng, request.InstagramOng, request.DocumentoOng, request.ChavePixOng, contatoOng, enderecoOng);
 
         ContatoRequest contatoResponsavel = new ContatoRequest(request.ContatoResponsavel.Telefone.Numero, request.ContatoOng.Email.Endereco);
-        CreateColaboradorRequest colaborador = new CreateColaboradorRequest(request.IdResponsavel, request.NomeResponsavel, request.DocumentoResponsavel, request.DataNascimentoResponsavel, contatoResponsavel);
-        return new SolicitacaoCadastroResponse(request.Id, ong, colaborador, request.CreatedAt, request.UpdatedAt);
+        CreateColaboradorRequest colaborador = new CreateColaboradorRequest(request.IdResponsavel, request.IdOng, request.NomeResponsavel, request.DocumentoResponsavel, request.DataNascimentoResponsavel, contatoResponsavel);
+        return new SolicitacaoCadastroResponse(request.Id, ong, colaborador, request.Status, request.CreatedAt, request.UpdatedAt);
     }
 
     public static PagedResponse<SolicitacaoCadastroResponse> MapDomainToResponse(this PagedResult<SolicitacaoCadastro> request)

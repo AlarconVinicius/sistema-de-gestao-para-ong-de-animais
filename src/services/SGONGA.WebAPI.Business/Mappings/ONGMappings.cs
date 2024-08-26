@@ -33,6 +33,6 @@ public static class ONGMappings
             return null!;
         }
 
-        return new ONG(request.Nome, request.Instagram, request.Documento, request.Contato.MapRequestToDomain(), request.Endereco.MapRequestToDomain(), request.ChavePix);
+        return new ONG(request.Id, request.Nome, request.Instagram, request.Documento, request.Contato.MapRequestToDomain(), request.Endereco.MapRequestToDomain(), request.ChavePix);
     }
 }

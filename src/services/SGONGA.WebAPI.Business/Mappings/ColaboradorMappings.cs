@@ -33,6 +33,6 @@ public static class ColaboradorMappings
             return null!;
         }
 
-        return new Colaborador(request.Id, request.Nome, request.Documento, request.Contato.MapRequestToDomain(), request.DataNascimento);
+        return new Colaborador(request.Id, request.TenantId, request.Nome, request.Documento, request.Contato.MapRequestToDomain(), request.DataNascimento);
     }
 }

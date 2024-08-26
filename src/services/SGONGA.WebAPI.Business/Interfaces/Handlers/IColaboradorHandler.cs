@@ -6,7 +6,6 @@ namespace SGONGA.WebAPI.Business.Interfaces.Handlers;
 public interface IColaboradorHandler
 {
     Task CreateAsync(CreateColaboradorRequest request);
-    Task CreateAsync(CreateColaboradorRequest request, Guid tenantId);
     Task UpdateAsync(UpdateColaboradorRequest request);
     Task DeleteAsync(DeleteColaboradorRequest request);
     Task<ColaboradorResponse> GetByIdAsync(GetColaboradorByIdRequest request);
