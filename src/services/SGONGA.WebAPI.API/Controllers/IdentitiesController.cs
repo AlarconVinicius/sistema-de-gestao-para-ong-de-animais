@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SGONGA.Core.Configurations;
-using SGONGA.Core.Extensions;
 using SGONGA.Core.Notifications;
 using SGONGA.WebAPI.API.Controllers.Shared;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
@@ -35,20 +33,20 @@ public class IdentitiesController : ApiController
         return IsOperationValid() ? ResponseOk(response) : ResponseBadRequest();
     }
 
-    [ClaimsAuthorize("Permissions", "SuperAdmin")]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpPost("cadastrar")]
-    public async Task<IActionResult> Create(CreateUserRequest request)
-    {
-        if (!ModelState.IsValid)
-        {
-            return ResponseBadRequest(ModelState);
-        }
-        var response = await _identityHandler.CreateAsync(request);
+    //[ClaimsAuthorize("Permissions", "SuperAdmin")]
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    //[HttpPost("cadastrar")]
+    //public async Task<IActionResult> Create(CreateUserRequest request)
+    //{
+    //    if (!ModelState.IsValid)
+    //    {
+    //        return ResponseBadRequest(ModelState);
+    //    }
+    //    var response = await _identityHandler.CreateAsync(request);
 
-        return IsOperationValid() ? ResponseOk(response) : ResponseBadRequest();
-    }
+    //    return IsOperationValid() ? ResponseOk(response) : ResponseBadRequest();
+    //}
 
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
@@ -78,48 +76,48 @@ public class IdentitiesController : ApiController
         return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
     }
 
-    [ClaimsAuthorize("Permissions", "SuperAdmin")]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
-    {
-        DeleteUserRequest request = new(id);
-        if (!ModelState.IsValid)
-        {
-            return ResponseBadRequest(ModelState);
-        }
-        await _identityHandler.DeleteAsync(request);
+    //[ClaimsAuthorize("Permissions", "SuperAdmin")]
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    //[HttpDelete("{id:guid}")]
+    //public async Task<IActionResult> Delete(Guid id)
+    //{
+    //    DeleteUserRequest request = new(id);
+    //    if (!ModelState.IsValid)
+    //    {
+    //        return ResponseBadRequest(ModelState);
+    //    }
+    //    await _identityHandler.DeleteAsync(request);
 
-        return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
-    }
+    //    return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
+    //}
 
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(Guid id)
-    {
-        GetUserByIdRequest request = new(id);
-        var result = await _identityHandler.GetByIdAsync(request);
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    //[HttpGet("{id:guid}")]
+    //public async Task<IActionResult> GetById(Guid id)
+    //{
+    //    GetUserByIdRequest request = new(id);
+    //    var result = await _identityHandler.GetByIdAsync(request);
 
-        return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
+    //    return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
 
-    }
+    //}
 
-    [ClaimsAuthorize("Permissions", "SuperAdmin")]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!)
-    {
-        GetAllUsersRequest request = new()
-        {
-            PageSize = ps,
-            PageNumber = page,
-            Query = q
-        };
-        var result = await _identityHandler.GetAllAsync(request);
+    //[ClaimsAuthorize("Permissions", "SuperAdmin")]
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    //[HttpGet]
+    //public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!)
+    //{
+    //    GetAllUsersRequest request = new()
+    //    {
+    //        PageSize = ps,
+    //        PageNumber = page,
+    //        Query = q
+    //    };
+    //    var result = await _identityHandler.GetAllAsync(request);
 
-        return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
-    }
+    //    return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
+    //}
 }

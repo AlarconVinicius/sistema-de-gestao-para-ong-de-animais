@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SGONGA.Core.Configurations;
+using SGONGA.Core.Extensions;
 using SGONGA.Core.Notifications;
 using SGONGA.WebAPI.API.Controllers.Shared;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
@@ -36,6 +37,7 @@ public class SolicitacoesCadastroController : ApiController
     #endregion
 
     #region Admin Methods
+    [ClaimsAuthorize("Permissions", "SuperAdmin")]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
     [HttpGet("{id:guid}")]
@@ -48,6 +50,7 @@ public class SolicitacoesCadastroController : ApiController
 
     }
 
+    [ClaimsAuthorize("Permissions", "SuperAdmin")]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
     [HttpGet]
@@ -64,6 +67,7 @@ public class SolicitacoesCadastroController : ApiController
         return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
     }
 
+    [ClaimsAuthorize("Permissions", "SuperAdmin")]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
     [HttpPut("{id:guid}")]

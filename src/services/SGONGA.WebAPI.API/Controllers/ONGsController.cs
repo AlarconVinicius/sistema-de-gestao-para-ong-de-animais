@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SGONGA.Core.Configurations;
+using SGONGA.Core.Extensions;
 using SGONGA.Core.Notifications;
 using SGONGA.WebAPI.API.Controllers.Shared;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Requests;
-using SGONGA.Core.Extensions;
 
 namespace SGONGA.WebAPI.API.Controllers;
 
@@ -65,6 +65,7 @@ public class ONGsController : ApiController
 
     }
 
+    [ClaimsAuthorize("Permissions", "SuperAdmin")]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
     [HttpGet]
@@ -81,20 +82,21 @@ public class ONGsController : ApiController
 
         return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
     }
-    [ClaimsAuthorize("Permissions", "SuperAdmin")]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpPost]
-    public async Task<IActionResult> Post(CreateONGRequest request)
-    {
-        if (!ModelState.IsValid)
-        {
-            return ResponseBadRequest(ModelState);
-        }
-        await _ongHandler.CreateAsync(request);
 
-        return IsOperationValid() ? ResponseCreated() : ResponseBadRequest();
-    }
+    //[ClaimsAuthorize("Permissions", "SuperAdmin")]
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status201Created)]
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    //[HttpPost]
+    //public async Task<IActionResult> Post(CreateONGRequest request)
+    //{
+    //    if (!ModelState.IsValid)
+    //    {
+    //        return ResponseBadRequest(ModelState);
+    //    }
+    //    await _ongHandler.CreateAsync(request);
+
+    //    return IsOperationValid() ? ResponseCreated() : ResponseBadRequest();
+    //}
 
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]

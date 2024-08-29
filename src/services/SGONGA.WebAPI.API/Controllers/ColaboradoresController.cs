@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SGONGA.Core.Configurations;
-using SGONGA.Core.Extensions;
 using SGONGA.Core.Notifications;
 using SGONGA.WebAPI.API.Controllers.Shared;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
@@ -32,36 +30,36 @@ public class ColaboradoresController : ApiController
 
     }
 
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!)
-    {
-        GetAllColaboradoresRequest request = new()
-        {
-            PageSize = ps,
-            PageNumber = page,
-            Query = q
-        };
-        var result = await _colaboradorHandler.GetAllAsync(request);
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    //[HttpGet]
+    //public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!)
+    //{
+    //    GetAllColaboradoresRequest request = new()
+    //    {
+    //        PageSize = ps,
+    //        PageNumber = page,
+    //        Query = q
+    //    };
+    //    var result = await _colaboradorHandler.GetAllAsync(request);
 
-        return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
-    }
+    //    return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
+    //}
 
-    [ClaimsAuthorize("Permissions", "SuperAdmin")]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpPost]
-    public async Task<IActionResult> Post(CreateColaboradorRequest request)
-    {
-        if (!ModelState.IsValid)
-        {
-            return ResponseBadRequest(ModelState);
-        }
-        await _colaboradorHandler.CreateAsync(request);
+    //[ClaimsAuthorize("Permissions", "SuperAdmin")]
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status201Created)]
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    //[HttpPost]
+    //public async Task<IActionResult> Post(CreateColaboradorRequest request)
+    //{
+    //    if (!ModelState.IsValid)
+    //    {
+    //        return ResponseBadRequest(ModelState);
+    //    }
+    //    await _colaboradorHandler.CreateAsync(request);
 
-        return IsOperationValid() ? ResponseOk(request) : ResponseBadRequest();
-    }
+    //    return IsOperationValid() ? ResponseOk(request) : ResponseBadRequest();
+    //}
 
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
@@ -79,15 +77,15 @@ public class ColaboradoresController : ApiController
         return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
     }
 
-    [ClaimsAuthorize("Permissions", "SuperAdmin")]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
-    {
-        await _colaboradorHandler.DeleteAsync(new DeleteColaboradorRequest(id));
+    //[ClaimsAuthorize("Permissions", "SuperAdmin")]
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
+    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    //[HttpDelete("{id:guid}")]
+    //public async Task<IActionResult> Delete(Guid id)
+    //{
+    //    await _colaboradorHandler.DeleteAsync(new DeleteColaboradorRequest(id));
 
-        return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
-    }
+    //    return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
+    //}
 #endregion
 }
