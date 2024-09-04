@@ -89,10 +89,12 @@ public static class ApiConfig
             options.AddPolicy(ApiConfigurationDefault.CorsPolicyName,
                 policy =>
                     policy
-                        .WithOrigins(ConfigurationDefault.ApiUrl, ConfigurationDefault.SiteUrl, ConfigurationDefault.PanelUrl)
+                        //.WithOrigins(ConfigurationDefault.ApiUrl, ConfigurationDefault.SiteUrl, ConfigurationDefault.PanelUrl)
+                        .AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader()
-                        .AllowCredentials());
+                        //.AllowCredentials()
+                        );
         });
         return services;
     }
