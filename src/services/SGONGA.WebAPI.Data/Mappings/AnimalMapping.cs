@@ -4,7 +4,7 @@ using SGONGA.WebAPI.Business.Models;
 
 namespace SGONGA.WebAPI.Data.Mappings;
 
-public class AnimalMapping :IEntityTypeConfiguration<Animal>
+public class AnimalMapping : IEntityTypeConfiguration<Animal>
 {
     public void Configure(EntityTypeBuilder<Animal> builder)
     {
@@ -12,46 +12,69 @@ public class AnimalMapping :IEntityTypeConfiguration<Animal>
 
         builder.HasKey(a => a.Id);
 
-        builder.Property(p => p.CreatedAt).IsRequired();
-        builder.Property(p => p.UpdatedAt).IsRequired();
+        builder.Property(a => a.CreatedAt)
+            .IsRequired();
+
+        builder.Property(a => a.UpdatedAt)
+            .IsRequired();
 
         builder.Property(a => a.TenantId)
             .IsRequired();
 
         builder.Property(a => a.Nome)
             .IsRequired()
-            .HasMaxLength(100);
+            .HasMaxLength(100)
+            .HasColumnType("varchar(100)");
 
         builder.Property(a => a.Especie)
             .IsRequired()
-            .HasMaxLength(50);
+            .HasMaxLength(50)
+            .HasColumnType("varchar(50)");
 
         builder.Property(a => a.Raca)
             .IsRequired()
-            .HasMaxLength(50);
+            .HasMaxLength(50)
+            .HasColumnType("varchar(50)");
+
+        builder.Property(a => a.Sexo)
+            .IsRequired()
+            .HasColumnType("bit");
+
+        builder.Property(a => a.Castrado)
+            .IsRequired()
+            .HasColumnType("bit");
 
         builder.Property(a => a.Cor)
             .IsRequired()
-            .HasMaxLength(50);
+            .HasMaxLength(50)
+            .HasColumnType("varchar(50)");
 
         builder.Property(a => a.Porte)
             .IsRequired()
-            .HasMaxLength(50);
+            .HasMaxLength(50)
+            .HasColumnType("varchar(50)");
+
+        builder.Property(a => a.Idade)
+            .IsRequired()
+            .HasMaxLength(100)
+            .HasColumnType("varchar(100)");
 
         builder.Property(a => a.Descricao)
             .IsRequired()
-            .HasMaxLength(500);
+            .HasMaxLength(500)
+            .HasColumnType("varchar(500)");
 
         builder.Property(a => a.Observacao)
-            .HasMaxLength(500);
+            .HasMaxLength(500)
+            .HasColumnType("varchar(500)");
 
         builder.Property(a => a.ChavePix)
-            .HasMaxLength(100);
+            .HasMaxLength(100)
+            .HasColumnType("varchar(100)");
 
-        builder.Property(a => a.Fotos)
-            .HasConversion(
-                v => string.Join(';', v),
-                v => v.Split(';', StringSplitOptions.RemoveEmptyEntries).ToList());
+        builder.Property(a => a.Foto)
+            .IsRequired()
+            .HasColumnType("text");
 
         builder.HasOne(a => a.ONG)
             .WithMany(o => o.Animais)

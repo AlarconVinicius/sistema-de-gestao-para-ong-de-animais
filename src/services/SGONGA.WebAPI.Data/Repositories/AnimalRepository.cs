@@ -15,6 +15,7 @@ public class AnimalRepository : Repository<Animal>, IAnimalRepository
     public async Task<Animal> GetByIdWithoutTenantAsync(Guid id)
     {
         return await DbSet.IgnoreQueryFilters()
+                          .Include(c => c.ONG)
                           .FirstOrDefaultAsync(c => c.Id == id) ?? null!;
     }
 
@@ -22,7 +23,7 @@ public class AnimalRepository : Repository<Animal>, IAnimalRepository
     {
         var result = new PagedResult<Animal>();
 
-        var queryable = DbSet.IgnoreQueryFilters().AsQueryable();
+        var queryable = DbSet.IgnoreQueryFilters().Include(c => c.ONG).AsQueryable();
 
         if (predicate != null)
         {

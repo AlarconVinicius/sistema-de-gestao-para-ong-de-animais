@@ -22,6 +22,14 @@ public class CreateAnimalRequest : Request
     public string Raca { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [DisplayName("Sexo")]
+    public bool Sexo { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [DisplayName("Castrado")]
+    public bool Castrado { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
     [DisplayName("Cor")]
     public string Cor { get; set; } = string.Empty;
@@ -30,6 +38,11 @@ public class CreateAnimalRequest : Request
     [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
     [DisplayName("Porte")]
     public string Porte { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
+    [DisplayName("Idade")]
+    public string Idade { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [StringLength(500, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
@@ -46,22 +59,25 @@ public class CreateAnimalRequest : Request
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [MinLength(1, ErrorMessage = "O campo {0} deve ter no mínimo {1} fotos.")]
-    [DisplayName("Fotos")]
-    public List<string> Fotos { get; set; } = new List<string>();
+    [DisplayName("Foto")]
+    public string Foto { get; set; } = string.Empty;
 
     public CreateAnimalRequest() { }
 
-    public CreateAnimalRequest(string nome, string especie, string raca, string cor, string porte, string descricao, string observacao, List<string> fotos, string chavePix = "")
+    public CreateAnimalRequest(string nome, string especie, string raca, bool sexo, bool castrado, string cor, string porte, string idade, string descricao, string observacao, string foto, string chavePix = "")
     {
         Nome = nome;
         Especie = especie;
         Raca = raca;
+        Sexo = sexo;
+        Castrado = castrado;
         Cor = cor;
         Porte = porte;
+        Idade = idade;
         Descricao = descricao;
         Observacao = observacao;
         ChavePix = chavePix;
-        Fotos = fotos;
+        Foto = foto;
     }
 }
 
@@ -87,6 +103,14 @@ public class UpdateAnimalRequest : Request
     public string Raca { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [DisplayName("Sexo")]
+    public bool Sexo { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [DisplayName("Castrado")]
+    public bool Castrado { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
     [DisplayName("Cor")]
     public string Cor { get; set; } = string.Empty;
@@ -95,6 +119,11 @@ public class UpdateAnimalRequest : Request
     [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
     [DisplayName("Porte")]
     public string Porte { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
+    [DisplayName("Idade")]
+    public string Idade { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [StringLength(500, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
@@ -112,23 +141,26 @@ public class UpdateAnimalRequest : Request
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [MinLength(1, ErrorMessage = "O campo {0} deve ter no mínimo {1} fotos.")]
-    [DisplayName("Fotos")]
-    public List<string> Fotos { get; set; } = new List<string>();
+    [DisplayName("Foto")]
+    public string Foto { get; set; } = string.Empty;
 
     public UpdateAnimalRequest() { }
 
-    public UpdateAnimalRequest(Guid id, string nome, string especie, string raca, string cor, string porte, string descricao, string observacao, List<string> fotos, string chavePix = "")
+    public UpdateAnimalRequest(Guid id, string nome, string especie, string raca, bool sexo, bool castrado, string cor, string porte, string idade, string descricao, string observacao, string foto, string chavePix = "")
     {
         Id = id;
         Nome = nome;
         Especie = especie;
         Raca = raca;
+        Sexo = sexo;
+        Castrado = castrado;
         Cor = cor;
         Porte = porte;
+        Idade = idade;
         Descricao = descricao;
         Observacao = observacao;
         ChavePix = chavePix;
-        Fotos = fotos;
+        Foto = foto;
     }
 }
 

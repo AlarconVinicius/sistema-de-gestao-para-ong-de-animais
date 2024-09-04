@@ -106,7 +106,7 @@ public class AnimalHandler : BaseHandler, IAnimalHandler
             animalDb.SetObservacao(request.Observacao);
             animalDb.SetChavePix(request.ChavePix);
             animalDb.SetPorte(request.Porte);
-            animalDb.SetFotos(request.Fotos);
+            animalDb.SetFoto(request.Foto);
 
             _unitOfWork.AnimalRepository.UpdateAsync(animalDb);
 

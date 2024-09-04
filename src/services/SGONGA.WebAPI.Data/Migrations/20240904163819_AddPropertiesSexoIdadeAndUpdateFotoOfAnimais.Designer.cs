@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SGONGA.WebAPI.Data.Context;
 
@@ -11,9 +12,11 @@ using SGONGA.WebAPI.Data.Context;
 namespace SGONGA.WebAPI.Data.Migrations
 {
     [DbContext(typeof(ONGDbContext))]
-    partial class ONGDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240904163819_AddPropertiesSexoIdadeAndUpdateFotoOfAnimais")]
+    partial class AddPropertiesSexoIdadeAndUpdateFotoOfAnimais
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
