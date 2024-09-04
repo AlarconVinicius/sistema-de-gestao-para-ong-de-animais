@@ -50,9 +50,9 @@ public class ONGDbContext : DbContext
         foreach (var entry in ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Modified))
         {
             var tenantProperty = entry.Properties.FirstOrDefault(p => p.Metadata.Name == "TenantId");
-
+            var tenantEmpty = Guid.Empty;
             //if (tenantProperty != null && tenantProperty.CurrentValue == null)
-            if (tenantProperty != null && tenantProperty.CurrentValue == null && entry.State == EntityState.Added)
+            if (tenantProperty != null && tenantProperty.CurrentValue!.ToString() == tenantEmpty!.ToString() && entry.State == EntityState.Added)
             {
                 if (_tenantId is null) 
                     throw new InvalidOperationException("TenantId cannot be null when saving entities with the TenantId property.");

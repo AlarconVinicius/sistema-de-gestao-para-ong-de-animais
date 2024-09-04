@@ -15,7 +15,7 @@ public class TenantIdentifierMiddleware
 
     public async Task InvokeAsync(HttpContext context, TenantProvider tenantProvider)
     {
-        StringValues tenantIdValues = context.Request.Headers["tenantId"];
+        StringValues tenantIdValues = context.Request.Headers["TenantId"];
 
         tenantProvider.TenantId = tenantIdValues.Count > 0
             ? tenantIdValues[0].TryParseGuid()
