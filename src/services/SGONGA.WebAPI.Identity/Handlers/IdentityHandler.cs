@@ -55,12 +55,17 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
 
     public async Task<LoginUserResponse> CreateAsync(CreateUserRequest request)
     {
+        if (!EhSuperAdmin())
+        {
+            Notify("Você não tem permissão para adicionar.");
+            return null!;
+        }
         if (request.Senha != request.ConfirmarSenha)
         {
             Notify("As senhas não conferem.");
             return null!;
         }
-        var employeeDb = await _colaboradorRepository.GetByIdAsync(request.Id);
+        var employeeDb = await _colaboradorRepository.GetByIdWithoutTenantAsync(request.Id);
         if (employeeDb is null)
         {
             Notify("Colaborador não encontrado.");
@@ -102,7 +107,7 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
             Notify("Usuário não encontrado.");
             return;
         }
-        userDb.UserName = request.NovoEmail;
+        userDb!.UserName = request.NovoEmail;
         userDb.NormalizedUserName = request.NovoEmail.ToUpper();
         userDb.Email = request.NovoEmail;
         userDb.NormalizedEmail = request.NovoEmail.ToUpper();
@@ -150,6 +155,11 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
 
     public async Task DeleteAsync(DeleteUserRequest request)
     {
+        if (!EhSuperAdmin())
+        {
+            Notify("Você não tem permissão para deletar.");
+            return;
+        }
         var userId = request.Id.ToString();
         var userDb = await _userManager.FindByIdAsync(userId);
         if (!await UserExists(userId))
@@ -201,6 +211,15 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
     public Task<PagedResponse<UserResponse>> GetAllAsync(GetAllUsersRequest request)
     {
         throw new NotImplementedException();
+    }
+
+    private bool EhSuperAdmin()
+    {
+        if (AppUser.HasClaim("Permissions", "SuperAdmin"))
+        {
+            return true;
+        }
+        return false;
     }
 
     #region IdentityHelpers

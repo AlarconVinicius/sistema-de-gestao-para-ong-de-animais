@@ -2,6 +2,8 @@
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Data.Context;
+using System.Linq;
+using System.Linq.Expressions;
 
 namespace SGONGA.WebAPI.Data.Repositories;
 
@@ -11,10 +13,42 @@ public class ColaboradorRepository : Repository<Colaborador>, IColaboradorReposi
     {
     }
 
-    public async Task<Colaborador> GetByIdAsync(Guid id, Guid tenantId)
+    public async Task<Colaborador> GetByIdWithoutTenantAsync(Guid id)
     {
-        if (tenantId == Guid.Empty) return null!;
+        return await DbSet.IgnoreQueryFilters()
+                          .FirstOrDefaultAsync(c => c.Id == id) ?? null!;
+    }
 
-        return await DbSet.FirstOrDefaultAsync(c => c.Id == id && c.TenantId == tenantId) ?? null!;
+    public async Task<PagedResult<Colaborador>> GetAllPagedWithoutTenantAsync(Expression<Func<Colaborador, bool>>? predicate = null, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false)
+    {
+        var result = new PagedResult<Colaborador>();
+
+        var queryable = DbSet.IgnoreQueryFilters().AsQueryable();
+
+        if (predicate != null)
+        {
+            queryable = queryable.Where(predicate);
+        }
+
+        result.TotalResults = await queryable.CountAsync();
+
+        if (!returnAll)
+        {
+            queryable = queryable.Skip((page - 1) * pageSize).Take(pageSize);
+        }
+
+        return new PagedResult<Colaborador>()
+        {
+            List = await queryable.ToListAsync(),
+            TotalResults = await queryable.CountAsync(),
+            PageIndex = page,
+            PageSize = pageSize,
+            Query = query
+        };
+    }
+
+    public async Task<IEnumerable<Colaborador>> SearchWithoutTenantAsync(Expression<Func<Colaborador, bool>> predicate)
+    {
+        return await DbSet.AsNoTracking().IgnoreQueryFilters().Where(predicate).ToListAsync();
     }
 }

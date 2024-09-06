@@ -12,8 +12,9 @@ public static class AnimalMappings
         {
             return null!;
         }
+        string endereco = $"{request.ONG!.Endereco.Cidade}, {request.ONG.Endereco.Estado}";
 
-        return new AnimalResponse(request.Id, request.TenantId, request.Nome, request.Especie, request.Raca, request.Cor, request.Porte, request.Descricao, request.Observacao, request.ChavePix, request.Fotos, request.CreatedAt, request.UpdatedAt);
+        return new AnimalResponse(request.Id, request.TenantId, request.Nome, request.Especie, request.Raca, request.Sexo, request.Castrado, request.Cor, request.Porte, request.Idade, request.ONG.Nome, endereco, request.Descricao, request.Observacao, request.ChavePix, request.Foto, request.CreatedAt, request.UpdatedAt);
     }
 
     public static Animal MapResponseToDomain(this AnimalResponse request)
@@ -23,7 +24,7 @@ public static class AnimalMappings
             return null!;
         }
 
-        return new Animal(request.Id, request.TenantId, request.Nome, request.Especie, request.Raca, request.Cor, request.Porte, request.Descricao, request.Observacao, request.Fotos, request.ChavePix);
+        return new Animal(request.Id, request.ONGId, request.Nome, request.Especie, request.Raca, request.Sexo, request.Castrado, request.Cor, request.Porte, request.Idade, request.Descricao, request.Observacao, request.Foto, request.ChavePix);
     }
 
     public static PagedResponse<AnimalResponse> MapDomainToResponse(this PagedResult<Animal> request)
@@ -43,6 +44,6 @@ public static class AnimalMappings
             return null!;
         }
 
-        return new Animal(request.TenantId, request.Nome, request.Especie, request.Raca, request.Cor, request.Porte, request.Descricao, request.Observacao, request.Fotos, request.ChavePix);
+        return new Animal(request.Nome, request.Especie, request.Raca, request.Sexo, request.Castrado, request.Cor, request.Porte, request.Idade, request.Descricao, request.Observacao, request.Foto, request.ChavePix);
     }
 }

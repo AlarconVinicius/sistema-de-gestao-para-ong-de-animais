@@ -3,6 +3,8 @@ using SGONGA.Core.User;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Mappings;
+using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Models.DomainObjects;
 using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
 
@@ -11,15 +13,16 @@ namespace SGONGA.WebAPI.Business.Handlers;
 public class ColaboradorHandler : BaseHandler, IColaboradorHandler
 {
     public readonly IUnitOfWork _unitOfWork;
+    public readonly SolicitacaoCadastroProvider _solicitacaoCadastroProvider;
 
-    public ColaboradorHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork unitOfWork) : base(notifier, appUser)
+    public ColaboradorHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork unitOfWork, SolicitacaoCadastroProvider solicitacaoCadastroProvider) : base(notifier, appUser)
     {
         _unitOfWork = unitOfWork;
+        _solicitacaoCadastroProvider = solicitacaoCadastroProvider;
     }
 
     public async Task<ColaboradorResponse> GetByIdAsync(GetColaboradorByIdRequest request)
     {
-        if (TenantIsEmpty()) return null!;
         try
         {
             if (!ColaboradorExiste(request.Id))
@@ -27,7 +30,7 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
                 Notify("Colaborador não encontrado.");
                 return null!;
             }
-            var colaborador = await _unitOfWork.ColaboradorRepository.GetByIdAsync(request.Id, TenantId);
+            var colaborador = await _unitOfWork.ColaboradorRepository.GetByIdAsync(request.Id);
 
             return colaborador.MapDomainToResponse();
         }
@@ -40,10 +43,9 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
 
     public async Task<PagedResponse<ColaboradorResponse>> GetAllAsync(GetAllColaboradoresRequest request)
     {
-        if (TenantIsEmpty()) return null!;
         try
         {
-            return (await _unitOfWork.ColaboradorRepository.GetAllPagedAsync(f => f.TenantId == TenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
+            return (await _unitOfWork.ColaboradorRepository.GetAllPagedAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
         }
         catch
         {
@@ -55,15 +57,17 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
     public async Task CreateAsync(CreateColaboradorRequest request)
     {
         //if (!ExecuteValidation(new ColaboradorValidation(), colaborador)) return;
+        if (!EhSuperAdmin())
+        {
+            Notify("Você não tem permissão para adicionar.");
+            return;
+        }
 
-        if (TenantIsEmpty()) return;
-
-        if (EmailEmUso(request.Email))
+        if (EmailEmUso(request.Contato.Email))
         {
             Notify("E-mail em uso.");
             return;
         }
-        request.TenantId = TenantId;
         var colaboradorMapped = request.MapRequestToDomain();
         try
         {
@@ -83,7 +87,11 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
     {
         //if (!ExecuteValidation(new ColaboradorValidation(), colaborador)) return;
 
-        if (TenantIsEmpty()) return;
+        if(AppUser.GetUserId() != request.Id)
+        {
+            Notify("Colaborador não encontrado.");
+            return;
+        }
 
         if (!ColaboradorExiste(request.Id))
         {
@@ -95,15 +103,23 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
 
         try
         {
-            if(request.Email != colaboradorDb.Email.Endereco)
+            string newEmail;
+
+            if (request.Contato.Email != colaboradorDb.Contato.Email.Endereco)
             {
-                if (EmailEmUso(request.Email))
+                if (EmailEmUso(request.Contato.Email))
                 {
                     Notify("E-mail em uso.");
                     return;
                 }
-                colaboradorDb.SetEmail(request.Email);
+                newEmail = colaboradorDb.Contato.Email.Endereco;
             }
+            else
+            {
+                newEmail = request.Contato.Email;
+            }
+            colaboradorDb.SetNome(request.Nome);
+            colaboradorDb.SetContato(new Contato(request.Contato.Telefone,newEmail));
 
             _unitOfWork.ColaboradorRepository.UpdateAsync(colaboradorDb);
 
@@ -119,11 +135,14 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
 
     public async Task DeleteAsync(DeleteColaboradorRequest request)
     {
-        if (TenantIsEmpty()) return;
-
+        if (!EhSuperAdmin())
+        {
+            Notify("Você não tem permissão para deletar.");
+            return;
+        }
         try
         {
-            if (!ColaboradorExiste(request.Id))
+            if (!_unitOfWork.ColaboradorRepository.SearchAsync(f => f.Id == request.Id).Result.Any())
             {
                 Notify("Colaborador não encontrado.");
                 return;
@@ -143,7 +162,7 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
 
     private bool ColaboradorExiste(Guid id)
     {
-        if (_unitOfWork.ColaboradorRepository.SearchAsync(f => f.Id == id && f.TenantId == TenantId).Result.Any())
+        if (_unitOfWork.ColaboradorRepository.SearchAsync(f => f.Id == id).Result.Any())
         {
             return true;
         };
@@ -152,10 +171,19 @@ public class ColaboradorHandler : BaseHandler, IColaboradorHandler
 
     private bool EmailEmUso(string email)
     {
-        if (_unitOfWork.ColaboradorRepository.SearchAsync(f => f.Email.Endereco == email).Result.Any())
+        if (_unitOfWork.ColaboradorRepository.SearchAsync(f => f.Contato.Email.Endereco == email).Result.Any())
         {
             return true;
         };
+        return false;
+    }
+
+    private bool EhSuperAdmin()
+    {
+        if (AppUser.HasClaim("Permissions", "SuperAdmin"))
+        {
+            return true;
+        }
         return false;
     }
 }

@@ -3,6 +3,8 @@ using SGONGA.Core.User;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Mappings;
+using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Models.DomainObjects;
 using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
 
@@ -11,22 +13,35 @@ namespace SGONGA.WebAPI.Business.Handlers;
 public class ONGHandler : BaseHandler, IONGHandler
 {
     public readonly IUnitOfWork _unitOfWork;
+    public readonly SolicitacaoCadastroProvider _solicitacaoCadastroProvider;
 
-    public ONGHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork unitOfWork) : base(notifier, appUser)
+    public ONGHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork unitOfWork, SolicitacaoCadastroProvider solicitacaoCadastroProvider) : base(notifier, appUser)
     {
         _unitOfWork = unitOfWork;
+        _solicitacaoCadastroProvider = solicitacaoCadastroProvider;
     }
 
     public async Task<ONGResponse> GetByIdAsync(GetONGByIdRequest request)
     {
         try
         {
+            ONG ong;
+
             if (!ONGExiste(request.Id))
             {
                 Notify("ONG não encontrada.");
                 return null!;
             }
-            var ong = await _unitOfWork.ONGRepository.GetByIdAsync(request.Id);
+            if (request.TenantFiltro)
+            {
+                ong = await _unitOfWork.ONGRepository.GetByIdAsync(request.Id);
+                if (ong is null) return null!;
+            }
+            else
+            {
+                ong = await _unitOfWork.ONGRepository.GetByIdWithoutTenantAsync(request.Id);
+                if (ong is null) return null!;
+            }
 
             return ong.MapDomainToResponse();
         }
@@ -41,7 +56,11 @@ public class ONGHandler : BaseHandler, IONGHandler
     {
         try
         {
-            return (await _unitOfWork.ONGRepository.GetAllPagedAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
+            if (request.TenantFiltro)
+            {
+                return (await _unitOfWork.ONGRepository.GetAllPagedAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
+            }
+            return (await _unitOfWork.ONGRepository.GetAllPagedWithoutTenantAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
         }
         catch
         {
@@ -54,13 +73,18 @@ public class ONGHandler : BaseHandler, IONGHandler
     {
         //if (!ExecuteValidation(new ONGValidation(), ong)) return;
 
+        if (!EhSuperAdmin())
+        {
+            Notify("Você não tem permissão para adicionar.");
+            return;
+        }
         if (NomeEmUso(request.Nome))
         {
             Notify("Nome em uso.");
-            return; 
+            return;
         }
 
-        if (EmailEmUso(request.Email))
+        if (EmailEmUso(request.Contato.Email))
         {
             Notify("E-mail em uso.");
             return;
@@ -71,6 +95,7 @@ public class ONGHandler : BaseHandler, IONGHandler
             await _unitOfWork.ONGRepository.AddAsync(ongMapped);
 
             await _unitOfWork.CommitAsync();
+            _solicitacaoCadastroProvider.OngId = ongMapped.Id;
             return;
         }
         catch
@@ -83,7 +108,12 @@ public class ONGHandler : BaseHandler, IONGHandler
     public async Task UpdateAsync(UpdateONGRequest request)
     {
         //if (!ExecuteValidation(new ONGValidation(), ong)) return;
-
+        if (TenantIsEmpty()) return;
+        if (request.Id != TenantId)
+        {
+            Notify("ONG não encontrada.");
+            return;
+        }
         if (!ONGExiste(request.Id))
         {
             Notify("ONG não encontrada.");
@@ -94,19 +124,19 @@ public class ONGHandler : BaseHandler, IONGHandler
 
         try
         {
-            if (request.Email != ongDb.Contato.Email.Endereco)
+            if (request.Contato.Email != ongDb.Contato.Email.Endereco)
             {
-                if (EmailEmUso(request.Email))
+                if (EmailEmUso(request.Contato.Email))
                 {
                     Notify("E-mail em uso.");
                     return;
                 }
-                ongDb.SetContato(request.Telefone, request.Email);
+                ongDb.SetContato(new Contato(request.Contato.Telefone, request.Contato.Email));
             }
             ongDb.SetNome(request.Nome);
-            ongDb.SetDescricao(request.Descricao);
+            ongDb.SetInstagram(request.Instagram);
             ongDb.SetChavePix(request.ChavePix);
-            ongDb.SetEndereco(request.Rua, request.Cidade, request.Estado, request.CEP, request.Complemento);
+            ongDb.SetEndereco(new Endereco(request.Endereco.Cidade, request.Endereco.Estado, request.Endereco.CEP, request.Endereco.Logradouro, request.Endereco.Bairro, request.Endereco.Numero, request.Endereco.Complemento, request.Endereco.Referencia));
 
             _unitOfWork.ONGRepository.UpdateAsync(ongDb);
 
@@ -124,6 +154,11 @@ public class ONGHandler : BaseHandler, IONGHandler
     {
         try
         {
+            if (!EhSuperAdmin())
+            {
+                Notify("Você não tem permissão para deletar.");
+                return;
+            }
             if (!ONGExiste(request.Id))
             {
                 Notify("ONG não encontrada.");
@@ -166,6 +201,15 @@ public class ONGHandler : BaseHandler, IONGHandler
         {
             return true;
         };
+        return false;
+    }
+
+    private bool EhSuperAdmin()
+    {
+        if (AppUser.HasClaim("Permissions", "SuperAdmin"))
+        {
+            return true;
+        }
         return false;
     }
 }

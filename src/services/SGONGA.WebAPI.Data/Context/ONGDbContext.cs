@@ -6,15 +6,18 @@ namespace SGONGA.WebAPI.Data.Context;
 
 public class ONGDbContext : DbContext
 {
-    public ONGDbContext(DbContextOptions<ONGDbContext> options) : base(options)
+    private readonly Guid? _tenantId;
+    public ONGDbContext(DbContextOptions<ONGDbContext> options, TenantProvider tenantProvider) : base(options)
     {
         ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         ChangeTracker.AutoDetectChangesEnabled = false;
+        _tenantId = tenantProvider.TenantId;
     }
 
     public DbSet<ONG> ONGs { get; set; }
     public DbSet<Colaborador> Colaboradores { get; set; }
     public DbSet<Animal> Animais { get; set; }
+    public DbSet<SolicitacaoCadastro> SolicitacoesCadastro { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,6 +30,57 @@ public class ONGDbContext : DbContext
 
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 
+        modelBuilder
+            .Entity<ONG>()
+            .HasQueryFilter(x => x.Id == _tenantId);
+
+        modelBuilder
+            .Entity<Colaborador>()
+            .HasQueryFilter(x => x.TenantId == _tenantId);
+
+        modelBuilder
+            .Entity<Animal>()
+            .HasQueryFilter(x => x.TenantId == _tenantId);
+
         base.OnModelCreating(modelBuilder);
+    }
+
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        foreach (var entry in ChangeTracker.Entries().Where(e => e.State == EntityState.Added || e.State == EntityState.Modified))
+        {
+            var tenantProperty = entry.Properties.FirstOrDefault(p => p.Metadata.Name == "TenantId");
+            var tenantEmpty = Guid.Empty;
+            //if (tenantProperty != null && tenantProperty.CurrentValue == null)
+            if (tenantProperty != null && tenantProperty.CurrentValue!.ToString() == tenantEmpty!.ToString() && entry.State == EntityState.Added)
+            {
+                if (_tenantId is null) 
+                    throw new InvalidOperationException("TenantId cannot be null when saving entities with the TenantId property.");
+
+                tenantProperty.CurrentValue = _tenantId;
+            }
+
+            var createdAtProperty = entry.Properties.FirstOrDefault(p => p.Metadata.Name == "CreatedAt");
+            var updatedAtProperty = entry.Properties.FirstOrDefault(p => p.Metadata.Name == "UpdatedAt");
+
+            if (entry.State == EntityState.Added)
+            {
+                if (createdAtProperty != null)
+                    createdAtProperty.CurrentValue = DateTime.UtcNow;
+
+                if (updatedAtProperty != null)
+                    updatedAtProperty.CurrentValue = DateTime.UtcNow;
+            }
+            else if (entry.State == EntityState.Modified)
+            {
+                if (createdAtProperty != null)
+                    createdAtProperty.IsModified = false;
+
+                if (updatedAtProperty != null)
+                    updatedAtProperty.CurrentValue = DateTime.UtcNow;
+            }
+        }
+
+        return await base.SaveChangesAsync(cancellationToken);
     }
 }

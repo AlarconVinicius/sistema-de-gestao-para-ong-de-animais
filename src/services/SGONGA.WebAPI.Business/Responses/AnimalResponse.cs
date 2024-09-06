@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace SGONGA.WebAPI.Business.Responses;
 
@@ -9,8 +9,9 @@ public class AnimalResponse : Response
     [DisplayName("Id")]
     public Guid Id { get; set; }
 
-    [DisplayName("Tenant Id")]
-    public Guid TenantId { get; set; }
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [DisplayName("ONG Id")]
+    public Guid ONGId { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [DisplayName("Nome")]
@@ -25,6 +26,14 @@ public class AnimalResponse : Response
     public string Raca { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [DisplayName("Sexo")]
+    public bool Sexo { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [DisplayName("Castrado")]
+    public bool Castrado { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [DisplayName("Cor")]
     public string Cor { get; set; } = string.Empty;
 
@@ -33,8 +42,21 @@ public class AnimalResponse : Response
     public string Porte { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
+    [DisplayName("Idade")]
+    public string Idade { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [DisplayName("Descrição")]
     public string Descricao { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [DisplayName("ONG")]
+    public string ONG { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [DisplayName("Endereço")]
+    public string Endereco { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [DisplayName("Observação")]
@@ -44,8 +66,8 @@ public class AnimalResponse : Response
     public string ChavePix { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [DisplayName("Fotos")]
-    public List<string> Fotos { get; set; } = new List<string>();
+    [DisplayName("Foto")]
+    public string Foto { get; set; } = string.Empty;
 
     [DisplayName("Data de Cadastro")]
     public DateTime CreatedAt { get; set; }
@@ -55,19 +77,24 @@ public class AnimalResponse : Response
 
     public AnimalResponse() { }
 
-    public AnimalResponse(Guid id, Guid tenantId, string nome, string especie, string raca, string cor, string porte, string descricao, string observacao, string chavePix, List<string> fotos, DateTime createdAt, DateTime updatedAt)
+    public AnimalResponse(Guid id, Guid ongId, string nome, string especie, string raca, bool sexo, bool castrado, string cor, string porte, string idade, string ong, string endereco, string descricao,  string observacao, string chavePix, string foto, DateTime createdAt, DateTime updatedAt)
     {
         Id = id;
-        TenantId = tenantId;
+        ONGId = ongId;
         Nome = nome;
         Especie = especie;
         Raca = raca;
+        Sexo = sexo;
+        Castrado = castrado;
         Cor = cor;
         Porte = porte;
+        Idade = idade;
         Descricao = descricao;
+        ONG = ong;
+        Endereco = endereco;
         Observacao = observacao;
         ChavePix = chavePix;
-        Fotos = fotos;
+        Foto = foto;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }

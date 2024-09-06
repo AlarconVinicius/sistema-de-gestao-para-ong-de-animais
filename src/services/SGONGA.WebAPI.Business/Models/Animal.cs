@@ -9,12 +9,15 @@ public class Animal : Entity
     public string Nome { get; private set; } = string.Empty;
     public string Especie { get; private set; } = string.Empty;
     public string Raca { get; private set; } = string.Empty;
+    public bool Sexo { get; private set; }
+    public bool Castrado { get; private set; }
     public string Cor { get; private set; } = string.Empty;
     public string Porte { get; private set; } = string.Empty;
+    public string Idade { get; private set; } = string.Empty;
     public string Descricao { get; private set; } = string.Empty;
     public string Observacao { get; private set; } = string.Empty;
     public string ChavePix { get; private set; } = string.Empty;
-    public List<string> Fotos { get; private set; } = new List<string>();
+    public string Foto { get; private set; } = string.Empty;
 
 
     [ForeignKey(nameof(TenantId))]
@@ -22,10 +25,8 @@ public class Animal : Entity
 
     public Animal() { }
 
-    public Animal(Guid tenantId, string nome, string especie, string raca, string cor, string porte, string descricao, string observacao, List<string> fotos, string chavePix = "") : base()
+    public Animal(string nome, string especie, string raca, bool sexo, bool castrado, string cor, string porte, string idade, string descricao, string observacao, string foto, string chavePix = "") : base()
     {
-        if (tenantId == Guid.Empty)
-            throw new ArgumentException("TenantId não pode ser vazio.");
         if (string.IsNullOrWhiteSpace(nome))
             throw new ArgumentException("Nome não pode ser nulo ou vazio.");
         if (string.IsNullOrWhiteSpace(especie))
@@ -38,23 +39,26 @@ public class Animal : Entity
             throw new ArgumentException("Porte não pode ser nulo ou vazio.");
         if (string.IsNullOrWhiteSpace(descricao))
             throw new ArgumentException("Descrição não pode ser nula ou vazia.");
-        if (string.IsNullOrWhiteSpace(observacao))
-            throw new ArgumentException("Observação não pode ser nula ou vazia.");
-        ValidarFotos(fotos);
+        if (string.IsNullOrWhiteSpace(foto))
+            throw new ArgumentException("Foto não pode ser nula ou vazia.");
+        if (string.IsNullOrWhiteSpace(idade))
+            throw new ArgumentException("Idade não pode ser nula ou vazia.");
 
-        TenantId = tenantId;
         Nome = nome;
         Especie = especie;
         Raca = raca;
+        Sexo = sexo;
+        Castrado = castrado;
         Cor = cor;
         Porte = porte;
+        Idade = idade;
         Descricao = descricao;
         Observacao = observacao;
         ChavePix = chavePix;
-        Fotos = fotos;
+        Foto = foto;
     }
 
-    public Animal(Guid id, Guid tenantId, string nome, string especie, string raca, string cor, string porte, string descricao, string observacao, List<string> fotos, string chavePix = "") : base(id)
+    public Animal(Guid id, Guid tenantId, string nome, string especie, string raca, bool sexo, bool castrado, string cor, string porte, string idade, string descricao, string observacao, string foto, string chavePix = "") : base(id)
     {
         if (tenantId == Guid.Empty)
             throw new ArgumentException("TenantId não pode ser vazio.");
@@ -72,18 +76,24 @@ public class Animal : Entity
             throw new ArgumentException("Descrição não pode ser nula ou vazia.");
         if (string.IsNullOrWhiteSpace(observacao))
             throw new ArgumentException("Observação não pode ser nula ou vazia.");
-        ValidarFotos(fotos);
+        if (string.IsNullOrWhiteSpace(foto))
+            throw new ArgumentException("Foto não pode ser nula ou vazia.");
+        if (string.IsNullOrWhiteSpace(idade))
+            throw new ArgumentException("Idade não pode ser nula ou vazia.");
 
         TenantId = tenantId;
         Nome = nome;
         Especie = especie;
         Raca = raca;
+        Sexo = sexo;
+        Castrado = castrado;
         Cor = cor;
         Porte = porte;
+        Idade = idade;
         Descricao = descricao;
         Observacao = observacao;
         ChavePix = chavePix;
-        Fotos = fotos;
+        Foto = foto;
     }
 
     private static void ValidarFotos(List<string> fotos)
@@ -98,6 +108,16 @@ public class Animal : Entity
         if (string.IsNullOrWhiteSpace(nome))
             throw new DomainException("Nome não pode ser nulo ou vazio.");
         Nome = nome;
+    }
+
+    public void SetSexo(bool sexo)
+    {
+        Sexo = sexo;
+    }
+
+    public void SetCastrado(bool castrado)
+    {
+        Castrado = castrado;
     }
 
     public void SetEspecie(string especie)
@@ -145,10 +165,9 @@ public class Animal : Entity
         ChavePix = chavePix;
     }
 
-    public void SetFotos(List<string> fotos)
+    public void SetFoto(string foto)
     {
-        ValidarFotos(fotos);
-        Fotos = fotos;
+        Foto = foto;
     }
     #endregion
 }

@@ -6,7 +6,11 @@ namespace SGONGA.WebAPI.Business.Models;
 public class Colaborador : Entity
 {
     public Guid TenantId { get; private set; }
-    public Email Email { get; private set; } = null!;
+
+    public string Nome { get; private set; } = string.Empty;
+    public string Documento { get; private set; } = string.Empty;
+    public Contato Contato { get; private set; } = null!;
+    public DateTime DataNascimento { get; private set; }
 
 
     [ForeignKey(nameof(TenantId))]
@@ -14,34 +18,45 @@ public class Colaborador : Entity
 
     public Colaborador() { }
 
-    public Colaborador(Guid tenantId, string email) : base()
+    public Colaborador(Guid id, string nome, string documento, Contato contato, DateTime dataNascimento) : base(id)
     {
-        if (tenantId == Guid.Empty)
-            throw new ArgumentException("TenantId não pode ser vazio.");
-        if (string.IsNullOrWhiteSpace(email))
-            throw new ArgumentException("Email não pode ser nulo ou vazio.");
+        if (string.IsNullOrWhiteSpace(nome))
+            throw new ArgumentException("Nome não pode ser nulo ou vazio.");
+        if (string.IsNullOrWhiteSpace(documento))
+            throw new ArgumentException("Documento não pode ser nulo ou vazio.");
 
-        TenantId = tenantId;
-        Email = new Email(email);
+        Nome = nome;
+        Documento = documento;
+        Contato = contato;
+        DataNascimento = dataNascimento;
     }
 
-    public Colaborador(Guid id, Guid tenantId, string email) : base(id)
+    public Colaborador(Guid id, Guid tenantId, string nome, string documento, Contato contato, DateTime dataNascimento) : base(id)
     {
         if (id == Guid.Empty)
             throw new ArgumentException("Id não pode ser vazio.");
         if (tenantId == Guid.Empty)
             throw new ArgumentException("TenantId não pode ser vazio.");
-        if (string.IsNullOrWhiteSpace(email))
-            throw new ArgumentException("Email não pode ser nulo ou vazio.");
 
         TenantId = tenantId;
-        Email = new Email(email);
+        Nome = nome;
+        Documento = documento;
+        Contato = contato;
+        DataNascimento = dataNascimento;
     }
 
     #region Setters
-    public void SetEmail(string email)
+    public void SetNome(string nome)
     {
-        Email = new Email(email);
+        Nome = nome;
+    }
+    public void SetContato(Contato contato)
+    {
+        Contato = contato;
+    }
+    public void SetTenant(Guid tenantId)
+    {
+        TenantId = tenantId;
     }
     #endregion
 }

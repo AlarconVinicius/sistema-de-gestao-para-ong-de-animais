@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using SGONGA.WebAPI.Business.Requests.Shared;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace SGONGA.WebAPI.Business.Responses;
@@ -11,9 +12,16 @@ public class ColaboradorResponse : Response
     [DisplayName("Tenant Id")]
     public Guid TenantId { get; set; }
 
-    [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    [DisplayName("E-mail")]
-    public string Email { get; set; } = string.Empty;
+    [DisplayName("Nome")]
+    public string Nome { get; set; } = string.Empty;
+
+    [DisplayName("Documento")]
+    public string Documento { get; set; } = string.Empty;
+
+    public ContatoResponse Contato { get; set; } = null!;
+
+    [DisplayName("Data de Nascimento")]
+    public DateTime DataNascimento { get; set; }
 
     [DisplayName("Data de Cadastro")]
     public DateTime CreatedAt { get; set; }
@@ -23,11 +31,14 @@ public class ColaboradorResponse : Response
 
     public ColaboradorResponse() { }
 
-    public ColaboradorResponse(Guid id, Guid tenantId, string email, DateTime createdAt, DateTime updatedAt)
+    public ColaboradorResponse(Guid id, Guid tenantId, string nome, string documento, ContatoResponse contato, DateTime dataNascimento, DateTime createdAt, DateTime updatedAt)
     {
         Id = id;
         TenantId = tenantId;
-        Email = email;
+        Nome = nome;
+        Documento = documento;
+        Contato = contato;
+        DataNascimento = dataNascimento;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }

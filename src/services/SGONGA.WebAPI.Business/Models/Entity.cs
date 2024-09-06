@@ -18,9 +18,4 @@ public abstract class Entity
         CreatedAt = DateTime.UtcNow;
         UpdatedAt = DateTime.UtcNow;
     }
-
-    public void SetUpdatedAt()
-    {
-        UpdatedAt = DateTime.UtcNow;
-    }
 }

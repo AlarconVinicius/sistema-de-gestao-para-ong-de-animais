@@ -13,17 +13,7 @@ public static class ColaboradorMappings
             return null!;
         }
 
-        return new ColaboradorResponse(request.Id, request.TenantId, request.Email.Endereco, request.CreatedAt, request.UpdatedAt);
-    }
-
-    public static Colaborador MapResponseToDomain(this ColaboradorResponse request)
-    {
-        if (request == null)
-        {
-            return null!;
-        }
-
-        return new Colaborador(request.Id, request.TenantId, request.Email);
+        return new ColaboradorResponse(request.Id, request.TenantId, request.Nome, request.Documento, request.Contato.MapDomainToResponse(), request.DataNascimento, request.CreatedAt, request.UpdatedAt);
     }
 
     public static PagedResponse<ColaboradorResponse> MapDomainToResponse(this PagedResult<Colaborador> request)
@@ -43,6 +33,6 @@ public static class ColaboradorMappings
             return null!;
         }
 
-        return new Colaborador(request.TenantId, request.Email);
+        return new Colaborador(request.Id, request.TenantId, request.Nome, request.Documento, request.Contato.MapRequestToDomain(), request.DataNascimento);
     }
 }
