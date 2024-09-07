@@ -55,6 +55,12 @@ public static class SwaggerConfig
     {
         app.UseSwagger();
 
+        app.UseReDoc(c =>
+        {
+            c.DocumentTitle = "Sistema de Gestão para ONGs de Animais V1";
+            c.RoutePrefix = "redoc";
+            c.SpecUrl = "/swagger/v1/swagger.json";
+        });
         app.UseSwaggerUI(opt =>
         {
             opt.SwaggerEndpoint("/swagger/v1/swagger.json", "Sistema de Gestão para ONGs de Animais V1");
