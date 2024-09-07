@@ -1,4 +1,6 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
+using Microsoft.OpenApi.Models;
 using System.Reflection;
 
 namespace SGONGA.WebAPI.API.Configurations;
@@ -18,8 +20,18 @@ public static class SwaggerConfig
                 Title = "Sistema de Gestão para ONGs de Animais — API",
                 Version = "V1",
                 Description = "Backend Sistema de Gestão para ONGs de Animais.",
-                Contact = new OpenApiContact() { Name = "Vinícius Alarcon", Email = "alarcon.vinicius74@gmail.com" },
-                License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
+                Contact = new OpenApiContact() { Name = "Vinícius Alarcon", Email = "alarcon.vinicius74@gmail.com", Url = new Uri("https://www.linkedin.com/in/vinicius-alarcon/") },
+                License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") },
+                Extensions = new Dictionary<string, IOpenApiExtension>
+                {
+                    {
+                        "x-logo", new OpenApiObject
+                        {
+                            {"url", new OpenApiString("https://iili.io/d8jKOJe.png")},
+                            { "altText", new OpenApiString("Sistema de Gestão para ONGs de Animais")}
+                        }
+                    }
+                }
             });
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
