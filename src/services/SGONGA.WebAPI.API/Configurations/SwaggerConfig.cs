@@ -1,4 +1,5 @@
 ﻿using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 namespace SGONGA.WebAPI.API.Configurations;
 
@@ -8,6 +9,10 @@ public static class SwaggerConfig
     {
         services.AddSwaggerGen(c =>
         {
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            c.IncludeXmlComments(xmlPath);
+
             c.SwaggerDoc("v1", new OpenApiInfo()
             {
                 Title = "Sistema de Gestão para ONGs de Animais — API",
