@@ -1,15 +1,25 @@
 # Sistema de Gestão para ONGs de Animais
 
-Nosso SaaS (Software as a Service) é projetado para facilitar a divulgação e promover a adoção de pets. A plataforma permite que ONGs de pets se cadastrem e recebam um login exclusivo, com o qual podem gerenciar seus pets disponíveis para adoção ou em situação de ajuda através de um painel administrativo dedicado.
 
+- [Sistema de Gestão para ONGs de Animais](#sistema-de-gest-o-para-ongs-de-animais)
+  * [Resumo](#resumo)
+  * [Tecnologias Utilizadas](#tecnologias-utilizadas)
+  * [Funcionalidades do SaaS para ONGs de Pets](#funcionalidades-do-saas-para-ongs-de-pets)
+    + [Cadastro e Gerenciamento de ONGs](#cadastro-e-gerenciamento-de-ongs)
+    + [Cadastro e Gerenciamento de Pets](#cadastro-e-gerenciamento-de-pets)
+    + [Busca e Filtros Avançados](#busca-e-filtros-avançados)
+    + [Contribuições e Doações](#contribuições-e-doações)
+    + [Banco de Voluntários (Futuro)](#banco-de-voluntários-futuro)
+    + [Cadastro de Eventos (Futuro)](#cadastro-de-eventos-futuro)
+  * [Documentação da API](#documentação-da-api)
+    + [Clique aqui para a documentação completa](http://docs.nectarcrm.apiary.io)
+  * [Informações de Contato](#informa-es-de-contato)
+
+## Resumo
+Nosso SaaS (Software as a Service) é projetado para facilitar a divulgação e promover a adoção de pets. A plataforma permite que ONGs de pets se cadastrem e recebam um login exclusivo (multi-tenant), com o qual podem gerenciar seus pets disponíveis para adoção ou em situação de ajuda através de um painel administrativo dedicado.
 ## Tecnologias Utilizadas
-
-
-### A API do SaaS para ONGs de Pets utiliza as seguintes tecnologias e ferramentas:
-
 - **.NET 8**
 - **SQL Server**
-
 ## Funcionalidades do SaaS para ONGs de Pets
 
 ### Cadastro e Gerenciamento de ONGs
@@ -38,31 +48,8 @@ Nosso SaaS (Software as a Service) é projetado para facilitar a divulgação e 
 - **Publicação de Eventos:** ONGs poderão publicar eventos, como feiras de adoção.
 - **Exibição de Eventos:** Os eventos serão exibidos na aba de eventos do site, facilitando a divulgação.
 
-## Clonando o Repositório
-
-Para obter o código-fonte da API do SaaS para ONGs de Pets, você pode clonar o repositório do GitHub. Siga as etapas abaixo:
-
-1. Abra um terminal ou prompt de comando em seu sistema.
-
-2. Execute o seguinte comando para clonar o repositório:
-
-```bash
-git clone https://github.com/AlarconVinicius/sistema-de-gestao-para-ong-de-animais.git
-```
-*Isso irá baixar o código-fonte da API para o seu sistema local.*
-
-3. Navegue até o diretório clonado usando o comando cd:
-
-```bash
-cd sistema-de-gestao-para-ong-de-animais
-```
-
-*Nota: Ao iniciar a aplicação pela primeira vez, um perfil de super administrador é criado automaticamente com as seguintes informações:*
-
-- **E-mail**: tenant@email.com
-- **Senha**: Admin@123
-
-## Rotas da API
+## Documentação da API
+### [Clique aqui para a documentação completa](https://github.com/AlarconVinicius/sistema-de-gestao-para-ong-de-animais/wiki)
 
 ## Informações de Contato
 
