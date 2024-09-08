@@ -12,7 +12,7 @@
     + [Banco de Voluntários (Futuro)](#banco-de-voluntários-futuro)
     + [Cadastro de Eventos (Futuro)](#cadastro-de-eventos-futuro)
   * [Documentação da API](#documentação-da-api)
-    + [Clique aqui para a documentação completa](http://docs.nectarcrm.apiary.io)
+    + [Clique aqui para a documentação completa](https://github.com/AlarconVinicius/sistema-de-gestao-para-ong-de-animais/wiki)
   * [Informações de Contato](#informa-es-de-contato)
 
 ## Resumo
