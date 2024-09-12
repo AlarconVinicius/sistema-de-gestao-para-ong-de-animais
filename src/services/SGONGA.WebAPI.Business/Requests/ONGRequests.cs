@@ -1,85 +1,26 @@
 ﻿using SGONGA.WebAPI.Business.Requests.Shared;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
 
 namespace SGONGA.WebAPI.Business.Requests;
 
-public class CreateONGRequest : Request
+public class CreateONGRequest : CreateUsuarioRequest
 {
-    [DisplayName("Id")]
-    public Guid Id { get; set; } = Guid.NewGuid();
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Nome")]
-    public string Nome { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [StringLength(500, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Instagram")]
-    public string Instagram { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [StringLength(11, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Documento")]
-    public string Documento { get; set; } = string.Empty;
-
-    [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Chave Pix")]
-    public string? ChavePix { get; set; } = string.Empty;
-
-    public ContatoRequest Contato { get; set; } = null!;
-
-    public EnderecoRequest Endereco { get; set; } = null!;
-
+    public string? ChavePix { get; set; }
     public CreateONGRequest() { }
 
-    public CreateONGRequest(Guid id, string nome, string instagram, string documento, string? chavePix, ContatoRequest contato, EnderecoRequest endereco)
+    public CreateONGRequest(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, ContatoRequest contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, string? chavePix) : base(id, tenantId, nome, apelido, documento, site, contato, telefoneVisivel, assinarNewsletter, dataNascimento, estado, cidade, sobre)
     {
-        Id = id;
-        Nome = nome;
-        Instagram = instagram;
-        Documento = documento;
         ChavePix = chavePix;
-        Contato = contato;
-        Endereco = endereco;
     }
 }
 
-public class UpdateONGRequest : Request
+public class UpdateONGRequest : UpdateUsuarioRequest
 {
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [DisplayName("Id")]
-    public Guid Id { get; set; }
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Nome")]
-    public string Nome { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [StringLength(500, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Instagram")]
-    public string Instagram { get; set; } = string.Empty;
-
-    [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Chave Pix")]
     public string? ChavePix { get; set; }
-
-    public ContatoRequest Contato { get; set; } = null!;
-
-    public EnderecoRequest Endereco { get; set; } = null!;
-
     public UpdateONGRequest() { }
 
-    public UpdateONGRequest(Guid id, string nome, string instagram, string? chavePix, ContatoRequest contato, EnderecoRequest endereco)
+    public UpdateONGRequest(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, ContatoRequest contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, string? chavePix) : base(id, tenantId, nome, apelido, documento, site, contato, telefoneVisivel, assinarNewsletter, dataNascimento, estado, cidade, sobre)
     {
-        Id = id;
-        Nome = nome;
-        Instagram = instagram;
         ChavePix = chavePix;
-        Contato = contato;
-        Endereco = endereco;
     }
 }
 

@@ -14,8 +14,9 @@ public class ONGDbContext : DbContext
         _tenantId = tenantProvider.TenantId;
     }
 
+    public DbSet<Usuario> Usuarios { get; set; }
+    public DbSet<Adotante> Adotantes { get; set; }
     public DbSet<ONG> ONGs { get; set; }
-    public DbSet<Colaborador> Colaboradores { get; set; }
     public DbSet<Animal> Animais { get; set; }
     public DbSet<SolicitacaoCadastro> SolicitacoesCadastro { get; set; }
 
@@ -31,11 +32,7 @@ public class ONGDbContext : DbContext
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 
         modelBuilder
-            .Entity<ONG>()
-            .HasQueryFilter(x => x.Id == _tenantId);
-
-        modelBuilder
-            .Entity<Colaborador>()
+            .Entity<Usuario>()
             .HasQueryFilter(x => x.TenantId == _tenantId);
 
         modelBuilder

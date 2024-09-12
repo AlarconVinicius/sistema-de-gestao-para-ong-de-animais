@@ -18,7 +18,7 @@ public class Animal : Entity
     public string Observacao { get; private set; } = string.Empty;
     public string ChavePix { get; private set; } = string.Empty;
     public string Foto { get; private set; } = string.Empty;
-
+    //public bool Adotado { get; set; }
 
     [ForeignKey(nameof(TenantId))]
     public virtual ONG? ONG { get; private set; }

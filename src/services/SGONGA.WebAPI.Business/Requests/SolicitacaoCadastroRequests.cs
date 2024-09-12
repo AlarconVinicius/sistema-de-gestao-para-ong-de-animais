@@ -6,12 +6,12 @@ public class CreateSolicitacaoCadastroRequests : Request
 {
     public CreateONGRequest ONG { get; set; } = null!;
 
-    public CreateColaboradorRequest Responsavel { get; set; } = null!;
+    public CreateAdotanteRequest Responsavel { get; set; } = null!;
 
     public EStatus Status { get; set; }
     public CreateSolicitacaoCadastroRequests() { }
 
-    public CreateSolicitacaoCadastroRequests(CreateONGRequest ong, CreateColaboradorRequest responsavel)
+    public CreateSolicitacaoCadastroRequests(CreateONGRequest ong, CreateAdotanteRequest responsavel)
     {
         ONG = ong;
         Responsavel = responsavel;

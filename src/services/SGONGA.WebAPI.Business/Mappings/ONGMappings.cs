@@ -13,7 +13,7 @@ public static class ONGMappings
             return null!;
         }
 
-        return new ONGResponse(request.Id, request.Nome, request.Instagram, request.Documento, request.Contato.MapDomainToResponse(), request.Endereco.MapDomainToResponse(), request.ChavePix, request.CreatedAt, request.UpdatedAt);
+        return new ONGResponse(request.Id, request.TenantId, request.Nome, request.Apelido, request.Documento, request.Site, request.Contato.MapDomainToResponse(), request.TelefoneVisivel, request.AssinarNewsletter, request.DataNascimento, request.Estado, request.Cidade, request.Sobre, request.ChavePix, request.CreatedAt, request.UpdatedAt);
     }
 
     public static PagedResponse<ONGResponse> MapDomainToResponse(this PagedResult<ONG> request)
@@ -33,6 +33,6 @@ public static class ONGMappings
             return null!;
         }
 
-        return new ONG(request.Id, request.Nome, request.Instagram, request.Documento, request.Contato.MapRequestToDomain(), request.Endereco.MapRequestToDomain(), request.ChavePix);
+        return new ONG(request.Id, request.TenantId, request.Nome, request.Apelido, request.Documento, request.Site, request.Contato.MapRequestToDomain(), request.TelefoneVisivel, request.AssinarNewsletter, request.DataNascimento, request.Estado, request.Cidade, request.Sobre, request.ChavePix);
     }
 }
