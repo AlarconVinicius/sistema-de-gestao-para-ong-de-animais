@@ -17,6 +17,12 @@ public class ONGRepository : Repository<ONG>, IONGRepository
         return await DbSet.IgnoreQueryFilters()
                           .FirstOrDefaultAsync(c => c.Id == id) ?? null!;
     }
+    public async Task<ONG> GetBySlugWithoutTenantAsync(string slug)
+    {
+        return await DbSet.IgnoreQueryFilters()
+                          .Include(c => c.Animais)
+                          .FirstOrDefaultAsync(c => c.Slug == slug) ?? null!;
+    }
 
     public async Task<PagedResult<ONG>> GetAllPagedWithoutTenantAsync(Expression<Func<ONG, bool>>? predicate = null, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false)
     {

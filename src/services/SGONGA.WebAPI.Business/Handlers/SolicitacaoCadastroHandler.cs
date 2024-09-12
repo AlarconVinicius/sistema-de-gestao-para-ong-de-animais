@@ -12,11 +12,11 @@ public class SolicitacaoCadastroHandler : BaseHandler, ISolicitacaoCadastroHandl
 {
     public readonly IUnitOfWork _unitOfWork;
     public readonly IONGHandler _ongHandler;
-    public readonly IColaboradorHandler _colaboradorHandler;
+    public readonly IAdotanteHandler _colaboradorHandler;
     public readonly IIdentityHandler _identityHandler;
     public readonly SolicitacaoCadastroProvider _solicitacaoCadastroProvider;
 
-    public SolicitacaoCadastroHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork unitOfWork, IONGHandler ongHandler, IColaboradorHandler colaboradorHandler, IIdentityHandler identityHandler, SolicitacaoCadastroProvider solicitacaoCadastroProvider) : base(notifier, appUser)
+    public SolicitacaoCadastroHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork unitOfWork, IONGHandler ongHandler, IAdotanteHandler colaboradorHandler, IIdentityHandler identityHandler, SolicitacaoCadastroProvider solicitacaoCadastroProvider) : base(notifier, appUser)
     {
         _unitOfWork = unitOfWork;
         _ongHandler = ongHandler;

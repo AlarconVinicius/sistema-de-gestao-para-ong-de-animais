@@ -2,26 +2,25 @@
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Data.Context;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace SGONGA.WebAPI.Data.Repositories;
 
-public class ColaboradorRepository : Repository<Colaborador>, IColaboradorRepository
+public class AdotanteRepository : Repository<Adotante>, IAdotanteRepository
 {
-    public ColaboradorRepository(ONGDbContext db) : base(db)
+    public AdotanteRepository(ONGDbContext db) : base(db)
     {
     }
 
-    public async Task<Colaborador> GetByIdWithoutTenantAsync(Guid id)
+    public async Task<Adotante> GetByIdWithoutTenantAsync(Guid id)
     {
         return await DbSet.IgnoreQueryFilters()
                           .FirstOrDefaultAsync(c => c.Id == id) ?? null!;
     }
 
-    public async Task<PagedResult<Colaborador>> GetAllPagedWithoutTenantAsync(Expression<Func<Colaborador, bool>>? predicate = null, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false)
+    public async Task<PagedResult<Adotante>> GetAllPagedWithoutTenantAsync(Expression<Func<Adotante, bool>>? predicate = null, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false)
     {
-        var result = new PagedResult<Colaborador>();
+        var result = new PagedResult<Adotante>();
 
         var queryable = DbSet.IgnoreQueryFilters().AsQueryable();
 
@@ -37,7 +36,7 @@ public class ColaboradorRepository : Repository<Colaborador>, IColaboradorReposi
             queryable = queryable.Skip((page - 1) * pageSize).Take(pageSize);
         }
 
-        return new PagedResult<Colaborador>()
+        return new PagedResult<Adotante>()
         {
             List = await queryable.ToListAsync(),
             TotalResults = await queryable.CountAsync(),
@@ -47,7 +46,7 @@ public class ColaboradorRepository : Repository<Colaborador>, IColaboradorReposi
         };
     }
 
-    public async Task<IEnumerable<Colaborador>> SearchWithoutTenantAsync(Expression<Func<Colaborador, bool>> predicate)
+    public async Task<IEnumerable<Adotante>> SearchWithoutTenantAsync(Expression<Func<Adotante, bool>> predicate)
     {
         return await DbSet.AsNoTracking().IgnoreQueryFilters().Where(predicate).ToListAsync();
     }

@@ -134,10 +134,10 @@ public class ONGHandler : BaseHandler, IONGHandler
                 ongDb.SetContato(new Contato(request.Contato.Telefone, request.Contato.Email));
             }
             ongDb.SetNome(request.Nome);
-            ongDb.SetInstagram(request.Instagram);
+            ongDb.SetApelido(request.Apelido);
             ongDb.SetChavePix(request.ChavePix);
-            ongDb.SetEndereco(new Endereco(request.Endereco.Cidade, request.Endereco.Estado, request.Endereco.CEP, request.Endereco.Logradouro, request.Endereco.Bairro, request.Endereco.Numero, request.Endereco.Complemento, request.Endereco.Referencia));
-
+            ongDb.SetSite(request.Site);
+            ongDb.SetEndereco(request.Estado, request.Cidade);
             _unitOfWork.ONGRepository.UpdateAsync(ongDb);
 
             await _unitOfWork.CommitAsync();
