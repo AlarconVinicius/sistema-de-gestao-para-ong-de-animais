@@ -1,4 +1,5 @@
-﻿using SGONGA.Core.Notifications;
+﻿using SGONGA.Core.Extensions;
+using SGONGA.Core.Notifications;
 using SGONGA.Core.User;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
@@ -73,12 +74,12 @@ public class ONGHandler : BaseHandler, IONGHandler
     {
         //if (!ExecuteValidation(new ONGValidation(), ong)) return;
 
-        if (!EhSuperAdmin())
+        if (DocumentoEmUso(request.Documento))
         {
-            Notify("Você não tem permissão para adicionar.");
+            Notify("E-mail em uso.");
             return;
         }
-        if (NomeEmUso(request.Nome))
+        if (ApelidoEmUso(request.Apelido))
         {
             Notify("Nome em uso.");
             return;
@@ -89,18 +90,14 @@ public class ONGHandler : BaseHandler, IONGHandler
             Notify("E-mail em uso.");
             return;
         }
-        var ongMapped = request.MapRequestToDomain();
         try
         {
-            await _unitOfWork.ONGRepository.AddAsync(ongMapped);
-
-            await _unitOfWork.CommitAsync();
-            _solicitacaoCadastroProvider.OngId = ongMapped.Id;
+            await _unitOfWork.ONGRepository.AddAsync(request.MapRequestToDomain());
             return;
         }
-        catch
+        catch(Exception ex)
         {
-            Notify("Não foi possível criar a ONG.");
+            Notify($"Não foi possível criar a ONG.: {ex.Message}");
             return;
         }
     }
@@ -154,17 +151,20 @@ public class ONGHandler : BaseHandler, IONGHandler
     {
         try
         {
-            if (!EhSuperAdmin())
-            {
-                Notify("Você não tem permissão para deletar.");
-                return;
-            }
             if (!ONGExiste(request.Id))
             {
                 Notify("ONG não encontrada.");
                 return;
             }
 
+            var ong = await _unitOfWork.ONGRepository.GetByIdWithoutTenantAsync(request.Id);
+            if (ong.Animais.Count != 0)
+            {
+                foreach (Animal animal in ong.Animais)
+                {
+                    _unitOfWork.AnimalRepository.DeleteAsync(animal.Id);
+                }
+            }
             _unitOfWork.ONGRepository.DeleteAsync(request.Id);
 
             await _unitOfWork.CommitAsync();
@@ -186,15 +186,23 @@ public class ONGHandler : BaseHandler, IONGHandler
         return false;
     }
 
-    private bool NomeEmUso(string nome)
+    private bool ApelidoEmUso(string apelido)
     {
-        if (_unitOfWork.ONGRepository.SearchAsync(f => f.Nome == nome).Result.Any())
+        if (_unitOfWork.ONGRepository.SearchAsync(f => f.Apelido == apelido || f.Slug == apelido.SlugifyString()).Result.Any())
         {
             return true;
         };
         return false;
     }
 
+    private bool DocumentoEmUso(string documento)
+    {
+        if (_unitOfWork.ONGRepository.SearchAsync(f => f.Documento == documento).Result.Any())
+        {
+            return true;
+        };
+        return false;
+    }
     private bool EmailEmUso(string email)
     {
         if (_unitOfWork.ONGRepository.SearchAsync(f => f.Contato.Email.Endereco == email).Result.Any())

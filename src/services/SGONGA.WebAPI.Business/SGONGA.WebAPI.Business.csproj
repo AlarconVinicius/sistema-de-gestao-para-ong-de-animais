@@ -7,10 +7,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Slugify.Core" Version="4.0.1" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<ProjectReference Include="..\..\building blocks\SGONGA.Core\SGONGA.Core.csproj" />
 	</ItemGroup>
 

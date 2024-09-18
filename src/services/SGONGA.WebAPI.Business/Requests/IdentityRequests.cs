@@ -1,4 +1,5 @@
-﻿using SGONGA.WebAPI.Business.Responses;
+﻿using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Responses;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,14 +7,8 @@ namespace SGONGA.WebAPI.Business.Requests;
 
 public class CreateUserRequest : Request
 {
-    [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    [DisplayName("Id")]
-    public Guid Id { get; set; }
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-    [EmailAddress(ErrorMessage = "O campo {0} está em formato inválido.")]
-    [DisplayName("E-mail")]
-    public string Email { get; set; } = string.Empty;
+    [DisplayName("Usuário")]
+    public CreateUsuarioRequest Usuario { get; set; } = null!;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [StringLength(100, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres.", MinimumLength = 6)]
@@ -26,10 +21,9 @@ public class CreateUserRequest : Request
 
     public CreateUserRequest() { }
 
-    public CreateUserRequest(Guid id, string email, string senha, string confirmarSenha)
+    public CreateUserRequest(CreateUsuarioRequest usuario, string senha, string confirmarSenha)
     {
-        Id = id;
-        Email = email;
+        Usuario = usuario;
         Senha = senha;
         ConfirmarSenha = confirmarSenha;
     }
@@ -139,8 +133,8 @@ public class GetUserByIdRequest : Request
 
 public class DeleteUserRequest : Request
 {
+    [DisplayName("Id")]
     public Guid Id { get; set; }
-
     public DeleteUserRequest() { }
 
     public DeleteUserRequest(Guid id)

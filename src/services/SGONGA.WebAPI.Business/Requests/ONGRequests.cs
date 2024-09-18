@@ -1,4 +1,5 @@
-﻿using SGONGA.WebAPI.Business.Requests.Shared;
+﻿using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Requests.Shared;
 
 namespace SGONGA.WebAPI.Business.Requests;
 
@@ -7,7 +8,7 @@ public class CreateONGRequest : CreateUsuarioRequest
     public string? ChavePix { get; set; }
     public CreateONGRequest() { }
 
-    public CreateONGRequest(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, ContatoRequest contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, string? chavePix) : base(id, tenantId, nome, apelido, documento, site, contato, telefoneVisivel, assinarNewsletter, dataNascimento, estado, cidade, sobre)
+    public CreateONGRequest(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, ContatoRequest contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, string? chavePix) : base(id, tenantId, EUsuarioTipo.ONG, nome, apelido, documento, site, contato, telefoneVisivel, assinarNewsletter, dataNascimento, estado, cidade, sobre)
     {
         ChavePix = chavePix;
     }

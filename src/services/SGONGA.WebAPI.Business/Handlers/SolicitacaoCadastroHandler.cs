@@ -127,40 +127,40 @@ public class SolicitacaoCadastroHandler : BaseHandler, ISolicitacaoCadastroHandl
     {
         try
         {
-            var ongId = request.ONG.Id;
-            Guid colaboradorId = request.Responsavel.Id;
-            //Cadastrar ONG
-            await _ongHandler.CreateAsync(new CreateONGRequest(ongId, request.ONG.Nome, request.ONG.Instagram, request.ONG.Documento, request.ONG.ChavePix, request.ONG.Contato, request.ONG.Endereco));
-            if (!IsOperationValid())
-            {
-                return;
-            };
+            //var ongId = request.ONG.Id;
+            //Guid colaboradorId = request.Responsavel.Id;
+            ////Cadastrar ONG
+            //await _ongHandler.CreateAsync(new CreateONGRequest(ongId, request.ONG.Nome, request.ONG.Instagram, request.ONG.Documento, request.ONG.ChavePix, request.ONG.Contato, request.ONG.Endereco));
+            //if (!IsOperationValid())
+            //{
+            //    return;
+            //};
 
-            //Cadastrar Colaborador
-            await _colaboradorHandler.CreateAsync(new CreateColaboradorRequest(colaboradorId, ongId, request.Responsavel.Nome, request.Responsavel.Documento, request.Responsavel.DataNascimento, request.Responsavel.Contato));
-            if (!IsOperationValid())
-            {
-                await _ongHandler.DeleteAsync(new DeleteONGRequest(ongId));
-                return;
-            };
-            //Cadastrar Login
-            string senha = "Senha@123";
-            var result = await _identityHandler.CreateAsync(new CreateUserRequest(colaboradorId, request.Responsavel.Contato.Email, senha, senha));
-            if (!IsOperationValid())
-            {
-                await _colaboradorHandler.DeleteAsync(new DeleteColaboradorRequest(colaboradorId));
-                await _ongHandler.DeleteAsync(new DeleteONGRequest(ongId));
-                return;
-            };
+            ////Cadastrar Colaborador
+            //await _colaboradorHandler.CreateAsync(new CreateColaboradorRequest(colaboradorId, ongId, request.Responsavel.Nome, request.Responsavel.Documento, request.Responsavel.DataNascimento, request.Responsavel.Contato));
+            //if (!IsOperationValid())
+            //{
+            //    await _ongHandler.DeleteAsync(new DeleteONGRequest(ongId));
+            //    return;
+            //};
+            ////Cadastrar Login
+            //string senha = "Senha@123";
+            //var result = await _identityHandler.CreateAsync(new CreateUserRequest(colaboradorId, request.Responsavel.Contato.Email, senha, senha));
+            //if (!IsOperationValid())
+            //{
+            //    await _colaboradorHandler.DeleteAsync(new DeleteColaboradorRequest(colaboradorId));
+            //    await _ongHandler.DeleteAsync(new DeleteONGRequest(ongId));
+            //    return;
+            //};
 
-            //Mudar status para Aprovado
-            var solicitacaoCadastroDb = await _unitOfWork.SolicitacaoCadastroRepository.GetByIdAsync(request.Id);
-            solicitacaoCadastroDb.SetStatus(EStatus.Aprovado);
-            _unitOfWork.SolicitacaoCadastroRepository.UpdateAsync(solicitacaoCadastroDb);
-            await _unitOfWork.CommitAsync();
+            ////Mudar status para Aprovado
+            //var solicitacaoCadastroDb = await _unitOfWork.SolicitacaoCadastroRepository.GetByIdAsync(request.Id);
+            //solicitacaoCadastroDb.SetStatus(EStatus.Aprovado);
+            //_unitOfWork.SolicitacaoCadastroRepository.UpdateAsync(solicitacaoCadastroDb);
+            //await _unitOfWork.CommitAsync();
 
-            //Enviar email para o usuário informando a senha default
-            // ...
+            ////Enviar email para o usuário informando a senha default
+            //// ...
             return;
         }
         catch
@@ -205,10 +205,10 @@ public class SolicitacaoCadastroHandler : BaseHandler, ISolicitacaoCadastroHandl
     }
     private bool EmailResponsavelEmUso(string email)
     {
-        if (_unitOfWork.ColaboradorRepository.SearchWithoutTenantAsync(f => f.Contato.Email.Endereco == email).Result.Any())
-        {
-            return true;
-        };
+        //if (_unitOfWork.ColaboradorRepository.SearchWithoutTenantAsync(f => f.Contato.Email.Endereco == email).Result.Any())
+        //{
+        //    return true;
+        //};
         return false;
     }
     private bool EhSuperAdmin()

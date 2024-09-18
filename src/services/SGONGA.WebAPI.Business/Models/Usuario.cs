@@ -1,5 +1,5 @@
-﻿using SGONGA.WebAPI.Business.Models.DomainObjects;
-using Slugify;
+﻿using SGONGA.Core.Extensions;
+using SGONGA.WebAPI.Business.Models.DomainObjects;
 using System.Text.RegularExpressions;
 
 namespace SGONGA.WebAPI.Business.Models;
@@ -71,8 +71,7 @@ public abstract class Usuario : Entity
     #region Setters
     private void SetSlug(string slug)
     {
-        SlugHelper helper = new();
-        Slug = helper.GenerateSlug(slug);
+        Slug = slug.SlugifyString();
     }
     public void SetNome(string nome)
     {

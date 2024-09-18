@@ -1,4 +1,5 @@
-﻿using SGONGA.Core.Notifications;
+﻿using SGONGA.Core.Extensions;
+using SGONGA.Core.Notifications;
 using SGONGA.Core.User;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
@@ -57,9 +58,14 @@ public class AdotanteHandler : BaseHandler, IAdotanteHandler
     public async Task CreateAsync(CreateAdotanteRequest request)
     {
         //if (!ExecuteValidation(new AdotanteValidation(), adotante)) return;
-        if (!EhSuperAdmin())
+        if (DocumentoEmUso(request.Documento))
         {
-            Notify("Você não tem permissão para adicionar.");
+            Notify("E-mail em uso.");
+            return;
+        }
+        if (ApelidoEmUso(request.Apelido))
+        {
+            Notify("Nome em uso.");
             return;
         }
 
@@ -68,12 +74,9 @@ public class AdotanteHandler : BaseHandler, IAdotanteHandler
             Notify("E-mail em uso.");
             return;
         }
-        var adotanteMapped = request.MapRequestToDomain();
         try
         {
-            await _unitOfWork.AdotanteRepository.AddAsync(adotanteMapped);
-
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.AdotanteRepository.AddAsync(request.MapRequestToDomain());
             return;
         }
         catch
@@ -168,7 +171,23 @@ public class AdotanteHandler : BaseHandler, IAdotanteHandler
         };
         return false;
     }
+    private bool ApelidoEmUso(string apelido)
+    {
+        if (_unitOfWork.AdotanteRepository.SearchAsync(f => f.Apelido == apelido || f.Slug == apelido.SlugifyString()).Result.Any())
+        {
+            return true;
+        };
+        return false;
+    }
 
+    private bool DocumentoEmUso(string documento)
+    {
+        if (_unitOfWork.AdotanteRepository.SearchAsync(f => f.Documento == documento).Result.Any())
+        {
+            return true;
+        };
+        return false;
+    }
     private bool EmailEmUso(string email)
     {
         if (_unitOfWork.AdotanteRepository.SearchAsync(f => f.Contato.Email.Endereco == email).Result.Any())

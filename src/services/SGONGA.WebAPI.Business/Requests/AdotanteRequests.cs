@@ -1,4 +1,5 @@
-﻿using SGONGA.WebAPI.Business.Requests.Shared;
+﻿using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Requests.Shared;
 
 namespace SGONGA.WebAPI.Business.Requests;
 
@@ -6,7 +7,7 @@ public class CreateAdotanteRequest : CreateUsuarioRequest
 {
     public CreateAdotanteRequest() { }
 
-    public CreateAdotanteRequest(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, ContatoRequest contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre) : base(id, tenantId, nome, apelido, documento, site, contato, telefoneVisivel, assinarNewsletter, dataNascimento, estado, cidade, sobre)
+    public CreateAdotanteRequest(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, ContatoRequest contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre) : base(id, tenantId, EUsuarioTipo.Adotante, nome, apelido, documento, site, contato, telefoneVisivel, assinarNewsletter, dataNascimento, estado, cidade, sobre)
     {
     }
 }

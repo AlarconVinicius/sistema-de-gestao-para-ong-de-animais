@@ -1,15 +1,19 @@
-﻿using SGONGA.WebAPI.Business.Requests.Shared;
+﻿using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Requests.Shared;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace SGONGA.WebAPI.Business.Requests;
-public abstract class CreateUsuarioRequest : Request
+public class CreateUsuarioRequest : Request
 {
     [DisplayName("Id")]
     public Guid Id { get; set; } = Guid.NewGuid();
 
     [DisplayName("Tenant Id")]
     public Guid TenantId { get; set; } = Guid.NewGuid();
+
+    [DisplayName("Tipo de Usuário")]
+    public EUsuarioTipo UsuarioTipo { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [StringLength(100, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
@@ -57,12 +61,13 @@ public abstract class CreateUsuarioRequest : Request
     [StringLength(500, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
     [DisplayName("Sobre")]
     public string? Sobre { get; set; } = string.Empty;
-    protected CreateUsuarioRequest() { }
+    public CreateUsuarioRequest() { }
 
-    protected CreateUsuarioRequest(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, ContatoRequest contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre)
+    public CreateUsuarioRequest(Guid id, Guid tenantId, EUsuarioTipo usuarioTipo, string nome, string apelido, string documento, string site, ContatoRequest contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre)
     {
         Id = id;
         TenantId = tenantId;
+        UsuarioTipo = usuarioTipo;
         Nome = nome;
         Apelido = apelido;
         Documento = documento;
