@@ -76,7 +76,7 @@ public static class ApiConfig
 
     public static void RunSeeds(this IApplicationBuilder app, IServiceProvider serviceProvider)
     {
-        SeedONGData.SeedONGAndColaborador(serviceProvider);
+        SeedONGData.SeedUsuarioDefault(serviceProvider);
 
         SeedIdentityDataAsync.SeedIdentityAsync(serviceProvider).GetAwaiter().GetResult();
     }

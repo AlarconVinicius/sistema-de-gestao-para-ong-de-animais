@@ -97,75 +97,78 @@ public class IdentitiesController : ApiController
     #endregion
 
     #region Admin Methods
-    ///// <summary>
-    ///// Cadastra um novo usuário (SuperAdmin).
-    ///// </summary>
-    ///// <remarks>
-    ///// Este endpoint permite o cadastro de um novo usuário de forma administrativa.
-    ///// Para uso administrativo, é necessário fornecer o cabeçalho de autenticação apropriado:
-    ///// 
-    ///// - **Authorization**: Bearer Token para autenticação do usuário.
-    ///// 
-    ///// O token deve ser obtido no fluxo de autenticação e incluído no formato `Bearer {token}`.
-    ///// </remarks>
-    ///// <param name="request">Dados de cadastro do usuário</param>
-    ///// <returns>Resposta indicando o sucesso ou falha na criação do usuário</returns>
-    ///// <response code="200">Usuário criado com sucesso</response>
-    ///// <response code="400">Retorna erros relacionados à requisição</response>
-    ///// <response code="401">Usuário não autorizado. Token de autenticação ausente ou inválido</response>
-    ///// <response code="403">Permissão negada. Usuário não possui privilégios para acessar este recurso</response>
+    /// <summary>
+    /// Cadastra um novo usuário (SuperAdmin).
+    /// </summary>
+    /// <remarks>
+    /// Este endpoint permite o cadastro de um novo usuário de forma administrativa.
+    /// Para uso administrativo, é necessário fornecer o cabeçalho de autenticação apropriado:
+    /// 
+    /// - **Authorization**: Bearer Token para autenticação do usuário.
+    /// 
+    /// O token deve ser obtido no fluxo de autenticação e incluído no formato `Bearer {token}`.
+    /// </remarks>
+    /// <param name="request">Dados de cadastro do usuário</param>
+    /// <returns>Resposta indicando o sucesso ou falha na criação do usuário</returns>
+    /// <response code="200">Usuário criado com sucesso</response>
+    /// <response code="400">Retorna erros relacionados à requisição</response>
+    /// <response code="401">Usuário não autorizado. Token de autenticação ausente ou inválido</response>
+    /// <response code="403">Permissão negada. Usuário não possui privilégios para acessar este recurso</response>
     //[ClaimsAuthorize("Permissions", "SuperAdmin")]
-    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
-    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-    //[HttpPost("cadastrar")]
-    //public async Task<IActionResult> Create(CreateUserRequest request)
-    //{
-    //    if (!ModelState.IsValid)
-    //    {
-    //        return ResponseBadRequest(ModelState);
-    //    }
-    //    var response = await _identityHandler.CreateAsync(request);
+    [AllowAnonymous]
+    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [HttpPost("cadastrar")]
+    public async Task<IActionResult> Create(CreateUserRequest request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return ResponseBadRequest(ModelState);
+        }
+        var response = await _identityHandler.CreateAsync(request);
 
-    //    return IsOperationValid() ? ResponseOk(response) : ResponseBadRequest();
-    //}
+        return IsOperationValid() ? ResponseOk(response) : ResponseBadRequest();
+    }
 
 
-    ///// <summary>
-    ///// Deleta um usuário (SuperAdmin).
-    ///// </summary>
-    ///// <remarks>
-    ///// Este endpoint permite a exclusão de um usuário específico de forma administrativa.
-    ///// Para uso administrativo, é necessário fornecer o cabeçalho de autenticação apropriado:
-    ///// 
-    ///// - **Authorization**: Bearer Token para autenticação do usuário.
-    ///// 
-    ///// O token deve ser obtido no fluxo de autenticação e incluído no formato `Bearer {token}`.
-    ///// </remarks>
-    ///// <param name="id">ID do usuário (GUID)</param>
-    ///// <returns>Resposta indicando o sucesso ou falha na exclusão do usuário</returns>
-    ///// <response code="200">Usuário deletado com sucesso</response>
-    ///// <response code="400">Retorna erros relacionados à requisição</response>
-    ///// <response code="401">Usuário não autorizado. Token de autenticação ausente ou inválido</response>
-    ///// <response code="403">Permissão negada. Usuário não possui privilégios para acessar este recurso</response>
+    /// <summary>
+    /// Deleta um usuário (Admin).
+    /// </summary>
+    /// <remarks>
+    /// Este endpoint permite a exclusão de um usuário específico de forma administrativa.
+    /// Para uso administrativo, é necessário fornecer o cabeçalho de autenticação apropriado:
+    /// 
+    /// - **Authorization**: Bearer Token para autenticação do usuário.
+    /// - **TenantId**: ID do locatário para identificar o ambiente.
+    /// 
+    /// O token deve ser obtido no fluxo de autenticação e incluído no formato `Bearer {token}`.
+    /// O `TenantId` deve ser o identificador do locatário que está fazendo a requisição.
+    /// </remarks>
+    /// <param name="id">ID do usuário (GUID)</param>
+    /// <returns>Resposta indicando o sucesso ou falha na exclusão do usuário</returns>
+    /// <response code="200">Usuário deletado com sucesso</response>
+    /// <response code="400">Retorna erros relacionados à requisição</response>
+    /// <response code="401">Usuário não autorizado. Token de autenticação ausente ou inválido</response>
+    /// <response code="403">Permissão negada. Usuário não possui privilégios para acessar este recurso</response>
     //[ClaimsAuthorize("Permissions", "SuperAdmin")]
-    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
-    //[ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
-    //[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-    //[HttpDelete("{id:guid}")]
-    //public async Task<IActionResult> Delete(Guid id)
-    //{
-    //    DeleteUserRequest request = new(id);
-    //    if (!ModelState.IsValid)
-    //    {
-    //        return ResponseBadRequest(ModelState);
-    //    }
-    //    await _identityHandler.DeleteAsync(request);
+    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        DeleteUserRequest request = new(id);
+        if (!ModelState.IsValid)
+        {
+            return ResponseBadRequest(ModelState);
+        }
+        await _identityHandler.DeleteAsync(request);
 
-    //    return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
-    //}
+        return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
+    }
 
     ///// <summary>
     ///// Retorna as informações de um usuário pelo ID (SuperAdmin).
