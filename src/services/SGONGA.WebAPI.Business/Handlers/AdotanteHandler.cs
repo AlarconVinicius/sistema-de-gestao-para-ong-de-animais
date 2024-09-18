@@ -4,58 +4,55 @@ using SGONGA.Core.User;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Mappings;
-using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.Models.DomainObjects;
 using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
 
 namespace SGONGA.WebAPI.Business.Handlers;
 
-public class AdotanteHandler : BaseHandler, IAdotanteHandler
+public class AdotanteHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork unitOfWork) : BaseHandler(notifier, appUser), IAdotanteHandler
 {
-    public readonly IUnitOfWork _unitOfWork;
-    public readonly SolicitacaoCadastroProvider _solicitacaoCadastroProvider;
+    public readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public AdotanteHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork unitOfWork, SolicitacaoCadastroProvider solicitacaoCadastroProvider) : base(notifier, appUser)
-    {
-        _unitOfWork = unitOfWork;
-        _solicitacaoCadastroProvider = solicitacaoCadastroProvider;
-    }
-
-    public async Task<AdotanteResponse> GetByIdAsync(GetAdotanteByIdRequest request)
+    public async Task<UsuarioResponse> GetByIdAsync(GetUsuarioByIdRequest request)
     {
         try
         {
-            if (!AdotanteExiste(request.Id))
+            if (!AdotanteExiste(request.Id, request.TenantFiltro))
             {
                 Notify("Adotante não encontrado.");
                 return null!;
             }
-            var adotante = await _unitOfWork.AdotanteRepository.GetByIdAsync(request.Id);
+            var adotante = request.TenantFiltro
+                           ? await _unitOfWork.AdotanteRepository.GetByIdAsync(request.Id) 
+                           : await _unitOfWork.AdotanteRepository.GetByIdWithoutTenantAsync(request.Id);
 
-            return adotante.MapDomainToResponse();
+            return adotante.MapAdotanteDomainToResponse();
         }
-        catch
+        catch (Exception ex)
         {
-            Notify("Não foi possível recuperar o adotante.");
+            Notify($"Não foi possível recuperar o adotante.: {ex.Message}");
             return null!;
         }
     }
 
-    public async Task<PagedResponse<AdotanteResponse>> GetAllAsync(GetAllAdotantesRequest request)
+    public async Task<PagedResponse<UsuarioResponse>> GetAllAsync(GetAllUsuariosRequest request)
     {
         try
         {
-            return (await _unitOfWork.AdotanteRepository.GetAllPagedAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapDomainToResponse();
+            var adotantes = request.TenantFiltro
+                           ? (await _unitOfWork.AdotanteRepository.GetAllPagedAsync()).MapAdotanteDomainToResponse()
+                           : (await _unitOfWork.AdotanteRepository.GetAllPagedWithoutTenantAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapAdotanteDomainToResponse();
+            return adotantes;
         }
-        catch
+        catch (Exception ex)
         {
-            Notify("Não foi possível recuperar os adotantes.");
+            Notify($"Não foi possível recuperar os adotantes.: {ex.Message}");
             return null!;
         }
     }
 
-    public async Task CreateAsync(CreateAdotanteRequest request)
+    public async Task CreateAsync(CreateUsuarioRequest request)
     {
         //if (!ExecuteValidation(new AdotanteValidation(), adotante)) return;
         if (DocumentoEmUso(request.Documento))
@@ -76,17 +73,17 @@ public class AdotanteHandler : BaseHandler, IAdotanteHandler
         }
         try
         {
-            await _unitOfWork.AdotanteRepository.AddAsync(request.MapRequestToDomain());
+            await _unitOfWork.AdotanteRepository.AddAsync(request.MapRequestToAdotanteDomain());
             return;
         }
-        catch
+        catch (Exception ex)
         {
-            Notify("Não foi possível criar o adotante.");
+            Notify($"Não foi possível criar o adotante.: {ex.Message}");
             return;
         }
     }
 
-    public async Task UpdateAsync(UpdateAdotanteRequest request)
+    public async Task UpdateAsync(UpdateUsuarioRequest request)
     {
         //if (!ExecuteValidation(new AdotanteValidation(), adotante)) return;
 
@@ -96,7 +93,7 @@ public class AdotanteHandler : BaseHandler, IAdotanteHandler
             return;
         }
 
-        if (!AdotanteExiste(request.Id))
+        if (!AdotanteExiste(request.Id, true))
         {
             Notify("Adotante não encontrado.");
             return;
@@ -122,50 +119,52 @@ public class AdotanteHandler : BaseHandler, IAdotanteHandler
                 newEmail = request.Contato.Email;
             }
             adotanteDb.SetNome(request.Nome);
-            adotanteDb.SetContato(new Contato(request.Contato.Telefone,newEmail));
+            adotanteDb.SetApelido(request.Apelido);
+            adotanteDb.SetSite(request.Site);
+            adotanteDb.SetContato(new Contato(request.Contato.Telefone, newEmail));
+            adotanteDb.SetEndereco(request.Estado, request.Cidade);
 
             _unitOfWork.AdotanteRepository.UpdateAsync(adotanteDb);
-
-            await _unitOfWork.CommitAsync();
             return;
         }
-        catch
+        catch (Exception ex)
         {
-            Notify("Não foi possível atualizar o Adotante.");
+            Notify($"Não foi possível atualizar o Adotante.: {ex.Message}");
             return;
         }
     }
 
-    public async Task DeleteAsync(DeleteAdotanteRequest request)
+    public async Task DeleteAsync(DeleteUsuarioRequest request)
     {
-        if (!EhSuperAdmin())
+        if (AppUser.GetUserId() != request.Id && !EhSuperAdmin())
         {
             Notify("Você não tem permissão para deletar.");
             return;
         }
         try
         {
-            if (!_unitOfWork.AdotanteRepository.SearchAsync(f => f.Id == request.Id).Result.Any())
+            if (!AdotanteExiste(request.Id, true))
             {
                 Notify("Adotante não encontrado.");
                 return;
             }
 
             _unitOfWork.AdotanteRepository.DeleteAsync(request.Id);
-
-            await _unitOfWork.CommitAsync();
             return;
         }
-        catch
+        catch (Exception ex)
         {
-            Notify("Não foi possível deletar o adotante.");
+            Notify($"Não foi possível deletar o adotante.: {ex.Message}");
             return;
         }
     }
 
-    private bool AdotanteExiste(Guid id)
+
+    private bool AdotanteExiste(Guid id, bool tenantFiltro)
     {
-        if (_unitOfWork.AdotanteRepository.SearchAsync(f => f.Id == id).Result.Any())
+        if (tenantFiltro 
+            ? _unitOfWork.AdotanteRepository.SearchAsync(f => f.Id == id).Result.Any() 
+            : _unitOfWork.AdotanteRepository.SearchWithoutTenantAsync(f => f.Id == id).Result.Any())
         {
             return true;
         };
@@ -173,16 +172,15 @@ public class AdotanteHandler : BaseHandler, IAdotanteHandler
     }
     private bool ApelidoEmUso(string apelido)
     {
-        if (_unitOfWork.AdotanteRepository.SearchAsync(f => f.Apelido == apelido || f.Slug == apelido.SlugifyString()).Result.Any())
+        if (_unitOfWork.AdotanteRepository.SearchWithoutTenantAsync(f => f.Apelido == apelido || f.Slug == apelido.SlugifyString()).Result.Any())
         {
             return true;
         };
         return false;
     }
-
     private bool DocumentoEmUso(string documento)
     {
-        if (_unitOfWork.AdotanteRepository.SearchAsync(f => f.Documento == documento).Result.Any())
+        if (_unitOfWork.AdotanteRepository.SearchWithoutTenantAsync(f => f.Documento == documento).Result.Any())
         {
             return true;
         };
@@ -190,13 +188,12 @@ public class AdotanteHandler : BaseHandler, IAdotanteHandler
     }
     private bool EmailEmUso(string email)
     {
-        if (_unitOfWork.AdotanteRepository.SearchAsync(f => f.Contato.Email.Endereco == email).Result.Any())
+        if (_unitOfWork.AdotanteRepository.SearchWithoutTenantAsync(f => f.Contato.Email.Endereco == email).Result.Any())
         {
             return true;
         };
         return false;
     }
-
     private bool EhSuperAdmin()
     {
         if (AppUser.HasClaim("Permissions", "SuperAdmin"))

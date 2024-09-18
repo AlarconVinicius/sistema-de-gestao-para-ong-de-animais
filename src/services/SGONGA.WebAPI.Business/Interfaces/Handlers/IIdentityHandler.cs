@@ -13,4 +13,5 @@ public interface IIdentityHandler
     Task DeleteAsync(DeleteUserRequest request);
     Task<UserResponse> GetByIdAsync(GetUserByIdRequest request);
     Task<PagedResponse<UserResponse>> GetAllAsync(GetAllUsersRequest request);
+    Task AddOrUpdateUserClaimAsync(AddOrUpdateUserClaimRequest request);
 }

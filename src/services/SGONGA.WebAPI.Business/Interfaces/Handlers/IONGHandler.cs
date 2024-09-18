@@ -5,9 +5,9 @@ namespace SGONGA.WebAPI.Business.Interfaces.Handlers;
 
 public interface IONGHandler
 {
-    Task CreateAsync(CreateONGRequest request);
-    Task UpdateAsync(UpdateONGRequest request);
-    Task DeleteAsync(DeleteONGRequest request);
-    Task<ONGResponse> GetByIdAsync(GetONGByIdRequest request);
-    Task<PagedResponse<ONGResponse>> GetAllAsync(GetAllONGsRequest request);
+    Task CreateAsync(CreateUsuarioRequest request);
+    Task UpdateAsync(UpdateUsuarioRequest request);
+    Task DeleteAsync(DeleteUsuarioRequest request);
+    Task<UsuarioResponse> GetByIdAsync(GetUsuarioByIdRequest request);
+    Task<PagedResponse<UsuarioResponse>> GetAllAsync(GetAllUsuariosRequest request);
 }

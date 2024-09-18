@@ -9,6 +9,7 @@ public static class DependencyInjectionConfig
 {
     public static IServiceCollection RegisterBusinessServices(this IServiceCollection services)
     {
+        services.AddScoped<IUsuarioHandler, UsuarioHandler>();
         services.AddScoped<IONGHandler, ONGHandler>();
         services.AddScoped<IAnimalHandler, AnimalHandler>();
         services.AddScoped<IAdotanteHandler, AdotanteHandler>();

@@ -2,7 +2,7 @@
 using System.ComponentModel;
 
 namespace SGONGA.WebAPI.Business.Responses;
-public abstract class UsuarioResponse : Response
+public class UsuarioResponse : Response
 {
     [DisplayName("Id")]
     public Guid Id { get; set; } = Guid.NewGuid();
@@ -42,15 +42,18 @@ public abstract class UsuarioResponse : Response
     [DisplayName("Sobre")]
     public string? Sobre { get; set; } = string.Empty;
 
+    [DisplayName("Chave Pix")]
+    public string? ChavePix { get; set; } = string.Empty;
+
     [DisplayName("Data de Cadastro")]
     public DateTime CreatedAt { get; set; }
 
     [DisplayName("Data de Modificação")]
     public DateTime UpdatedAt { get; set; }
 
-    protected UsuarioResponse() { }
+    public UsuarioResponse() { }
 
-    protected UsuarioResponse(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, ContatoResponse contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, DateTime createdAt, DateTime updatedAt)
+    public UsuarioResponse(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, ContatoResponse contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, string? chavePix, DateTime createdAt, DateTime updatedAt)
     {
         Id = id;
         TenantId = tenantId;
@@ -65,6 +68,7 @@ public abstract class UsuarioResponse : Response
         Estado = estado;
         Cidade = cidade;
         Sobre = sobre;
+        ChavePix = chavePix;
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }

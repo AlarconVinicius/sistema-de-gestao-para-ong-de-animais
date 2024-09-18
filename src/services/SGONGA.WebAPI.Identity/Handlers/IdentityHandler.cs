@@ -18,25 +18,12 @@ using System.Text;
 
 namespace SGONGA.WebAPI.Identity.Handlers;
 
-public class IdentityHandler : BaseHandler, IIdentityHandler
+public class IdentityHandler(INotifier notifier, IAspNetUser appUser, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IOptions<AppSettings> appSettings) : BaseHandler(notifier, appUser), IIdentityHandler
 {
-    private readonly SignInManager<IdentityUser> _signInManager;
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IONGHandler _ongHandler;
-    private readonly IAdotanteHandler _adotanteHandler;
-    private readonly AppSettings _appSettings;
-    public IdentityHandler(INotifier notifier, IAspNetUser appUser, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IOptions<AppSettings> appSettings, IUnitOfWork unitOfWork, IONGHandler ongHandler, IAdotanteHandler adotanteHandler) : base(notifier, appUser)
-    {
-        _signInManager = signInManager;
-        _userManager = userManager;
-        _roleManager = roleManager;
-        _appSettings = appSettings.Value;
-        _unitOfWork = unitOfWork;
-        _ongHandler = ongHandler;
-        _adotanteHandler = adotanteHandler;
-    }
+    private readonly SignInManager<IdentityUser> _signInManager = signInManager;
+    private readonly UserManager<IdentityUser> _userManager = userManager;
+    private readonly RoleManager<IdentityRole> _roleManager = roleManager;
+    private readonly AppSettings _appSettings = appSettings.Value;
 
     public async Task<LoginUserResponse> LoginAsync(LoginUserRequest request)
     {
@@ -67,16 +54,11 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
             Notify("As senhas não conferem.");
             return null!;
         }
-        if (!await ManipularCriacaoUsuarioAsync(request.Usuario))
-        {
-            Notify("Dados de usuário inválidos.");
-            return null!;
-        }
         var user = new IdentityUser
         {
-            Id = request.Usuario.Id.ToString(),
-            UserName = request.Usuario.Contato.Email,
-            Email = request.Usuario.Contato.Email,
+            Id = request.Id.ToString(),
+            UserName = request.Email,
+            Email = request.Email,
             EmailConfirmed = true,
         };
 
@@ -90,12 +72,10 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
             }
             return null!;
         }
-        await AddOrUpdateUserClaimAsync(new AddOrUpdateUserClaimRequest(request.Usuario.Id, new UserClaim("Tenant", request.Usuario.TenantId.ToString())));
-        await _unitOfWork.CommitAsync();
 
         await _signInManager.SignInAsync(user, false);
 
-        return await GenerateJwt(request.Usuario.Contato.Email);
+        return await GenerateJwt(request.Email);
     }
 
     public async Task UpdateEmailAsync(UpdateUserEmailRequest request)
@@ -161,20 +141,9 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
             Notify("Você não tem permissão para deletar.");
             return;
         }
-        var usuarioTipo = IdentificarTipoUsuario(userId);
-        if (usuarioTipo is null)
-        {
-            Notify("Usuário não encontrado.");
-            return;
-        }
         if (!await UserExists(userId.ToString()))
         {
             Notify("Usuário não encontrado.");
-            return;
-        }
-        if (!await ManipularDelecaoUsuarioAsync(request, (EUsuarioTipo)usuarioTipo))
-        {
-            Notify("Dados de usuário inválidos.");
             return;
         }
         var userDb = await _userManager.FindByIdAsync(userId.ToString());
@@ -203,7 +172,6 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
             Notify("Erro ao deletar usuário.");
             return;
         }
-        await _unitOfWork.CommitAsync();
         return;
     }
 
@@ -224,80 +192,7 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
         throw new NotImplementedException();
     }
 
-    private bool EhSuperAdmin()
-    {
-        if (AppUser.HasClaim("Permissions", "SuperAdmin"))
-        {
-            return true;
-        }
-        return false;
-    }
-    private EUsuarioTipo? IdentificarTipoUsuario(Guid id)
-    {
-        if (_unitOfWork.AdotanteRepository.SearchAsync(f => f.Id == id).Result.Any())
-        {
-            return EUsuarioTipo.Adotante;
-        }
-        if (_unitOfWork.ONGRepository.SearchAsync(f => f.Id == id).Result.Any())
-        {
-            return EUsuarioTipo.ONG;
-        }
-        return null!;
-    }
-    private async Task<bool> ManipularCriacaoUsuarioAsync(CreateUsuarioRequest request)
-    {
-        Usuario? userDb;
-
-        switch (request.UsuarioTipo)
-        {
-            case EUsuarioTipo.Adotante:
-                userDb = await _unitOfWork.AdotanteRepository.GetByIdWithoutTenantAsync(request.Id);
-                if (userDb == null)
-                {
-                    CreateAdotanteRequest adotante = new(request.Id, request.TenantId, request.Nome, request.Apelido, request.Documento, request.Site, request.Contato, request.TelefoneVisivel, request.AssinarNewsletter, request.DataNascimento, request.Estado, request.Cidade, request.Sobre);
-                    await _adotanteHandler.CreateAsync(adotante);
-                }
-                break;
-
-            case EUsuarioTipo.ONG:
-                userDb = await _unitOfWork.ONGRepository.GetByIdWithoutTenantAsync(request.Id);
-                if (userDb == null)
-                {
-                    CreateONGRequest ong = new(request.Id, request.TenantId, request.Nome, request.Apelido, request.Documento, request.Site, request.Contato, request.TelefoneVisivel, request.AssinarNewsletter, request.DataNascimento, request.Estado, request.Cidade, request.Sobre, "");
-                    await _ongHandler.CreateAsync(ong);
-                }
-                break;
-            default:
-                return false;
-        }
-        if (!IsOperationValid())
-        {
-            return false;
-        };
-        return true;
-    }
-    private async Task<bool> ManipularDelecaoUsuarioAsync(DeleteUserRequest request, EUsuarioTipo usuarioTipo)
-    {
-        switch (usuarioTipo)
-        {
-            case EUsuarioTipo.Adotante:
-                    await _adotanteHandler.DeleteAsync(new DeleteAdotanteRequest(request.Id));
-                break;
-
-            case EUsuarioTipo.ONG:
-                    await _ongHandler.DeleteAsync(new DeleteONGRequest(request.Id));
-                break;
-            default:
-                return false;
-        }
-        if (!IsOperationValid())
-        {
-            return false;
-        };
-        return true;
-    }
-    #region IdentityHelpers
-    private async Task AddOrUpdateUserClaimAsync(AddOrUpdateUserClaimRequest request)
+    public async Task AddOrUpdateUserClaimAsync(AddOrUpdateUserClaimRequest request)
     {
         var userId = request.Id.ToString();
         if (!await UserExists(userId))
@@ -317,6 +212,18 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
         await _userManager.AddClaimAsync(userDb!, newClaim);
         return;
     }
+
+
+    private bool EhSuperAdmin()
+    {
+        if (AppUser.HasClaim("Permissions", "SuperAdmin"))
+        {
+            return true;
+        }
+        return false;
+    }
+
+    #region IdentityHelpers
     private async Task<bool> UserExists(string userId)
     {
         return await _userManager.FindByIdAsync(userId) != null!;

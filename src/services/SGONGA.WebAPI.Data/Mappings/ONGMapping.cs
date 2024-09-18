@@ -17,6 +17,7 @@ public class ONGMapping : IEntityTypeConfiguration<ONG>
 
         builder.HasMany(o => o.Animais)
             .WithOne(a => a.ONG)
+            .HasPrincipalKey(a => a.TenantId)
             .HasForeignKey(a => a.TenantId);
     }
 }

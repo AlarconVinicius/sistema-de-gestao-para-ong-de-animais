@@ -7,8 +7,13 @@ namespace SGONGA.WebAPI.Business.Requests;
 
 public class CreateUserRequest : Request
 {
-    [DisplayName("Usuário")]
-    public CreateUsuarioRequest Usuario { get; set; } = null!;
+    public Guid Id { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório.")]
+    [EmailAddress(ErrorMessage = "O campo {0} não é válido.")]
+    [StringLength(254, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
+    [DisplayName("E-mail")]
+    public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [StringLength(100, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres.", MinimumLength = 6)]
@@ -21,9 +26,10 @@ public class CreateUserRequest : Request
 
     public CreateUserRequest() { }
 
-    public CreateUserRequest(CreateUsuarioRequest usuario, string senha, string confirmarSenha)
+    public CreateUserRequest(Guid id, string email, string senha, string confirmarSenha)
     {
-        Usuario = usuario;
+        Id = id;
+        Email = email;
         Senha = senha;
         ConfirmarSenha = confirmarSenha;
     }
