@@ -9,11 +9,10 @@ public static class DependencyInjectionConfig
 {
     public static IServiceCollection RegisterBusinessServices(this IServiceCollection services)
     {
+        services.AddScoped<IUsuarioHandler, UsuarioHandler>();
         services.AddScoped<IONGHandler, ONGHandler>();
         services.AddScoped<IAnimalHandler, AnimalHandler>();
-        services.AddScoped<IColaboradorHandler, ColaboradorHandler>();
-        services.AddScoped<ISolicitacaoCadastroHandler, SolicitacaoCadastroHandler>();
-        services.AddScoped<SolicitacaoCadastroProvider>();
+        services.AddScoped<IAdotanteHandler, AdotanteHandler>();
 
         return services;
     }

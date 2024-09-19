@@ -3,7 +3,7 @@ using SGONGA.WebAPI.Business.Responses;
 
 namespace SGONGA.WebAPI.Business.Interfaces.Handlers;
 
-public interface IONGHandler
+public interface IAdotanteHandler
 {
     Task CreateAsync(CreateUsuarioRequest request);
     Task UpdateAsync(UpdateUsuarioRequest request);

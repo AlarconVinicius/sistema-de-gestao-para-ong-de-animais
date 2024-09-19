@@ -11,8 +11,8 @@ public static class SeedIdentityDataAsync
         {
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
             var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var ongId = Guid.Parse("05bf1089-6015-4c2d-bf7c-1cbfa920ce23");
             var userId = Guid.Parse("2f805cb2-1c01-4d88-92ec-a989bad5b0af");
+            var tenantId = Guid.Parse("05bf1089-6015-4c2d-bf7c-1cbfa920ce23");
 
             var adminEmail = "tenant@email.com";
             var adminPassword = "Admin@123";
@@ -41,11 +41,11 @@ public static class SeedIdentityDataAsync
                 }
             }
 
-            var hasTenantClaim = (await userManager.GetClaimsAsync(adminUser)).Any(c => c.Type == "Tenant" && c.Value == ongId.ToString());
+            var hasTenantClaim = (await userManager.GetClaimsAsync(adminUser)).Any(c => c.Type == "Tenant" && c.Value == tenantId.ToString());
             var hasSuperAdminClaim = (await userManager.GetClaimsAsync(adminUser)).Any(c => c.Type == "Permissions" && c.Value == "SuperAdmin");
             if (!hasTenantClaim)
             {
-                await userManager.AddClaimAsync(adminUser, new Claim("Tenant", ongId.ToString()));
+                await userManager.AddClaimAsync(adminUser, new Claim("Tenant", tenantId.ToString()));
             }
             if (!hasSuperAdminClaim)
             {

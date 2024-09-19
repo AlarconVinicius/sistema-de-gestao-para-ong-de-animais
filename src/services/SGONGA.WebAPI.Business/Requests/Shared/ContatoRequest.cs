@@ -7,7 +7,7 @@ public class ContatoRequest
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]
     [Phone(ErrorMessage = "O campo {0} não é válido.")]
     [StringLength(15, ErrorMessage = "O campo {0} deve ter no máximo {1} caracteres.")]
-    [DisplayName("Telefone")]
+    [DisplayName("Whatsapp")]
     public string Telefone { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório.")]

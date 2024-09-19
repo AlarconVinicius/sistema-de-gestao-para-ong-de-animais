@@ -9,8 +9,7 @@ public class UnitOfWork : IUnitOfWork
 
     private IONGRepository? _ongRepository;
     private IAnimalRepository? _animalRepository;
-    private IColaboradorRepository? _colaboradorRepository;
-    private ISolicitacaoCadastroRepository? _solicitacaoCadastroRepository;
+    private IAdotanteRepository? _adotanteRepository;
 
     public UnitOfWork(ONGDbContext context)
     {
@@ -33,19 +32,11 @@ public class UnitOfWork : IUnitOfWork
         }
     }
 
-    public IColaboradorRepository ColaboradorRepository
+    public IAdotanteRepository AdotanteRepository
     {
         get
         {
-            return _colaboradorRepository ??= new ColaboradorRepository(_context);
-        }
-    }
-
-    public ISolicitacaoCadastroRepository SolicitacaoCadastroRepository
-    {
-        get
-        {
-            return _solicitacaoCadastroRepository ??= new SolicitacaoCadastroRepository(_context);
+            return _adotanteRepository ??= new AdotanteRepository(_context);
         }
     }
 

@@ -6,7 +6,6 @@ using SGONGA.Core.Notifications;
 using SGONGA.Core.User;
 using SGONGA.WebAPI.Business.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
-using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
 using System.IdentityModel.Tokens.Jwt;
@@ -15,21 +14,12 @@ using System.Text;
 
 namespace SGONGA.WebAPI.Identity.Handlers;
 
-public class IdentityHandler : BaseHandler, IIdentityHandler
+public class IdentityHandler(INotifier notifier, IAspNetUser appUser, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IOptions<AppSettings> appSettings) : BaseHandler(notifier, appUser), IIdentityHandler
 {
-    private readonly SignInManager<IdentityUser> _signInManager;
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly RoleManager<IdentityRole> _roleManager;
-    private readonly IColaboradorRepository _colaboradorRepository;
-    private readonly AppSettings _appSettings;
-    public IdentityHandler(INotifier notifier, IAspNetUser appUser, SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, IOptions<AppSettings> appSettings, IColaboradorRepository colaboradorRepository) : base(notifier, appUser)
-    {
-        _signInManager = signInManager;
-        _userManager = userManager;
-        _roleManager = roleManager;
-        _appSettings = appSettings.Value;
-        _colaboradorRepository = colaboradorRepository;
-    }
+    private readonly SignInManager<IdentityUser> _signInManager = signInManager;
+    private readonly UserManager<IdentityUser> _userManager = userManager;
+    private readonly RoleManager<IdentityRole> _roleManager = roleManager;
+    private readonly AppSettings _appSettings = appSettings.Value;
 
     public async Task<LoginUserResponse> LoginAsync(LoginUserRequest request)
     {
@@ -55,23 +45,11 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
 
     public async Task<LoginUserResponse> CreateAsync(CreateUserRequest request)
     {
-        if (!EhSuperAdmin())
-        {
-            Notify("Você não tem permissão para adicionar.");
-            return null!;
-        }
         if (request.Senha != request.ConfirmarSenha)
         {
             Notify("As senhas não conferem.");
             return null!;
         }
-        var employeeDb = await _colaboradorRepository.GetByIdWithoutTenantAsync(request.Id);
-        if (employeeDb is null)
-        {
-            Notify("Colaborador não encontrado.");
-            return null!;
-        };
-
         var user = new IdentityUser
         {
             Id = request.Id.ToString(),
@@ -90,8 +68,6 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
             }
             return null!;
         }
-
-        await AddOrUpdateUserClaimAsync(new AddOrUpdateUserClaimRequest(request.Id, new UserClaim("Tenant", employeeDb.TenantId.ToString())));
 
         await _signInManager.SignInAsync(user, false);
 
@@ -155,18 +131,18 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
 
     public async Task DeleteAsync(DeleteUserRequest request)
     {
-        if (!EhSuperAdmin())
+        var userId = request.Id;
+        if(AppUser.GetUserId() != userId && !EhSuperAdmin())
         {
             Notify("Você não tem permissão para deletar.");
             return;
         }
-        var userId = request.Id.ToString();
-        var userDb = await _userManager.FindByIdAsync(userId);
-        if (!await UserExists(userId))
+        if (!await UserExists(userId.ToString()))
         {
             Notify("Usuário não encontrado.");
             return;
         }
+        var userDb = await _userManager.FindByIdAsync(userId.ToString());
 
         var logins = await _userManager.GetLoginsAsync(userDb!);
         foreach (var login in logins)
@@ -192,7 +168,6 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
             Notify("Erro ao deletar usuário.");
             return;
         }
-
         return;
     }
 
@@ -213,6 +188,28 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
         throw new NotImplementedException();
     }
 
+    public async Task AddOrUpdateUserClaimAsync(AddOrUpdateUserClaimRequest request)
+    {
+        var userId = request.Id.ToString();
+        if (!await UserExists(userId))
+        {
+            Notify("Usuário não encontrado.");
+            return;
+        }
+        var userDb = await _userManager.FindByIdAsync(userId);
+        var existingClaims = await _userManager.GetClaimsAsync(userDb!);
+        Claim existingClaim;
+        existingClaim = existingClaims.FirstOrDefault(c => c.Type == request.NewClaim.Type)!;
+        if (existingClaim != null)
+        {
+            await _userManager.RemoveClaimAsync(userDb!, existingClaim);
+        }
+        var newClaim = new Claim(request.NewClaim.Type, request.NewClaim.Value);
+        await _userManager.AddClaimAsync(userDb!, newClaim);
+        return;
+    }
+
+
     private bool EhSuperAdmin()
     {
         if (AppUser.HasClaim("Permissions", "SuperAdmin"))
@@ -223,28 +220,6 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
     }
 
     #region IdentityHelpers
-    private async Task AddOrUpdateUserClaimAsync(AddOrUpdateUserClaimRequest request)
-    {
-        var userId = request.Id.ToString();
-        if (!await UserExists(userId))
-        {
-            Notify("Usuário não encontrado.");
-            return;
-        }
-        var userDb = await _userManager.FindByIdAsync(userId);
-
-        var existingClaims = await _userManager.GetClaimsAsync(userDb!);
-        Claim existingClaim;
-        existingClaim = existingClaims.FirstOrDefault(c => c.Type == request.NewClaim.Type)!;
-
-        if (existingClaim != null)
-        {
-            await _userManager.RemoveClaimAsync(userDb!, existingClaim);
-        }
-        var newClaim = new Claim(request.NewClaim.Type, request.NewClaim.Value);
-        await _userManager.AddClaimAsync(userDb!, newClaim);
-        return;
-    }
     private async Task<bool> UserExists(string userId)
     {
         return await _userManager.FindByIdAsync(userId) != null!;
@@ -263,14 +238,10 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
         var userRoles = await _userManager.GetRolesAsync(userDb);
         AddStandardClaims(claims, userDb);
         AddUserRolesClaims(claims, userRoles);
-
         var token = GenerateToken(claims);
-
         var response = CreateResponse(token, userDb, claims);
-
         return response;
     }
-
     private void AddStandardClaims(List<Claim> claims, IdentityUser user)
     {
         claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
@@ -290,11 +261,8 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
     {
         var identityClaims = new ClaimsIdentity();
         identityClaims.AddClaims(claims);
-
         var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-
         var tokenHandler = new JwtSecurityTokenHandler();
-
         return tokenHandler.CreateToken(new SecurityTokenDescriptor
         {
             Subject = identityClaims,
@@ -303,12 +271,10 @@ public class IdentityHandler : BaseHandler, IIdentityHandler
             Expires = DateTime.UtcNow.AddHours(_appSettings.ExpirationHours),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         });
-
     }
     private LoginUserResponse CreateResponse(SecurityToken token, IdentityUser user, List<Claim> claims)
     {
         var encodedToken = new JwtSecurityTokenHandler().WriteToken(token);
-
         return new LoginUserResponse
         {
             AccessToken = encodedToken,

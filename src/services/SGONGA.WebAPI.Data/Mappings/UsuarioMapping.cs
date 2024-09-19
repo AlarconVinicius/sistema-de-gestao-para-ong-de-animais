@@ -5,11 +5,11 @@ using SGONGA.WebAPI.Business.Models.DomainObjects;
 
 namespace SGONGA.WebAPI.Data.Mappings;
 
-public class ColaboradorMapping : IEntityTypeConfiguration<Colaborador>
+public class UsuarioMapping : IEntityTypeConfiguration<Usuario>
 {
-    public void Configure(EntityTypeBuilder<Colaborador> builder)
+    public void Configure(EntityTypeBuilder<Usuario> builder)
     {
-        builder.ToTable("tbl_colaboradores");
+        builder.ToTable("tbl_usuarios");
 
         builder.HasKey(a => a.Id);
 
@@ -19,7 +19,26 @@ public class ColaboradorMapping : IEntityTypeConfiguration<Colaborador>
         builder.Property(a => a.TenantId)
             .IsRequired();
 
+        builder.Property(o => o.UsuarioTipo)
+            .IsRequired();
+
+        builder.Property(o => o.TelefoneVisivel)
+            .IsRequired();
+
+        builder.Property(o => o.AssinarNewsletter)
+            .IsRequired();
+
         builder.Property(o => o.Nome)
+            .IsRequired()
+            .HasMaxLength(100)
+            .HasColumnType("varchar(100)");
+
+        builder.Property(o => o.Apelido)
+            .IsRequired()
+            .HasMaxLength(100)
+            .HasColumnType("varchar(100)");
+
+        builder.Property(o => o.Slug)
             .IsRequired()
             .HasMaxLength(100)
             .HasColumnType("varchar(100)");
@@ -28,6 +47,25 @@ public class ColaboradorMapping : IEntityTypeConfiguration<Colaborador>
                 .IsRequired()
                 .HasMaxLength(11)
                 .HasColumnType("varchar(11)");
+
+        builder.Property(o => o.Site)
+            .IsRequired()
+            .HasMaxLength(200)
+            .HasColumnType("varchar(200)");
+
+        builder.Property(e => e.Cidade)
+                .IsRequired()
+                .HasMaxLength(50)
+                .HasColumnType("varchar(50)");
+
+        builder.Property(e => e.Estado)
+            .IsRequired()
+            .HasMaxLength(50)
+            .HasColumnType("varchar(50)");
+
+        builder.Property(e => e.Sobre)
+            .IsRequired(false)
+            .HasColumnType("text");
 
         builder.Property(c => c.DataNascimento)
                 .IsRequired();
@@ -53,9 +91,5 @@ public class ColaboradorMapping : IEntityTypeConfiguration<Colaborador>
                     .HasColumnType($"varchar({Email.ComprimentoMaxEndereco})");
             });
         });
-
-        builder.HasOne(a => a.ONG)
-            .WithMany(o => o.Colaboradores)
-            .HasForeignKey(a => a.TenantId);
     }
 }

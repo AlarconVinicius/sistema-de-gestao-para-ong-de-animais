@@ -4,7 +4,6 @@ public interface IUnitOfWork : IDisposable
 {
     IONGRepository ONGRepository { get; }
     IAnimalRepository AnimalRepository { get; }
-    IColaboradorRepository ColaboradorRepository { get; }
-    ISolicitacaoCadastroRepository SolicitacaoCadastroRepository { get; }
+    IAdotanteRepository AdotanteRepository { get; }
     Task<int> CommitAsync();
 }
