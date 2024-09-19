@@ -10,7 +10,6 @@ public class UnitOfWork : IUnitOfWork
     private IONGRepository? _ongRepository;
     private IAnimalRepository? _animalRepository;
     private IAdotanteRepository? _adotanteRepository;
-    private ISolicitacaoCadastroRepository? _solicitacaoCadastroRepository;
 
     public UnitOfWork(ONGDbContext context)
     {
@@ -38,14 +37,6 @@ public class UnitOfWork : IUnitOfWork
         get
         {
             return _adotanteRepository ??= new AdotanteRepository(_context);
-        }
-    }
-
-    public ISolicitacaoCadastroRepository SolicitacaoCadastroRepository
-    {
-        get
-        {
-            return _solicitacaoCadastroRepository ??= new SolicitacaoCadastroRepository(_context);
         }
     }
 

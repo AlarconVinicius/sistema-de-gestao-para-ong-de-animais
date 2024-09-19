@@ -8,13 +8,12 @@ using SGONGA.WebAPI.Business.Responses;
 
 namespace SGONGA.WebAPI.Business.Handlers;
 
-public class UsuarioHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork unitOfWork, IAdotanteHandler adotanteHandler, IONGHandler ongHandler, IIdentityHandler identityHandler, SolicitacaoCadastroProvider solicitacaoCadastroProvider) : BaseHandler(notifier, appUser), IUsuarioHandler
+public class UsuarioHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork unitOfWork, IAdotanteHandler adotanteHandler, IONGHandler ongHandler, IIdentityHandler identityHandler) : BaseHandler(notifier, appUser), IUsuarioHandler
 {
     public readonly IUnitOfWork _unitOfWork = unitOfWork;
     public readonly IAdotanteHandler _adotanteHandler = adotanteHandler;
     public readonly IONGHandler _ongHandler = ongHandler;
     public readonly IIdentityHandler _identityHandler = identityHandler;
-    public readonly SolicitacaoCadastroProvider _solicitacaoCadastroProvider = solicitacaoCadastroProvider;
 
     public async Task<UsuarioResponse> GetByIdAsync(GetUsuarioByIdRequest request)
     {

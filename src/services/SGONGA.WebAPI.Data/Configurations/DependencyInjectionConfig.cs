@@ -20,7 +20,6 @@ public static class DependencyInjectionConfig
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IONGRepository, ONGRepository>();
         services.AddScoped<IAnimalRepository, AnimalRepository>();
-        services.AddScoped<ISolicitacaoCadastroRepository, SolicitacaoCadastroRepository>();
 
         return services;
     }

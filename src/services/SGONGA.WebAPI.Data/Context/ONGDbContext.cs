@@ -18,7 +18,6 @@ public class ONGDbContext : DbContext
     public DbSet<Adotante> Adotantes { get; set; }
     public DbSet<ONG> ONGs { get; set; }
     public DbSet<Animal> Animais { get; set; }
-    public DbSet<SolicitacaoCadastro> SolicitacoesCadastro { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
