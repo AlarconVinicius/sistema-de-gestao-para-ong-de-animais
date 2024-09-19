@@ -1,6 +1,4 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SGONGA.Core.Configurations;
@@ -8,8 +6,6 @@ using SGONGA.Core.Notifications;
 using SGONGA.Core.User;
 using SGONGA.WebAPI.Business.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
-using SGONGA.WebAPI.Business.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
 using System.IdentityModel.Tokens.Jwt;
