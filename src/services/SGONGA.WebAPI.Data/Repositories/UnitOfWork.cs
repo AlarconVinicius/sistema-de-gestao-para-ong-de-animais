@@ -1,4 +1,5 @@
-﻿using SGONGA.WebAPI.Business.Interfaces.Repositories;
+﻿using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Data.Context;
 
 namespace SGONGA.WebAPI.Data.Repositories;
@@ -40,9 +41,10 @@ public class UnitOfWork : IUnitOfWork
         }
     }
 
-    public async Task<int> CommitAsync()
+    public async Task<Result<int>> CommitAsync()
     {
-        return await _context.SaveChangesAsync();
+        var result = await _context.SaveChangesAsync();
+        return result > 0 ? result : Result.Failure<int>(Error.CommitFailed);
     }
 
     public void Dispose()

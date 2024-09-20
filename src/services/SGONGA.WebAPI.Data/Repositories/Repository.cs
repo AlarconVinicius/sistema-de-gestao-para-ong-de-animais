@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Data.Context;
@@ -16,22 +17,40 @@ public class Repository<T> : IRepository<T> where T : Entity, new()
         Db = db;
         DbSet = db.Set<T>();
     }
-    public virtual async Task<IEnumerable<T>> SearchAsync(Expression<Func<T, bool>> predicate)
+    public virtual async Task<Result<IEnumerable<T>>> SearchAsync(Expression<Func<T, bool>> predicate)
     {
-        return await DbSet.AsNoTracking().Where(predicate).ToListAsync();
+        return await DbSet.AsNoTracking()
+                          .Where(predicate)
+                          .ToListAsync();
     }
 
-    public virtual async Task<T> GetByIdAsync(Guid id)
+    public virtual async Task<Result<IEnumerable<T>>> SearchWithoutTenantAsync(Expression<Func<T, bool>> predicate)
     {
-        return await DbSet.FindAsync(id) ?? null!;
+        return await DbSet.IgnoreQueryFilters()
+                          .AsNoTracking()
+                          .Where(predicate)
+                          .ToListAsync();
     }
 
-    public virtual async Task<List<T>> GetAllAsync()
+    public virtual async Task<Result<T>> GetByIdAsync(Guid id)
+    {
+        return await DbSet.AsNoTracking()
+                          .FirstOrDefaultAsync(c => c.Id == id) ?? null!;
+    }
+
+    public virtual async Task<Result<T>> GetByIdWithoutTenantAsync(Guid id)
+    {
+        return await DbSet.IgnoreQueryFilters()
+                          .AsNoTracking()
+                          .FirstOrDefaultAsync(c => c.Id == id) ?? null!;
+    }
+
+    public virtual async Task<Result<List<T>>> GetAllAsync()
     {
         return await DbSet.ToListAsync();
     }
 
-    public async Task<PagedResult<T>> GetAllPagedAsync(Expression<Func<T, bool>>? predicate = null, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false)
+    public virtual async Task<Result<PagedResult<T>>> GetAllPagedAsync(Expression<Func<T, bool>>? predicate = null, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false)
     {
         var result = new PagedResult<T>();
 
@@ -59,19 +78,50 @@ public class Repository<T> : IRepository<T> where T : Entity, new()
         };
     }
 
-    public virtual async Task AddAsync(T entity)
+    public virtual async Task<Result<PagedResult<T>>> GetAllPagedWithoutTenantAsync(Expression<Func<T, bool>>? predicate = null, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false)
+    {
+        var result = new PagedResult<T>();
+
+        var queryable = DbSet.IgnoreQueryFilters().AsQueryable();
+
+        if (predicate != null)
+        {
+            queryable = queryable.Where(predicate);
+        }
+
+        result.TotalResults = await queryable.CountAsync();
+
+        if (!returnAll)
+        {
+            queryable = queryable.Skip((page - 1) * pageSize).Take(pageSize);
+        }
+
+        return new PagedResult<T>()
+        {
+            List = await queryable.ToListAsync(),
+            TotalResults = await queryable.CountAsync(),
+            PageIndex = page,
+            PageSize = pageSize,
+            Query = query
+        };
+    }
+
+    public virtual async Task<Result> AddAsync(T entity)
     {
         await DbSet.AddAsync(entity);
+        return Result.Success();
     }
 
-    public virtual void UpdateAsync(T entity)
+    public virtual Result Update(T entity)
     {
         DbSet.Update(entity);
+        return Result.Success();
     }
 
-    public virtual void DeleteAsync(Guid id)
+    public virtual Result Delete(Guid id)
     {
         DbSet.Remove(new T { Id = id });
+        return Result.Success();
     }
 
     public void Dispose()

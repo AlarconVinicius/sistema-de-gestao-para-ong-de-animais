@@ -1,11 +1,15 @@
-﻿using SGONGA.WebAPI.Business.Models;
-using System.Linq.Expressions;
+﻿using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.Models;
 
 namespace SGONGA.WebAPI.Business.Interfaces.Repositories;
 
 public interface IONGRepository : IRepository<ONG>
 {
-    Task<ONG> GetByIdWithoutTenantAsync(Guid id);
-    Task<PagedResult<ONG>> GetAllPagedWithoutTenantAsync(Expression<Func<ONG, bool>>? predicate = null, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false);
-    Task<IEnumerable<ONG>> SearchWithoutTenantAsync(Expression<Func<ONG, bool>> predicate);
+    Task<Result<ONG>> GetByIdWithAnimalsAsync(Guid id);
+
+    Task<Result<ONG>> GetByIdWithAnimalsWithoutTenantAsync(Guid id);
+    
+    Task<Result<ONG>> GetBySlugAsync(string slug);
+
+    Task<Result<ONG>> GetBySlugWithoutTenantAsync(string slug);
 }
