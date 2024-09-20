@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SGONGA.Core.Configurations;
+using SGONGA.WebAPI.API.Infrastructure;
 using SGONGA.WebAPI.API.Middlewares;
 using SGONGA.WebAPI.Data.Context;
 using SGONGA.WebAPI.Data.Seed;
@@ -19,6 +19,9 @@ public static class ApiConfig
             options.SuppressModelStateInvalidFilter = true;
 
         });
+
+        services.AddExceptionHandler<GlobalExceptionHandler>();
+        services.AddProblemDetails();
 
         services.AddCrossOrigin();
 
@@ -40,6 +43,8 @@ public static class ApiConfig
         app.UseHttpsRedirection(); 
 
         app.UseMiddleware<TenantIdentifierMiddleware>();
+
+        app.UseExceptionHandler();
 
         app.UseRouting();
 
