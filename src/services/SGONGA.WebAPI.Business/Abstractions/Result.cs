@@ -4,63 +4,74 @@ namespace SGONGA.WebAPI.Business.Abstractions;
 
 public class Result
 {
-    public bool IsSuccess { get; }
+    public bool IsFailed => Errors.Any();
 
-    public bool IsFailure => !IsSuccess;
+    public bool IsSuccess => !IsFailed;
 
-    public Error Error { get; }
+    public List<Error> Errors { get; } = [];
 
-    protected Result(bool isSuccess, Error error)
+    protected Result() { }
+
+    protected Result(IEnumerable<Error> errors)
     {
-        if (isSuccess && error != Error.None ||
-            !isSuccess && error == Error.None)
-            throw new ArgumentException("Invalid error", nameof(error));
+        if (errors == null || !errors.Any())
+            throw new ArgumentException("A lista de erros não pode ser nula ou vazia para uma falha.");
 
-        IsSuccess = isSuccess;
-        Error = error;
+        Errors.AddRange(errors);
     }
 
-    public static Result Success() => new(true, Error.None);
+    public static Result Ok() => new();
 
-    public static Result<TValue> Success<TValue>(TValue value) =>
-        new(value, true, Error.None);
+    public static Result Fail(Error error)
+    {
+        if (error == null)
+            throw new ArgumentNullException(nameof(error), "O erro não pode ser nulo.");
 
-    public static Result Failure(Error error) => new(false, error);
+        return new Result([error]);
+    }
 
-    public static Result<TValue> Failure<TValue>(Error error) =>
-        new(default, false, error);
+    public static Result Fail(IEnumerable<Error> errors)
+    {
+        if (errors == null || !errors.Any())
+            throw new ArgumentNullException(nameof(errors), "A lista de erros não pode ser nula.");
 
-    //public static Result Create(bool condition) => 
-    //    condition ? Success() : Failure(Error.ConditionNotMet);
+        return new Result(errors);
+    }
 
-    //public static Result<TValue> Create<TValue>(TValue? value) => 
-    //    value is not null ? Success(value) : Failure<TValue>(Error.NullValue);
+    public static Result<TValue> Ok<TValue>(TValue value) => new(value);
 
-    public static implicit operator Result(Error error) => Failure(error);
+    public static Result<TValue> Fail<TValue>(Error error) => new([error]);
+
+    public static Result<TValue> Fail<TValue>(IEnumerable<Error> errors) => new(errors);
+
+
+    public static implicit operator Result(Error error) => Fail(error);
+
+    public static implicit operator Result(List<Error> errors) => Fail(errors);
 }
 
 public class Result<TValue> : Result
 {
     private readonly TValue? _value;
 
-    protected internal Result(TValue? value, bool isSuccess, Error error)
-        : base(isSuccess, error) =>
+    protected internal Result(TValue value)
+    {
         _value = value;
+    }
+
+    protected internal Result(IEnumerable<Error> errors)
+        : base(errors) { }
 
     [NotNull]
     public TValue Value => IsSuccess
         ? _value!
-        : throw new InvalidOperationException("The value of a failure result can't be accessed.");
+        : throw new InvalidOperationException("O valor de um resultado de falha não pode ser acessado.");
 
-    public static Result<TValue> ValidationFailure(Error error) =>
-        new(default, false, error);
+    public static implicit operator Result<TValue>(TValue value) => Ok(value);
 
-    //public static implicit operator Result<TValue>(TValue? value) => Create(value);
+    public static implicit operator Result<TValue>(Error error) => Fail<TValue>(error);
 
-    public static implicit operator Result<TValue>(Error error) => Failure<TValue>(error);
-
-    public static implicit operator Result<TValue>(TValue? value) =>
-        value is not null ? Success(value) : Failure<TValue>(Error.NullValue);
+    public static implicit operator Result<TValue>(List<Error> errors) => Fail<TValue>(errors);
 }
 public static class ResultExtensions
 {
