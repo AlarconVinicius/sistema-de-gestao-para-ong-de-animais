@@ -109,19 +109,19 @@ public class Repository<T> : IRepository<T> where T : Entity, new()
     public virtual async Task<Result> AddAsync(T entity)
     {
         await DbSet.AddAsync(entity);
-        return Result.Success();
+        return Result.Ok();
     }
 
     public virtual Result Update(T entity)
     {
         DbSet.Update(entity);
-        return Result.Success();
+        return Result.Ok();
     }
 
     public virtual Result Delete(Guid id)
     {
         DbSet.Remove(new T { Id = id });
-        return Result.Success();
+        return Result.Ok();
     }
 
     public void Dispose()

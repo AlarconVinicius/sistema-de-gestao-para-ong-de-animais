@@ -44,7 +44,7 @@ public class UnitOfWork : IUnitOfWork
     public async Task<Result<int>> CommitAsync()
     {
         var result = await _context.SaveChangesAsync();
-        return result > 0 ? result : Result.Failure<int>(Error.CommitFailed);
+        return result > 0 ? result : Error.CommitFailed;
     }
 
     public void Dispose()
