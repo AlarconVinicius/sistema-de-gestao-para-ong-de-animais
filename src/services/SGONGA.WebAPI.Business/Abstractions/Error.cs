@@ -3,30 +3,30 @@
 public sealed record Error
 {
     public string Code { get; }
-    public string Description { get; }
+    public string Message { get; }
     public ErrorType Type { get; }
 
-    private Error(string code, string description, ErrorType errorType)
+    private Error(string code, string message, ErrorType errorType)
     {
         Code = code;
-        Description = description;
+        Message = message;
         Type = errorType;
     }
 
-    public static Error NotFound(string code, string description) =>
-        new(code, description, ErrorType.NotFound);
+    public static Error NotFound(string code, string message) =>
+        new(code, message, ErrorType.NotFound);
 
-    public static Error Valdiation(string code, string description) =>
-        new(code, description, ErrorType.Valdiation);
+    public static Error Validation(string code, string message) =>
+        new(code, message, ErrorType.Validation);
 
-    public static Error Conflict(string code, string description) =>
-        new(code, description, ErrorType.Conflict);
+    public static Error Conflict(string code, string message) =>
+        new(code, message, ErrorType.Conflict);
 
-    public static Error Failure(string code, string description) =>
-        new(code, description, ErrorType.Failure);
+    public static Error Failure(string code, string message) =>
+        new(code, message, ErrorType.Failure);
 
-    public static Error Forbidden(string code, string description) =>
-        new(code, description, ErrorType.Forbidden);
+    public static Error Forbidden(string code, string message) =>
+        new(code, message, ErrorType.Forbidden);
 
 
     public static readonly Error None = new(string.Empty, string.Empty, ErrorType.Failure);
@@ -40,7 +40,7 @@ public sealed record Error
 public enum ErrorType
 {
     Failure = 0,
-    Valdiation = 1,
+    Validation = 1,
     NotFound = 2,
     Conflict = 3,
     Forbidden = 4
