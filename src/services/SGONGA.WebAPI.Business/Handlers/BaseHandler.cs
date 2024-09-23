@@ -3,6 +3,7 @@ using SGONGA.Core.User;
 using SGONGA.WebAPI.Business.Models;
 using FluentValidation;
 using FluentValidation.Results;
+using SGONGA.WebAPI.Business.Abstractions;
 
 namespace SGONGA.WebAPI.Business.Handlers;
 
@@ -10,6 +11,7 @@ public class BaseHandler
 {
     private readonly INotifier _notifier;
     protected ValidationResult _validationResult;
+    protected List<Error> _errorsList;
     public readonly IAspNetUser AppUser;
     protected Guid UserId { get; set; }
     protected Guid TenantId = Guid.Empty;
@@ -19,6 +21,7 @@ public class BaseHandler
     {
         _notifier = notifier;
         _validationResult = new ValidationResult();
+        _errorsList = new();
 
         AppUser = appUser;
 
@@ -42,6 +45,8 @@ public class BaseHandler
     {
         _notifier.Handle(new Notification(message));
         _validationResult.Errors.Add(new ValidationFailure(string.Empty, message));
+        
+        _errorsList.Add(Error.Validation("VALIDATION", message));
     }
     protected bool IsOperationValid()
     {

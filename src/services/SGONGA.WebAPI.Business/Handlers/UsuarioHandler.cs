@@ -1,5 +1,7 @@
 ﻿using SGONGA.Core.Notifications;
 using SGONGA.Core.User;
+using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.Errors;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Models;
@@ -15,208 +17,167 @@ public class UsuarioHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork
     public readonly IONGHandler _ongHandler = ongHandler;
     public readonly IIdentityHandler _identityHandler = identityHandler;
 
-    public async Task<UsuarioResponse> GetByIdAsync(GetUsuarioByIdRequest request)
+    public async Task<Result<UsuarioResponse>> GetByIdAsync(GetUsuarioByIdRequest request)
     {
-        UsuarioResponse? response;
-        try
+        var usuarioTipo = IdentificarTipoUsuario(request.Id, request.TenantFiltro);
+        if (usuarioTipo.IsFailed) 
+            return UsuarioErrors.UsuarioNaoEncontrado(request.Id);
+
+        Result<UsuarioResponse> response;
+        switch (usuarioTipo.Value)
         {
-            var usuarioTipo = IdentificarTipoUsuario(request.Id, request.TenantFiltro);
-            if (usuarioTipo is null)
-            {
-                Notify("Usuário não encontrado.");
-                return null!;
-            }
-            switch (usuarioTipo)
-            {
-                case EUsuarioTipo.Adotante:
-                    response = await _adotanteHandler.GetByIdAsync(request);
-                    break;
+            case EUsuarioTipo.Adotante:
+                response = await _adotanteHandler.GetByIdAsync(request);
+                break;
 
-                case EUsuarioTipo.ONG:
-                    response = await _ongHandler.GetByIdAsync(request);
-                    break;
-                default:
-                    Notify("Usuário não encontrado.");
-                    return null!;
-            }
-
-            if (!IsOperationValid()) return null!;
-
-            return response;
+            case EUsuarioTipo.ONG:
+                response = await _ongHandler.GetByIdAsync(request);
+                break;
+            default:
+                return UsuarioErrors.NaoFoiPossivelRecuperarUsuario;
         }
-        catch
-        {
-            Notify("Não foi possível recuperar o usuário.");
-            return null!;
-        }
+
+        return response.IsSuccess ? response.Value : response.Errors;
     }
 
-    public async Task<PagedResponse<UsuarioResponse>> GetAllAsync(GetAllUsuariosRequest request)
+    public async Task<Result<PagedResponse<UsuarioResponse>>> GetAllAsync(GetAllUsuariosRequest request)
     {
-        PagedResponse<UsuarioResponse> response;
-        try
+        Result<PagedResponse<UsuarioResponse>> response;
+        switch (request.UsuarioTipo)
         {
-            switch (request.UsuarioTipo)
-            {
-                case EUsuarioTipo.Adotante:
-                    response = await _adotanteHandler.GetAllAsync(request);
-                    break;
+            case EUsuarioTipo.Adotante:
+                response = await _adotanteHandler.GetAllAsync(request);
+                break;
 
-                case EUsuarioTipo.ONG:
-                    response = await _ongHandler.GetAllAsync(request);
-                    break;
-                default:
-                    Notify("Nenhum usuário encontrado.");
-                    return null!;
-            }
-
-            if (!IsOperationValid()) return null!;
-
-            return response;
+            case EUsuarioTipo.ONG:
+                response = await _ongHandler.GetAllAsync(request);
+                break;
+            default:
+                return UsuarioErrors.NaoFoiPossivelRecuperarUsuarios;
         }
-        catch
-        {
-            Notify("Não foi possível recuperar os usuários.");
-            return null!;
-        }
+
+        return response.IsSuccess ? response.Value : response.Errors;
     }
 
-    public async Task CreateAsync(CreateUsuarioRequest request)
+    public async Task<Result> CreateAsync(CreateUsuarioRequest request)
     {
-        try
+        Result userResult;
+        Result identityResult;
+        switch (request.UsuarioTipo)
         {
-            switch (request.UsuarioTipo)
-            {
-                case EUsuarioTipo.Adotante:
-                    await _adotanteHandler.CreateAsync(request);
+            case EUsuarioTipo.Adotante:
+                userResult = await _adotanteHandler.CreateAsync(request);
+                if (userResult.IsFailed)
+                    return userResult.Errors;
 
-                    if (!IsOperationValid()) return;
+                identityResult = await _identityHandler.CreateAsync(new CreateUserRequest(request.Id, request.Contato.Email, request.Senha, request.ConfirmarSenha));
+                if (identityResult.IsFailed)
+                    return identityResult.Errors;
 
-                    await _identityHandler.CreateAsync(new CreateUserRequest(request.Id, request.Contato.Email, request.Senha, request.ConfirmarSenha));
+                await _identityHandler.AddOrUpdateUserClaimAsync(new AddOrUpdateUserClaimRequest(request.Id, new UserClaim("Tenant", request.TenantId.ToString())));
+                break;
 
-                    if (!IsOperationValid()) return;
+            case EUsuarioTipo.ONG:
+                userResult = await _ongHandler.CreateAsync(request);
+                if (userResult.IsFailed)
+                    return userResult.Errors;
 
-                    await _identityHandler.AddOrUpdateUserClaimAsync(new AddOrUpdateUserClaimRequest(request.Id, new UserClaim("Tenant", request.TenantId.ToString())));
-                    break;
+                identityResult = await _identityHandler.CreateAsync(new CreateUserRequest(request.Id, request.Contato.Email, request.Senha, request.ConfirmarSenha));
+                if (identityResult.IsFailed)
+                    return identityResult.Errors;
 
-                case EUsuarioTipo.ONG:
-                    await _ongHandler.CreateAsync(request);
-
-                    if (!IsOperationValid()) return;
-
-                    await _identityHandler.CreateAsync(new CreateUserRequest(request.Id, request.Contato.Email, request.Senha, request.ConfirmarSenha));
-
-                    if (!IsOperationValid()) return;
-
-                    await _identityHandler.AddOrUpdateUserClaimAsync(new AddOrUpdateUserClaimRequest(request.Id, new UserClaim("Tenant", request.TenantId.ToString())));
-                    break;
-                default:
-                    Notify("Não foi possível criar o usuário.");
-                    return;
-            }
-
-            if (!IsOperationValid()) return;
-
-            await _unitOfWork.CommitAsync();
-            return;
+                await _identityHandler.AddOrUpdateUserClaimAsync(new AddOrUpdateUserClaimRequest(request.Id, new UserClaim("Tenant", request.TenantId.ToString())));
+                break;
+            default:
+                return UsuarioErrors.NaoFoiPossivelCriarUsuario;
         }
-        catch
-        {
-            Notify("Não foi possível criar o usuário.");
-            return;
-        }
+
+        Result commitResult = await _unitOfWork.CommitAsync();
+
+        return commitResult.IsSuccess ? Result.Ok() : commitResult.Errors;
     }
 
-    public async Task UpdateAsync(UpdateUsuarioRequest request)
+    public async Task<Result> UpdateAsync(UpdateUsuarioRequest request)
     {
         //if (!ExecuteValidation(new AdotanteValidation(), adotante)) return;
 
-        try
+        Result result;
+        switch (request.UsuarioTipo)
         {
-            switch (request.UsuarioTipo)
-            {
-                case EUsuarioTipo.Adotante:
-                    await _adotanteHandler.UpdateAsync(request);
-                    break;
+            case EUsuarioTipo.Adotante:
+                result = await _adotanteHandler.UpdateAsync(request);
+                break;
 
-                case EUsuarioTipo.ONG:
-                    await _ongHandler.UpdateAsync(request);
-                    break;
-                default:
-                    Notify("Não foi possível atualizar o usuário.");
-                    return;
-            }
-
-            if (!IsOperationValid()) return;
-
-            await _unitOfWork.CommitAsync();
-            return;
+            case EUsuarioTipo.ONG:
+                result = await _ongHandler.UpdateAsync(request);
+                break;
+            default:
+                return UsuarioErrors.NaoFoiPossivelAtualizarUsuario;
         }
-        catch
-        {
-            Notify("Não foi possível atualizar o usuário.");
-            return;
-        }
+
+        if (result.IsFailed)
+            return result.Errors;
+
+        Result commitResult = await _unitOfWork.CommitAsync();
+
+        return commitResult.IsSuccess ? Result.Ok() : commitResult.Errors;
     }
 
-    public async Task DeleteAsync(DeleteUsuarioRequest request)
+    public async Task<Result> DeleteAsync(DeleteUsuarioRequest request)
     {
-        try
+        var usuarioTipo = IdentificarTipoUsuario(request.Id, true).Value;
+        if (usuarioTipo is null)
+            return UsuarioErrors.UsuarioNaoEncontrado(request.Id);
+
+        Result userResult;
+        Result identityResult;
+        switch (usuarioTipo)
         {
-            var usuarioTipo = IdentificarTipoUsuario(request.Id, true);
-            if (usuarioTipo is null)
-            {
-                Notify("Usuário não encontrado.");
-                return;
-            }
-            switch (usuarioTipo)
-            {
-                case EUsuarioTipo.Adotante:
-                    await _adotanteHandler.DeleteAsync(request);
+            case EUsuarioTipo.Adotante:
 
-                    if (!IsOperationValid()) return;
+                userResult = _adotanteHandler.Delete(request);
+                if(userResult.IsFailed)
+                    return userResult.Errors;
 
-                    await _identityHandler.DeleteAsync(new DeleteUserRequest(request.Id));
-                    break;
+                identityResult = await _identityHandler.DeleteAsync(new DeleteUserRequest(request.Id));
+                if (identityResult.IsFailed)
+                    return identityResult.Errors;
+                break;
 
-                case EUsuarioTipo.ONG:
-                    await _ongHandler.DeleteAsync(request);
+            case EUsuarioTipo.ONG:
 
-                    if (!IsOperationValid()) return;
+                userResult = await _ongHandler.DeleteAsync(request);
+                if (userResult.IsFailed)
+                    return userResult.Errors;
 
-                    await _identityHandler.DeleteAsync(new DeleteUserRequest(request.Id));
-                    break;
-                default:
-                    Notify("Não foi possível deletar o usuário.");
-                    return;
-            }
-
-            if (!IsOperationValid()) return;
-
-            await _unitOfWork.CommitAsync();
-            return;
+                identityResult = await _identityHandler.DeleteAsync(new DeleteUserRequest(request.Id));
+                if (identityResult.IsFailed)
+                    return identityResult.Errors;
+                break;
+            default:
+                return UsuarioErrors.NaoFoiPossivelDeletarUsuario;
         }
-        catch
-        {
-            Notify("Não foi possível deletar o usuário.");
-            return;
-        }
+
+        Result commitResult = await _unitOfWork.CommitAsync();
+
+        return commitResult.IsSuccess ? Result.Ok() : commitResult.Errors;
     }
 
-    private EUsuarioTipo? IdentificarTipoUsuario(Guid id, bool tenantFiltro)
+    private Result<EUsuarioTipo?> IdentificarTipoUsuario(Guid id, bool tenantFiltro)
     {
         if (tenantFiltro
-            ? _unitOfWork.AdotanteRepository.SearchAsync(f => f.Id == id).Result.Any()
-            : _unitOfWork.AdotanteRepository.SearchWithoutTenantAsync(f => f.Id == id).Result.Any())
+            ? _unitOfWork.AdotanteRepository.SearchAsync(f => f.Id == id).Result.Value.Any()
+            : _unitOfWork.AdotanteRepository.SearchWithoutTenantAsync(f => f.Id == id).Result.Value.Any())
         {
             return EUsuarioTipo.Adotante;
         }
         if (tenantFiltro
-            ? _unitOfWork.ONGRepository.SearchAsync(f => f.Id == id).Result.Any()
-            : _unitOfWork.ONGRepository.SearchWithoutTenantAsync(f => f.Id == id).Result.Any())
+            ? _unitOfWork.ONGRepository.SearchAsync(f => f.Id == id).Result.Value.Any()
+            : _unitOfWork.ONGRepository.SearchWithoutTenantAsync(f => f.Id == id).Result.Value.Any())
         {
             return EUsuarioTipo.ONG;
         }
-        return null!;
+        //return Result.Failure<EUsuarioTipo?>();
+        return Error.NullValue;
     }
 }

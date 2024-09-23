@@ -1,13 +1,14 @@
-﻿using SGONGA.WebAPI.Business.Requests;
+﻿using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
 
 namespace SGONGA.WebAPI.Business.Interfaces.Handlers;
 
 public interface IONGHandler
 {
-    Task CreateAsync(CreateUsuarioRequest request);
-    Task UpdateAsync(UpdateUsuarioRequest request);
-    Task DeleteAsync(DeleteUsuarioRequest request);
-    Task<UsuarioResponse> GetByIdAsync(GetUsuarioByIdRequest request);
-    Task<PagedResponse<UsuarioResponse>> GetAllAsync(GetAllUsuariosRequest request);
+    Task<Result> CreateAsync(CreateUsuarioRequest request);
+    Task<Result> UpdateAsync(UpdateUsuarioRequest request);
+    Task<Result> DeleteAsync(DeleteUsuarioRequest request);
+    Task<Result<UsuarioResponse>> GetByIdAsync(GetUsuarioByIdRequest request);
+    Task<Result<PagedResponse<UsuarioResponse>>> GetAllAsync(GetAllUsuariosRequest request);
 }

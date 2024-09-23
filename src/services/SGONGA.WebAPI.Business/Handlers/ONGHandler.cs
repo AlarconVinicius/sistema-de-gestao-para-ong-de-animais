@@ -1,6 +1,8 @@
 ﻿using SGONGA.Core.Extensions;
 using SGONGA.Core.Notifications;
 using SGONGA.Core.User;
+using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.Errors;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Mappings;
@@ -15,201 +17,136 @@ public class ONGHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork uni
 {
     public readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task<UsuarioResponse> GetByIdAsync(GetUsuarioByIdRequest request)
+    public async Task<Result<UsuarioResponse>> GetByIdAsync(GetUsuarioByIdRequest request)
     {
-        try
-        {
-            if (!ONGExiste(request.Id, request.TenantFiltro))
-            {
-                Notify("ONG não encontrada.");
-                return null!;
-            }
-            var ong = request.TenantFiltro
-                           ? await _unitOfWork.ONGRepository.GetByIdAsync(request.Id)
-                           : await _unitOfWork.ONGRepository.GetByIdWithoutTenantAsync(request.Id);
+        if (ONGExiste(request.Id, request.TenantFiltro).IsFailed)
+            return ONGErrors.ONGNaoEncontrada(request.Id);
 
-            return ong.MapONGDomainToResponse();
-        }
-        catch (Exception ex)
-        {
-            Notify($"Não foi possível recuperar a ONG.: {ex.Message}");
-            return null!;
-        }
+        var result = request.TenantFiltro
+                       ? await _unitOfWork.ONGRepository.GetByIdAsync(request.Id)
+                       : await _unitOfWork.ONGRepository.GetByIdWithoutTenantAsync(request.Id);
+
+        return result.Value.MapONGDomainToResponse();
     }
 
-    public async Task<PagedResponse<UsuarioResponse>> GetAllAsync(GetAllUsuariosRequest request)
+    public async Task<Result<PagedResponse<UsuarioResponse>>> GetAllAsync(GetAllUsuariosRequest request)
     {
-        try
-        {
-            var ongs = request.TenantFiltro
-                           ? (await _unitOfWork.ONGRepository.GetAllPagedAsync()).MapONGDomainToResponse()
-                           : (await _unitOfWork.ONGRepository.GetAllPagedWithoutTenantAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)).MapONGDomainToResponse();
-            return ongs;
-        }
-        catch
-        {
-            Notify("Não foi possível recuperar as ONGs.");
-            return null!;
-        }
+        var results = request.TenantFiltro
+                           ? await _unitOfWork.ONGRepository.GetAllPagedAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll)
+                           : await _unitOfWork.ONGRepository.GetAllPagedWithoutTenantAsync(null, request.PageNumber, request.PageSize, request.Query, request.ReturnAll);
+
+        return results.Value.MapONGDomainToResponse();
     }
 
-    public async Task CreateAsync(CreateUsuarioRequest request)
+    public async Task<Result> CreateAsync(CreateUsuarioRequest request)
     {
         //if (!ExecuteValidation(new ONGValidation(), ong)) return;
 
-        if (DocumentoEmUso(request.Documento))
-        {
-            Notify("E-mail em uso.");
-            return;
-        }
-        if (ApelidoEmUso(request.Apelido))
-        {
-            Notify("Nome em uso.");
-            return;
-        }
+        if (DocumentoDisponivel(request.Documento).IsFailed)
+            return ValidationErrors.DocumentoEmUso(request.Documento);
 
-        if (EmailEmUso(request.Contato.Email))
-        {
-            Notify("E-mail em uso.");
-            return;
-        }
-        try
-        {
-            await _unitOfWork.ONGRepository.AddAsync(request.MapRequestToONGDomain());
-            return;
-        }
-        catch(Exception ex)
-        {
-            Notify($"Não foi possível criar a ONG.: {ex.Message}");
-            return;
-        }
+        if (ApelidoDisponivel(request.Apelido).IsFailed)
+            return ValidationErrors.ApelidoEmUso(request.Apelido);
+
+        if (EmailDisponivel(request.Contato.Email).IsFailed)
+            return ValidationErrors.EmailEmUso(request.Contato.Email);
+
+        await _unitOfWork.ONGRepository.AddAsync(request.MapRequestToONGDomain());
+
+        return Result.Ok();
     }
 
-    public async Task UpdateAsync(UpdateUsuarioRequest request)
+    public async Task<Result> UpdateAsync(UpdateUsuarioRequest request)
     {
         //if (!ExecuteValidation(new ONGValidation(), ong)) return;
 
-        if (AppUser.GetUserId() != request.Id)
+        if (AppUser.GetUserId() != request.Id
+            || ONGExiste(request.Id, true).IsFailed)
+            return ONGErrors.ONGNaoEncontrada(request.Id);
+
+        var resultDb = (await _unitOfWork.ONGRepository.GetByIdAsync(request.Id)).Value;
+
+        string newEmail;
+
+        if (request.Contato.Email != resultDb.Contato.Email.Endereco)
         {
-            Notify("ONG não encontrada.");
-            return;
+            if (EmailDisponivel(request.Contato.Email).IsFailed)
+                return ValidationErrors.EmailEmUso(request.Contato.Email);
+
+            newEmail = resultDb.Contato.Email.Endereco;
         }
-
-        if (!ONGExiste(request.Id, true))
+        else
         {
-            Notify("ONG não encontrada.");
-            return;
+            newEmail = request.Contato.Email;
         }
+        resultDb.SetNome(request.Nome);
+        resultDb.SetApelido(request.Apelido);
+        resultDb.SetChavePix(request.ChavePix);
+        resultDb.SetSite(request.Site);
+        resultDb.SetContato(new Contato(request.Contato.Telefone, newEmail));
+        resultDb.SetEndereco(request.Estado, request.Cidade);
 
-        var ongDb = await _unitOfWork.ONGRepository.GetByIdAsync(request.Id);
+        _unitOfWork.ONGRepository.Update(resultDb);
 
-        try
+        return Result.Ok();
+    }
+
+    public async Task<Result> DeleteAsync(DeleteUsuarioRequest request)
+    {
+        if (AppUser.GetUserId() != request.Id && EhSuperAdmin().IsFailed)
+            return Error.AccessDenied;
+
+        if (ONGExiste(request.Id, true).IsFailed)
+            return ONGErrors.ONGNaoEncontrada(request.Id);
+
+        var resultsDb = (await _unitOfWork.ONGRepository.GetByIdAsync(request.Id)).Value;
+
+        if (resultsDb.Animais.Count != 0)
         {
-            string newEmail;
-            if (request.Contato.Email != ongDb.Contato.Email.Endereco)
+            foreach (Animal result in resultsDb.Animais)
             {
-                if (EmailEmUso(request.Contato.Email))
-                {
-                    Notify("E-mail em uso.");
-                    return;
-                }
-                newEmail = ongDb.Contato.Email.Endereco;
+                _unitOfWork.AnimalRepository.Delete(result.Id);
             }
-            else
-            {
-                newEmail = request.Contato.Email;
-            }
-            ongDb.SetNome(request.Nome);
-            ongDb.SetApelido(request.Apelido);
-            ongDb.SetChavePix(request.ChavePix);
-            ongDb.SetSite(request.Site);
-            ongDb.SetContato(new Contato(request.Contato.Telefone, newEmail));
-            ongDb.SetEndereco(request.Estado, request.Cidade);
+        }
 
-            _unitOfWork.ONGRepository.UpdateAsync(ongDb);
-            return;
-        }
-        catch (Exception ex)
-        {
-            Notify($"Não foi possível atualizar a ONG.: {ex.Message}");
-            return;
-        }
-    }
+        _unitOfWork.ONGRepository.Delete(request.Id);
 
-    public async Task DeleteAsync(DeleteUsuarioRequest request)
-    {
-        if (AppUser.GetUserId() != request.Id && !EhSuperAdmin())
-        {
-            Notify("Você não tem permissão para deletar.");
-            return;
-        }
-        try
-        {
-            if (!ONGExiste(request.Id, true))
-            {
-                Notify("ONG não encontrada.");
-                return;
-            }
-
-            var ong = await _unitOfWork.ONGRepository.GetByIdAsync(request.Id);
-            if (ong.Animais.Count != 0)
-            {
-                foreach (Animal animal in ong.Animais)
-                {
-                    _unitOfWork.AnimalRepository.DeleteAsync(animal.Id);
-                }
-            }
-            _unitOfWork.ONGRepository.DeleteAsync(request.Id);
-            return;
-        }
-        catch (Exception ex)
-        {
-            Notify($"Não foi possível deletar a ONG.: {ex.Message}");
-            return;
-        }
+        return Result.Ok();
     }
 
 
-    private bool ONGExiste(Guid id, bool tenantFiltro)
+    private Result ONGExiste(Guid id, bool tenantFiltro)
     {
-        if (tenantFiltro
-            ? _unitOfWork.ONGRepository.SearchAsync(f => f.Id == id).Result.Any()
-            : _unitOfWork.ONGRepository.SearchWithoutTenantAsync(f => f.Id == id).Result.Any())
-        {
-            return true;
-        };
-        return false;
+        var exists = tenantFiltro
+        ? _unitOfWork.ONGRepository.SearchAsync(f => f.Id == id).Result.Value.Any()
+        : _unitOfWork.ONGRepository.SearchWithoutTenantAsync(f => f.Id == id).Result.Value.Any();
+
+        return exists ? Result.Ok() : Error.NullValue;
     }
-    private bool ApelidoEmUso(string apelido)
+    private Result ApelidoDisponivel(string apelido)
     {
-        if (_unitOfWork.ONGRepository.SearchWithoutTenantAsync(f => f.Apelido == apelido || f.Slug == apelido.SlugifyString()).Result.Any())
-        {
-            return true;
-        };
-        return false;
+        var available = !_unitOfWork.ONGRepository.SearchWithoutTenantAsync(f => f.Apelido == apelido || f.Slug == apelido.SlugifyString()).Result.Value.Any();
+
+        return available ? Result.Ok() : Error.NullValue;
     }
-    private bool DocumentoEmUso(string documento)
+    private Result DocumentoDisponivel(string documento)
     {
-        if (_unitOfWork.ONGRepository.SearchWithoutTenantAsync(f => f.Documento == documento).Result.Any())
-        {
-            return true;
-        };
-        return false;
+        var available = !_unitOfWork.ONGRepository.SearchWithoutTenantAsync(f => f.Documento == documento).Result.Value.Any();
+
+        return available ? Result.Ok() : Error.NullValue;
     }
-    private bool EmailEmUso(string email)
+    private Result EmailDisponivel(string email)
     {
-        if (_unitOfWork.ONGRepository.SearchWithoutTenantAsync(f => f.Contato.Email.Endereco == email).Result.Any())
-        {
-            return true;
-        };
-        return false;
+        var available = !_unitOfWork.ONGRepository.SearchWithoutTenantAsync(f => f.Contato.Email.Endereco == email).Result.Value.Any();
+
+        return available ? Result.Ok() : Error.NullValue;
     }
-    private bool EhSuperAdmin()
+    private Result EhSuperAdmin()
     {
         if (AppUser.HasClaim("Permissions", "SuperAdmin"))
         {
-            return true;
+            return Result.Ok();
         }
-        return false;
+        return Error.NullValue;
     }
 }

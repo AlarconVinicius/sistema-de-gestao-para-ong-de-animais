@@ -1,17 +1,18 @@
-﻿using SGONGA.WebAPI.Business.Requests;
+﻿using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
 
 namespace SGONGA.WebAPI.Business.Interfaces.Handlers;
 
 public interface IIdentityHandler
 {
-    Task<LoginUserResponse> LoginAsync(LoginUserRequest request);
-    Task Logout();
-    Task<LoginUserResponse> CreateAsync(CreateUserRequest request);
-    Task UpdateEmailAsync(UpdateUserEmailRequest request);
-    Task UpdatePasswordAsync(UpdateUserPasswordRequest request);
-    Task DeleteAsync(DeleteUserRequest request);
-    Task<UserResponse> GetByIdAsync(GetUserByIdRequest request);
-    Task<PagedResponse<UserResponse>> GetAllAsync(GetAllUsersRequest request);
-    Task AddOrUpdateUserClaimAsync(AddOrUpdateUserClaimRequest request);
+    Task<Result<LoginUserResponse>> LoginAsync(LoginUserRequest request);
+    Task<Result> Logout();
+    Task<Result<LoginUserResponse>> CreateAsync(CreateUserRequest request);
+    Task<Result> UpdateEmailAsync(UpdateUserEmailRequest request);
+    Task<Result> UpdatePasswordAsync(UpdateUserPasswordRequest request);
+    Task<Result> DeleteAsync(DeleteUserRequest request);
+    Task<Result<UserResponse>> GetByIdAsync(GetUserByIdRequest request);
+    Task<Result<PagedResponse<UserResponse>>> GetAllAsync(GetAllUsersRequest request);
+    Task<Result> AddOrUpdateUserClaimAsync(AddOrUpdateUserClaimRequest request);
 }
