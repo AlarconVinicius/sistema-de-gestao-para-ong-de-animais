@@ -125,13 +125,13 @@ public class UsuarioHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork
 
     public async Task<Result> DeleteAsync(DeleteUsuarioRequest request)
     {
-        var usuarioTipo = IdentificarTipoUsuario(request.Id, true).Value;
-        if (usuarioTipo is null)
+        var usuarioTipo = IdentificarTipoUsuario(request.Id, true);
+        if (usuarioTipo.IsFailed)
             return UsuarioErrors.UsuarioNaoEncontrado(request.Id);
 
         Result userResult;
         Result identityResult;
-        switch (usuarioTipo)
+        switch (usuarioTipo.Value)
         {
             case EUsuarioTipo.Adotante:
 
