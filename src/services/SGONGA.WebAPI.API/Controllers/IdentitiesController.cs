@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using SGONGA.Core.Notifications;
 using SGONGA.WebAPI.API.Controllers.Shared;
+using SGONGA.WebAPI.API.Extensions;
+using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Requests;
 
@@ -33,16 +35,18 @@ public class IdentitiesController : ApiController
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginUserRequest request)
+    public async Task<IResult> Login(LoginUserRequest request)
     {
         if (!ModelState.IsValid)
         {
-            return ResponseBadRequest(ModelState);
+            return ModelState.ToProblemDetails();
         }
 
-        var response = await _identityHandler.LoginAsync(request);
+        var result = await _identityHandler.LoginAsync(request);
 
-        return IsOperationValid() ? ResponseOk(response) : ResponseBadRequest();
+        return result.Match(
+            onSuccess: response => Results.Ok(response),
+            onFailure: response => response.ToProblemDetails());
     }
 
     ///// <summary>

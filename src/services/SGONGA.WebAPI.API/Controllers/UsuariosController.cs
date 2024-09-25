@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using SGONGA.Core.Configurations;
 using SGONGA.Core.Notifications;
 using SGONGA.WebAPI.API.Controllers.Shared;
+using SGONGA.WebAPI.API.Extensions;
+using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Requests;
+using SGONGA.WebAPI.Business.Responses;
 
 namespace SGONGA.WebAPI.API.Controllers;
 
@@ -32,18 +35,20 @@ public class UsuariosController : ApiController
     /// <response code="201">Usuario criado com sucesso</response>
     /// <response code="400">Retorna erros de validação</response>
     [AllowAnonymous]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost("/api/v1/usuarios")]
-    public async Task<IActionResult> Post(CreateUsuarioRequest request)
+    public async Task<IResult> Post(CreateUsuarioRequest request)
     {
         if (!ModelState.IsValid)
         {
-            return ResponseBadRequest(ModelState);
+            return ModelState.ToProblemDetails();
         }
-        await _usuarioHandler.CreateAsync(request);
+        var result = await _usuarioHandler.CreateAsync(request);
 
-        return IsOperationValid() ? ResponseCreated() : ResponseBadRequest();
+        return result.Match(
+            onSuccess: () => Results.Created(),
+            onFailure: response => response.ToProblemDetails());
     }
 
     /// <summary>
@@ -58,16 +63,17 @@ public class UsuariosController : ApiController
     /// <response code="200">Detalhes do usuario retornados com sucesso</response>
     /// <response code="400">Retorna erros relacionados à requisição</response>
     [AllowAnonymous]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(UsuarioResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpGet("/api/v1/usuarios/{id:guid}")]
-    public async Task<IActionResult> GetByIdPublic(Guid id)
+    public async Task<IResult> GetByIdPublic(Guid id)
     {
         GetUsuarioByIdRequest request = new(id, false);
         var result = await _usuarioHandler.GetByIdAsync(request);
 
-        return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
-
+        return result.Match(
+            onSuccess: response => Results.Ok(response),
+            onFailure: response => response.ToProblemDetails());
     }
 
     /// <summary>
@@ -85,10 +91,10 @@ public class UsuariosController : ApiController
     /// <response code="200">Lista de usuarios retornada com sucesso</response>
     /// <response code="400">Retorna erros relacionados à requisição</response>
     [AllowAnonymous]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(PagedResponse<UsuarioResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpGet("/api/v1/usuarios")]
-    public async Task<IActionResult> GetAllPublic([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, [FromQuery] int tipo = 0)
+    public async Task<IResult> GetAllPublic([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, [FromQuery] int tipo = 0)
     {
         GetAllUsuariosRequest request = new(
             pageSize: ps,
@@ -99,7 +105,9 @@ public class UsuariosController : ApiController
         );
         var result = await _usuarioHandler.GetAllAsync(request);
 
-        return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
+        return result.Match(
+            onSuccess: response => Results.Ok(response),
+            onFailure: response => response.ToProblemDetails());
     }
     #endregion
 
@@ -124,18 +132,19 @@ public class UsuariosController : ApiController
     /// <response code="400">Retorna erros relacionados à requisição</response>
     /// <response code="401">Usuário não autorizado. Token de autenticação ausente ou inválido</response>
     /// <response code="403">Permissão negada. Usuário não possui privilégios para acessar este recurso</response>
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(UsuarioResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<IResult> GetById(Guid id)
     {
         GetUsuarioByIdRequest request = new(id, true);
         var result = await _usuarioHandler.GetByIdAsync(request);
 
-        return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
-
+        return result.Match(
+            onSuccess: response => Results.Ok(response),
+            onFailure: response => response.ToProblemDetails());
     }
 
     /// <summary>
@@ -160,12 +169,12 @@ public class UsuariosController : ApiController
     /// <response code="400">Retorna erros relacionados à requisição</response>
     /// <response code="401">Usuário não autorizado. Token de autenticação ausente ou inválido</response>
     /// <response code="403">Permissão negada. Usuário não possui privilégios para acessar este recurso</response>
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(PagedResponse<UsuarioResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, [FromQuery] int tipo = 0)
+    public async Task<IResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, [FromQuery] int tipo = 0)
     {
         GetAllUsuariosRequest request = new(
             pageSize: ps,
@@ -176,7 +185,9 @@ public class UsuariosController : ApiController
         );
         var result = await _usuarioHandler.GetAllAsync(request);
 
-        return IsOperationValid() ? ResponseOk(result) : ResponseBadRequest();
+        return result.Match(
+            onSuccess: response => Results.Ok(response),
+            onFailure: response => response.ToProblemDetails());
     }
 
     /// <summary>
@@ -195,26 +206,30 @@ public class UsuariosController : ApiController
     /// <param name="id">ID do usuario (GUID)</param>
     /// <param name="request">Dados atualizados do usuario</param>
     /// <returns>Resposta indicando o sucesso ou falha na atualização do usuario</returns>
-    /// <response code="200">Usuario atualizado com sucesso</response>
+    /// <response code="204">Usuario atualizado com sucesso</response>
     /// <response code="400">Retorna erros de validação ou IDs não correspondentes</response>
     /// <response code="401">Usuário não autorizado. Token de autenticação ausente ou inválido</response>
     /// <response code="403">Permissão negada. Usuário não possui privilégios para acessar este recurso</response>
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> Update(Guid id, UpdateUsuarioRequest request)
+    public async Task<IResult> Update(Guid id, UpdateUsuarioRequest request)
     {
-        if (id != request.Id) return ResponseBadRequest("Os IDs não correspondem.");
+        if (id != request.Id)
+            ModelState.AddModelError(string.Empty, "Os IDs não correspondem.");
+
         if (!ModelState.IsValid)
         {
-            return ResponseBadRequest(ModelState);
+            return ModelState.ToProblemDetails();
         }
 
-        await _usuarioHandler.UpdateAsync(request);
+        var result = await _usuarioHandler.UpdateAsync(request);
 
-        return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
+        return result.Match(
+            onSuccess: () => Results.NoContent(),
+            onFailure: response => response.ToProblemDetails());
     }
 
     /// <summary>
@@ -232,20 +247,22 @@ public class UsuariosController : ApiController
     /// </remarks>
     /// <param name="id">ID do usuario (GUID)</param>
     /// <returns>Resposta indicando o sucesso ou falha na exclusão do usuario</returns>
-    /// <response code="200">Usuario deletado com sucesso</response>
+    /// <response code="204">Usuario deletado com sucesso</response>
     /// <response code="400">Retorna erros relacionados à requisição</response>
     /// <response code="401">Usuário não autorizado. Token de autenticação ausente ou inválido</response>
     /// <response code="403">Permissão negada. Usuário não possui privilégios para acessar este recurso</response>
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> Delete(Guid id)
+    public async Task<IResult> Delete(Guid id)
     {
-        await _usuarioHandler.DeleteAsync(new DeleteUsuarioRequest(id));
+        var result = await _usuarioHandler.DeleteAsync(new DeleteUsuarioRequest(id));
 
-        return IsOperationValid() ? ResponseOk() : ResponseBadRequest();
+        return result.Match(
+            onSuccess: () => Results.NoContent(),
+            onFailure: response => response.ToProblemDetails());
     }
     #endregion
 }
