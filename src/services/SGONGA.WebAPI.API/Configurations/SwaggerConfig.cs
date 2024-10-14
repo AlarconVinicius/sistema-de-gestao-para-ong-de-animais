@@ -1,6 +1,7 @@
 ﻿using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 
 namespace SGONGA.WebAPI.API.Configurations;
@@ -58,7 +59,12 @@ public static class SwaggerConfig
                     new string[] {}
                 }
             });
+            //c.ExampleFilters();
+            c.OperationFilter<TenantHeaderParameter>();
         });
+
+        //services.AddSwaggerExamplesFromAssemblyOf<TenantHeaderParameter>();
+        //services.AddSwaggerExamplesFromAssemblies(Assembly.GetEntryAssembly());
 
         return services;
     }
@@ -78,5 +84,37 @@ public static class SwaggerConfig
             opt.SwaggerEndpoint("/swagger/v1/swagger.json", "Sistema de Gestão para ONGs de Animais V1");
         });
         return app;
+    }
+}
+public class TenantHeaderParameter : IOperationFilter
+{
+    //private static readonly string[] operationWithoutHeader = ["Admin"];
+
+    public void Apply(OpenApiOperation operation, OperationFilterContext context)
+    {
+        if (operation.Parameters == null)
+        {
+            operation.Parameters = [];
+        }
+        if (context.ApiDescription.RelativePath!.Contains("admin", StringComparison.OrdinalIgnoreCase))
+        {
+            operation.Parameters.Add(new OpenApiParameter
+            {
+                Name = "TenantId",
+                In = ParameterLocation.Header,
+                Description = "Identificador do locatário que está fazendo a requisição.",
+                Required = true
+            });
+        }
+        //if (!operation.Tags.Any(x => operationWithoutHeader.Contains(x.Name)))
+        //{
+        //    operation.Parameters.Add(new OpenApiParameter
+        //    {
+        //        Name = "TenantId",
+        //        In = ParameterLocation.Header,
+        //        Description = "Id do tenant que o usuário vai se conectar",
+        //        Required = true
+        //    });
+        //}
     }
 }
