@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SGONGA.WebAPI.API.Infrastructure;
 using SGONGA.WebAPI.API.Middlewares;
@@ -6,12 +7,16 @@ using SGONGA.WebAPI.Data.Context;
 using SGONGA.WebAPI.Data.Seed;
 using SGONGA.WebAPI.Identity.Context;
 using SGONGA.WebAPI.Identity.Seed;
+using System.Globalization;
 
 namespace SGONGA.WebAPI.API.Configurations;
 public static class ApiConfig
 {
     public static IServiceCollection AddApiConfig(this IServiceCollection services)
     {
+        CultureInfo.CurrentCulture = new CultureInfo("pt-BR");
+        FluentValidation.ValidatorOptions.Global.LanguageManager.Culture = CultureInfo.CurrentCulture;
+        FluentValidation.ValidatorOptions.Global.DefaultRuleLevelCascadeMode = FluentValidation.CascadeMode.Stop;
         services.AddControllers();
 
         services.Configure<ApiBehaviorOptions>(options =>
@@ -47,6 +52,14 @@ public static class ApiConfig
         app.UseExceptionHandler();
 
         app.UseRouting();
+
+        var supportedCultures = new[] { new CultureInfo("pt-BR") };
+        app.UseRequestLocalization(new RequestLocalizationOptions
+        {
+            DefaultRequestCulture = new RequestCulture("pt-BR"),
+            SupportedCultures = supportedCultures,
+            SupportedUICultures = supportedCultures
+        });
 
         app.UseAuthentication();
         app.UseAuthorization();
