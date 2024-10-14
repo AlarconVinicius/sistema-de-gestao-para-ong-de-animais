@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SGONGA.Core.Configurations;
 using SGONGA.Core.Notifications;
@@ -16,7 +17,7 @@ namespace SGONGA.WebAPI.API.Controllers;
 public class UsuariosController : ApiController
 {
     public readonly IUsuarioHandler _usuarioHandler;
-    public UsuariosController(INotifier notifier, IUsuarioHandler usuarioHandler) : base(notifier)
+    public UsuariosController(INotifier notifier, IUsuarioHandler usuarioHandler, ISender sender) : base(notifier, sender)
     {
         _usuarioHandler = usuarioHandler;
     }

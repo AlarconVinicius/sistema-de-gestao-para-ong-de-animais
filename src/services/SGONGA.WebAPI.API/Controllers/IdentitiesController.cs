@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SGONGA.Core.Notifications;
 using SGONGA.WebAPI.API.Controllers.Shared;
@@ -14,7 +15,7 @@ namespace SGONGA.WebAPI.API.Controllers;
 public class IdentitiesController : ApiController
 {
     public readonly IIdentityHandler _identityHandler;
-    public IdentitiesController(INotifier notifier, IIdentityHandler identityHandler) : base(notifier)
+    public IdentitiesController(INotifier notifier, IIdentityHandler identityHandler, ISender sender) : base(notifier, sender)
     {
         _identityHandler = identityHandler;
     }

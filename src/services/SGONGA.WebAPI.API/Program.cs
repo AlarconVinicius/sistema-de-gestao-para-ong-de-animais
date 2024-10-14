@@ -1,7 +1,7 @@
 using SGONGA.Core.Configurations;
 using SGONGA.WebAPI.API.Configurations;
-using SGONGA.WebAPI.Data.Configurations;
 using SGONGA.WebAPI.Business.Configurations;
+using SGONGA.WebAPI.Data.Configurations;
 using SGONGA.WebAPI.Identity.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +15,7 @@ builder.Services.RegisterApiServices()
                 .RegisterDataServices(builder.Configuration)
                 .RegisterIdentityServices(builder.Configuration)
                 .RegisterBusinessServices();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfig();

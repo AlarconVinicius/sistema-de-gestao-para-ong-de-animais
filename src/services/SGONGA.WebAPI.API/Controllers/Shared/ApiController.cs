@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SGONGA.Core.Extensions;
 using SGONGA.Core.Notifications;
@@ -10,10 +11,12 @@ namespace SGONGA.WebAPI.API.Controllers.Shared;
 public abstract class ApiController : ControllerBase
 {
     private readonly INotifier _notifier;
+    protected readonly ISender Sender;
 
-    protected ApiController(INotifier notifier)
+    protected ApiController(INotifier notifier, ISender sender)
     {
         _notifier = notifier;
+        Sender = sender;
     }
 
     protected IActionResult ResponseOk(object result) =>
