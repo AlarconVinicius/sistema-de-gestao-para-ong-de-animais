@@ -1,8 +1,6 @@
-﻿using SGONGA.WebAPI.API.Abstractions.Messaging;
+﻿namespace SGONGA.WebAPI.API.Animals.Command.Update;
 
-namespace SGONGA.WebAPI.API.Animals.Shared;
-
-public abstract record BaseAnimalCommand(
+public sealed record UpdateAnimalRequest(
     string Nome,
     string Especie,
     string Raca,
@@ -14,4 +12,4 @@ public abstract record BaseAnimalCommand(
     string Descricao,
     string Observacao,
     string Foto,
-    string ChavePix = "") : ICommand;
+    string ChavePix = "");

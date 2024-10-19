@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace SGONGA.WebAPI.API.Animals.Shared;
+namespace SGONGA.WebAPI.API.Animals.Command;
 
 public class BaseAnimalCommandValidator : AbstractValidator<BaseAnimalCommand>
 {

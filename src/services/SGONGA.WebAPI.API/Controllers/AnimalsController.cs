@@ -3,25 +3,22 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SGONGA.Core.Configurations;
 using SGONGA.Core.Notifications;
-using SGONGA.WebAPI.API.Animals.Command.CreateAnimal;
+using SGONGA.WebAPI.API.Animals.Command.Create;
+using SGONGA.WebAPI.API.Animals.Command.Delete;
+using SGONGA.WebAPI.API.Animals.Command.Update;
+using SGONGA.WebAPI.API.Animals.Queries.GetAll;
+using SGONGA.WebAPI.API.Animals.Queries.GetById;
 using SGONGA.WebAPI.API.Controllers.Shared;
 using SGONGA.WebAPI.API.Extensions;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Interfaces.Handlers;
-using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
 
 namespace SGONGA.WebAPI.API.Controllers;
 
 [Authorize]
 [Route("api/v1/animais/admin/")]
-public class AnimalsController : ApiController
+public class AnimalsController(INotifier notifier, ISender sender) : ApiController(notifier, sender)
 {
-    public readonly IAnimalHandler _animalHandler;
-    public AnimalsController(INotifier notifier, IAnimalHandler animalHandler, ISender sender) : base(notifier, sender)
-    {
-        _animalHandler = animalHandler;
-    }
 
     #region Public Methods
 
@@ -33,6 +30,7 @@ public class AnimalsController : ApiController
     /// Não é necessário fornecer cabeçalhos de autenticação ou identificação de locatário para este endpoint.
     /// </remarks>
     /// <param name="id">ID do animal (GUID)</param>
+    /// <param name="cancellationToken">Ignored</param>
     /// <returns>Detalhes do animal</returns>
     /// <response code="200">Detalhes do animal retornados com sucesso</response>
     /// <response code="400">Retorna erros relacionados à requisição</response>
@@ -40,10 +38,11 @@ public class AnimalsController : ApiController
     [ProducesResponseType(typeof(AnimalResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpGet("/api/v1/animais/{id:guid}")]
-    public async Task<IResult> GetByIdPublic(Guid id)
+    public async Task<IResult> GetByIdPublic(Guid id, CancellationToken cancellationToken)
     {
-        GetAnimalByIdRequest request = new(id, false);
-        var result = await _animalHandler.GetByIdAsync(request);
+        GetAnimalByIdQuery query = new(id, false);
+
+        var result = await Sender.Send(query, cancellationToken);
 
         return result.Match(
             onSuccess: response => Results.Ok(response),
@@ -60,6 +59,7 @@ public class AnimalsController : ApiController
     /// <param name="ps">Tamanho da página para paginação (padrão: 25)</param>
     /// <param name="page">Número da página para paginação (padrão: 1)</param>
     /// <param name="q">Consulta para filtragem de animais</param>
+    /// <param name="cancellationToken">Ignored</param>
     /// <returns>Lista de animais</returns>
     /// <response code="200">Lista de animais retornada com sucesso</response>
     /// <response code="400">Retorna erros relacionados à requisição</response>
@@ -67,16 +67,11 @@ public class AnimalsController : ApiController
     [ProducesResponseType(typeof(PagedResponse<AnimalResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpGet("/api/v1/animais")]
-    public async Task<IResult> GetAllPublic([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!)
+    public async Task<IResult> GetAllPublic(CancellationToken cancellationToken, [FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!)
     {
-        GetAllAnimaisRequest request = new()
-        {
-            PageSize = ps,
-            PageNumber = page,
-            Query = q,
-            TenantFiltro = false
-        };
-        var result = await _animalHandler.GetAllAsync(request);
+        GetAllAnimalsQuery query = new(ps, page, q, false, false);
+
+        var result = await Sender.Send(query, cancellationToken);
 
         return result.Match(
             onSuccess: response => Results.Ok(response),
@@ -100,6 +95,7 @@ public class AnimalsController : ApiController
     /// O `TenantId` deve ser o identificador do locatário que está fazendo a requisição.
     /// </remarks>
     /// <param name="id">ID do animal (GUID)</param>
+    /// <param name="cancellationToken">Ignored</param>
     /// <returns>Detalhes do animal</returns>
     /// <response code="200">Detalhes do animal retornados com sucesso</response>
     /// <response code="400">Retorna erros relacionados à requisição</response>
@@ -110,15 +106,15 @@ public class AnimalsController : ApiController
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [HttpGet("{id:guid}")]
-    public async Task<IResult> GetById(Guid id)
+    public async Task<IResult> GetById(Guid id, CancellationToken cancellationToken)
     {
-        GetAnimalByIdRequest request = new(id, true);
-        var result = await _animalHandler.GetByIdAsync(request);
+        GetAnimalByIdQuery query = new(id, true);
+
+        var result = await Sender.Send(query, cancellationToken);
 
         return result.Match(
             onSuccess: response => Results.Ok(response),
             onFailure: response => response.ToProblemDetails());
-
     }
 
     /// <summary>
@@ -137,6 +133,7 @@ public class AnimalsController : ApiController
     /// <param name="ps">Tamanho da página para paginação (padrão: 25)</param>
     /// <param name="page">Número da página para paginação (padrão: 1)</param>
     /// <param name="q">Consulta para filtragem de animais</param>
+    /// <param name="cancellationToken">Ignored</param>
     /// <returns>Lista de animais</returns>
     /// <response code="200">Lista de animais retornada com sucesso</response>
     /// <response code="400">Retorna erros relacionados à requisição</response>
@@ -147,16 +144,11 @@ public class AnimalsController : ApiController
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [HttpGet]
-    public async Task<IResult> GetAll([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!)
+    public async Task<IResult> GetAll(CancellationToken cancellationToken, [FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!)
     {
-        GetAllAnimaisRequest request = new()
-        {
-            PageSize = ps,
-            PageNumber = page,
-            Query = q,
-            TenantFiltro = true
-        };
-        var result = await _animalHandler.GetAllAsync(request);
+        GetAllAnimalsQuery query = new(ps, page, q, false, true);
+
+        var result = await Sender.Send(query, cancellationToken);
 
         return result.Match(
             onSuccess: response => Results.Ok(response),
@@ -177,7 +169,7 @@ public class AnimalsController : ApiController
     /// O `TenantId` deve ser o identificador do locatário que está fazendo a requisição.
     /// </remarks>
     /// <param name="command">Dados de cadastro do animal</param>
-    /// <param name="cancellationToken">Dados de cadastro do animal</param>
+    /// <param name="cancellationToken">Ignored</param>
     /// <returns>Resposta indicando o sucesso ou falha na criação do animal</returns>
     /// <response code="201">Animal criado com sucesso</response>
     /// <response code="400">Retorna erros de validação</response>
@@ -212,6 +204,7 @@ public class AnimalsController : ApiController
     /// </remarks>
     /// <param name="id">ID do animal (GUID)</param>
     /// <param name="request">Dados atualizados do animal</param>
+    /// <param name="cancellationToken">Ignored</param>
     /// <returns>Resposta indicando o sucesso ou falha na atualização do animal</returns>
     /// <response code="204">Animal atualizado com sucesso</response>
     /// <response code="400">Retorna erros de validação ou IDs não correspondentes</response>
@@ -222,17 +215,11 @@ public class AnimalsController : ApiController
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [HttpPut("{id:guid}")]
-    public async Task<IResult> Update(Guid id, UpdateAnimalRequest request)
+    public async Task<IResult> Update(Guid id, [FromBody] UpdateAnimalRequest request, CancellationToken cancellationToken)
     {
-        if (id != request.Id) 
-            ModelState.AddModelError(string.Empty, "Os IDs não correspondem.");
+        UpdateAnimalCommand command = new (id, request.Nome, request.Especie, request.Raca, request.Sexo, request.Castrado, request.Cor, request.Porte, request.Idade, request.Descricao, request.Observacao, request.Foto, request.ChavePix);
 
-        if (!ModelState.IsValid)
-        {
-            return ModelState.ToProblemDetails();
-        }
-
-        var result = await _animalHandler.UpdateAsync(request);
+        var result = await Sender.Send(command, cancellationToken);
 
         return result.Match(
             onSuccess: () => Results.NoContent(),
@@ -253,6 +240,7 @@ public class AnimalsController : ApiController
     /// O `TenantId` deve ser o identificador do locatário que está fazendo a requisição.
     /// </remarks>
     /// <param name="id">ID do animal (GUID)</param>
+    /// <param name="cancellationToken">Ignored</param>
     /// <returns>Resposta indicando o sucesso ou falha na exclusão do animal</returns>
     /// <response code="204">Animal deletado com sucesso</response>
     /// <response code="400">Retorna erros relacionados à requisição</response>
@@ -263,9 +251,11 @@ public class AnimalsController : ApiController
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [HttpDelete("{id:guid}")]
-    public async Task<IResult> Delete(Guid id)
+    public async Task<IResult> Delete(Guid id, CancellationToken cancellationToken)
     {
-        var result = await _animalHandler.DeleteAsync(new DeleteAnimalRequest(id));
+        DeleteAnimalCommand command = new(id);
+
+        var result = await Sender.Send(command, cancellationToken);
 
         return result.Match(
             onSuccess: () => Results.NoContent(),

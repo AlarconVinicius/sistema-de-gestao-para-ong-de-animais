@@ -1,6 +1,4 @@
-﻿using SGONGA.WebAPI.API.Animals.Shared;
-
-namespace SGONGA.WebAPI.API.Animals.Command.CreateAnimal;
+﻿namespace SGONGA.WebAPI.API.Animals.Command.Create;
 
 public sealed record CreateAnimalCommand(
     string Nome,
