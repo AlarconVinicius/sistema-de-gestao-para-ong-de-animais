@@ -5,7 +5,7 @@ using SGONGA.WebAPI.Business.Models;
 
 namespace SGONGA.WebAPI.API.Animals.Command.Create;
 
-internal sealed class CreateAnimalCommandHandler(IUnitOfWork UnitOfWork, TenantProvider TenantProvider) : ICommandHandler<CreateAnimalCommand>
+internal sealed class CreateAnimalCommandHandler(IONGDbContext Context, TenantProvider TenantProvider) : ICommandHandler<CreateAnimalCommand>
 {
     public async Task<Result> Handle(CreateAnimalCommand command, CancellationToken cancellationToken)
     {
@@ -17,12 +17,25 @@ internal sealed class CreateAnimalCommandHandler(IUnitOfWork UnitOfWork, TenantP
         if(validationResult.IsFailed)
             return validationResult.Errors;
 
-        Animal animal = Animal.Create((Guid)tenantId, command.Nome, command.Especie, command.Raca, command.Sexo, command.Castrado, command.Cor, command.Porte, command.Idade, command.Descricao, command.Observacao, command.Foto, command.ChavePix);
-        
-        await UnitOfWork.AnimalRepository.AddAsync(animal);
+        Animal animal = Animal.Create(
+            (Guid)tenantId, 
+            command.Nome, 
+            command.Especie, 
+            command.Raca, 
+            command.Sexo, 
+            command.Castrado, 
+            command.Cor, 
+            command.Porte, 
+            command.Idade, 
+            command.Descricao, 
+            command.Observacao, 
+            command.Foto, 
+            command.ChavePix);
 
-        var result = await UnitOfWork.CommitAsync();
+        await Context.Animais.AddAsync(animal, cancellationToken);
 
-        return result.IsSuccess ? Result.Ok() : result.Errors;
+        await Context.SaveChangesAsync(cancellationToken);
+
+        return Result.Ok();
     }
 }
