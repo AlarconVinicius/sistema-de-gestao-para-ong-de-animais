@@ -9,7 +9,6 @@ public class UnitOfWork : IUnitOfWork
     private readonly ONGDbContext _context;
 
     private IONGRepository? _ongRepository;
-    private IAnimalRepository? _animalRepository;
     private IAdotanteRepository? _adotanteRepository;
 
     public UnitOfWork(ONGDbContext context)
@@ -22,14 +21,6 @@ public class UnitOfWork : IUnitOfWork
         get
         {
             return _ongRepository ??= new ONGRepository(_context);
-        }
-    }
-
-    public IAnimalRepository AnimalRepository
-    {
-        get
-        {
-            return _animalRepository ??= new AnimalRepository(_context);
         }
     }
 

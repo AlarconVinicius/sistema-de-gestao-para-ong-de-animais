@@ -105,7 +105,8 @@ public class ONGHandler(INotifier notifier, IAspNetUser appUser, IUnitOfWork uni
         {
             foreach (Animal result in resultsDb.Animais)
             {
-                _unitOfWork.AnimalRepository.Delete(result.Id);
+                //_unitOfWork.AnimalRepository.Delete(result.Id);
+                throw new NotImplementedException();
             }
         }
 

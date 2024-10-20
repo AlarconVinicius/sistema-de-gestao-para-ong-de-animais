@@ -19,7 +19,6 @@ public static class DependencyInjectionConfig
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IONGRepository, ONGRepository>();
-        services.AddScoped<IAnimalRepository, AnimalRepository>();
 
         return services;
     }
