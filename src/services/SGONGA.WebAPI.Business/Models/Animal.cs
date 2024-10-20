@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SGONGA.WebAPI.Business.Models;
 
-public class Animal : Entity
+public sealed class Animal : Entity
 {
     public Guid TenantId { get; init; }
     public string Nome { get; private set; } = string.Empty;
@@ -21,7 +21,7 @@ public class Animal : Entity
     //public bool Adotado { get; set; }
 
     [ForeignKey(nameof(TenantId))]
-    public virtual ONG? ONG { get; private set; }
+    public ONG? ONG { get; private set; }
 
     public Animal() { }
 
