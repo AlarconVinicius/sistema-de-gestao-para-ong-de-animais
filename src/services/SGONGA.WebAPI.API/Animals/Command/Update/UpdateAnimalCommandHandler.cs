@@ -3,11 +3,11 @@ using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.API.Animals.Errors;
 using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Interfaces.Services;
 
 namespace SGONGA.WebAPI.API.Animals.Command.Update;
 
-internal sealed class UpdateAnimalCommandHandler(IONGDbContext Context, TenantProvider TenantProvider) : ICommandHandler<UpdateAnimalCommand>
+internal sealed class UpdateAnimalCommandHandler(IONGDbContext Context, ITenantProvider TenantProvider) : ICommandHandler<UpdateAnimalCommand>
 {
     public async Task<Result> Handle(UpdateAnimalCommand command, CancellationToken cancellationToken)
     {
@@ -15,12 +15,13 @@ internal sealed class UpdateAnimalCommandHandler(IONGDbContext Context, TenantPr
         if (validationResult.IsFailed)
             return validationResult.Errors;
 
-        var tenantId = TenantProvider.TenantId
-            ?? throw new InvalidOperationException("TenantId cannot be null when saving entities with the TenantId property.");
+        Result<Guid> tenantId = TenantProvider.GetTenantId();
+        if (tenantId.IsFailed)
+            return tenantId.Errors;
 
         var animal = await Context.Animais
             .AsNoTracking()
-            .Where(q => q.Id == command.Id && q.TenantId == tenantId)
+            .Where(q => q.Id == command.Id && q.TenantId == tenantId.Value)
             .FirstOrDefaultAsync(cancellationToken);
 
         if(animal is null)

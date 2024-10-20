@@ -3,11 +3,11 @@ using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.API.Animals.Errors;
 using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Interfaces.Services;
 
 namespace SGONGA.WebAPI.API.Animals.Queries.GetById;
 
-internal sealed class GetAnimalByIdQueryHandler(IONGDbContext Context, TenantProvider TenantProvider) : IQueryHandler<GetAnimalByIdQuery,AnimalResponse>
+internal sealed class GetAnimalByIdQueryHandler(IONGDbContext Context, ITenantProvider TenantProvider) : IQueryHandler<GetAnimalByIdQuery,AnimalResponse>
 {
     public async Task<Result<AnimalResponse>> Handle(GetAnimalByIdQuery query, CancellationToken cancellationToken)
     {
@@ -18,7 +18,11 @@ internal sealed class GetAnimalByIdQueryHandler(IONGDbContext Context, TenantPro
 
         if (query.TenantFiltro)
         {
-            queryable = queryable.Where(q => q.TenantId == TenantProvider.TenantId);
+            Result<Guid> tenantId = TenantProvider.GetTenantId();
+            if (tenantId.IsFailed)
+                return tenantId.Errors;
+
+            queryable = queryable.Where(q => q.TenantId == tenantId.Value);
         }
 
         var animal = await queryable

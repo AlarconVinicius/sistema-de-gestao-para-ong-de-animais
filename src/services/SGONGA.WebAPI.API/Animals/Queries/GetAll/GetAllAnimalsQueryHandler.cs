@@ -3,11 +3,11 @@ using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.API.Shared;
 using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Interfaces.Services;
 
 namespace SGONGA.WebAPI.API.Animals.Queries.GetAll;
 
-internal sealed class GetAllAnimalsQueryHandler(IONGDbContext Context, TenantProvider TenantProvider) : IQueryHandler<GetAllAnimalsQuery, BasePagedResponse<AnimalResponse>>
+internal sealed class GetAllAnimalsQueryHandler(IONGDbContext Context, ITenantProvider TenantProvider) : IQueryHandler<GetAllAnimalsQuery, BasePagedResponse<AnimalResponse>>
 {
     public async Task<Result<BasePagedResponse<AnimalResponse>>> Handle(GetAllAnimalsQuery query, CancellationToken cancellationToken)
     {
@@ -18,11 +18,15 @@ internal sealed class GetAllAnimalsQueryHandler(IONGDbContext Context, TenantPro
 
         if (query.TenantFiltro)
         {
-            queryable = queryable.Where(q => q.TenantId == TenantProvider.TenantId);
+            Result<Guid> tenantId = TenantProvider.GetTenantId();
+            if (tenantId.IsFailed)
+                return tenantId.Errors;
+
+            queryable = queryable.Where(q => q.TenantId == tenantId.Value);
         }
         if (!string.IsNullOrEmpty(query.Query))
         {
-            queryable = queryable.Where(q => q.Nome.Contains(query.Query) || q.ONG.Nome.Contains(query.Query));
+            queryable = queryable.Where(q => q.Nome.Contains(query.Query) || q.ONG!.Nome.Contains(query.Query));
         }
 
         queryable = queryable.OrderByDescending(q => q.UpdatedAt)

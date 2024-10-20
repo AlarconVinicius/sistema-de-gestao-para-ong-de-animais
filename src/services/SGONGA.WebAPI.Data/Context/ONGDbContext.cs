@@ -1,18 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
+using SGONGA.WebAPI.Business.Interfaces.Services;
 using SGONGA.WebAPI.Business.Models;
 
 namespace SGONGA.WebAPI.Data.Context;
 
 public class ONGDbContext : DbContext, IONGDbContext
 {
-    private readonly Guid? _tenantId;
-    public ONGDbContext(DbContextOptions<ONGDbContext> options, TenantProvider tenantProvider) : base(options)
+    private readonly Result<Guid> _tenantId;
+    public ONGDbContext(DbContextOptions<ONGDbContext> options, ITenantProvider tenantProvider) : base(options)
     {
         ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         ChangeTracker.AutoDetectChangesEnabled = false;
-        _tenantId = tenantProvider.TenantId;
+        _tenantId = tenantProvider.GetTenantId();
     }
 
     public DbSet<Usuario> Usuarios { get; set; }
@@ -51,10 +53,10 @@ public class ONGDbContext : DbContext, IONGDbContext
             //if (tenantProperty != null && tenantProperty.CurrentValue == null)
             if (tenantProperty != null && tenantProperty.CurrentValue!.ToString() == tenantEmpty!.ToString() && entry.State == EntityState.Added)
             {
-                if (_tenantId is null) 
-                    throw new InvalidOperationException("TenantId cannot be null when saving entities with the TenantId property.");
+                if (_tenantId.IsFailed) 
+                    throw new InvalidOperationException("O TenantId não pode ser nulo ao salvar entidades com a propriedade TenantId.");
 
-                tenantProperty.CurrentValue = _tenantId;
+                tenantProperty.CurrentValue = _tenantId.Value;
             }
 
             var createdAtProperty = entry.Properties.FirstOrDefault(p => p.Metadata.Name == "CreatedAt");

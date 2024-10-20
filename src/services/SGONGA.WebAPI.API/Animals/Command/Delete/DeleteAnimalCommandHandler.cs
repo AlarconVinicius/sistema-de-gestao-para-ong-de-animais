@@ -3,11 +3,12 @@ using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.API.Animals.Errors;
 using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
+using SGONGA.WebAPI.Business.Interfaces.Services;
 using SGONGA.WebAPI.Business.Models;
 
 namespace SGONGA.WebAPI.API.Animals.Command.Delete;
 
-internal sealed class DeleteAnimalCommandHandler(IONGDbContext Context, TenantProvider TenantProvider) : ICommandHandler<DeleteAnimalCommand>
+internal sealed class DeleteAnimalCommandHandler(IONGDbContext Context, ITenantProvider TenantProvider) : ICommandHandler<DeleteAnimalCommand>
 {
     public async Task<Result> Handle(DeleteAnimalCommand command, CancellationToken cancellationToken)
     {
@@ -15,10 +16,11 @@ internal sealed class DeleteAnimalCommandHandler(IONGDbContext Context, TenantPr
         if (validationResult.IsFailed)
             return validationResult.Errors;
 
-        var tenantId = TenantProvider.TenantId
-            ?? throw new InvalidOperationException("TenantId cannot be null when saving entities with the TenantId property.");
+        Result<Guid> tenantId = TenantProvider.GetTenantId();
+        if (tenantId.IsFailed)
+            return tenantId.Errors;
 
-        if ((await AnimalExiste(command.Id, tenantId)).IsFailed)
+        if ((await AnimalExiste(command.Id, tenantId.Value)).IsFailed)
             return AnimalErrors.AnimalNotFound(command.Id);
 
         Context.Animais.Remove(new Animal { Id = command.Id });

@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Primitives;
-using SGONGA.Core.Extensions;
-using SGONGA.WebAPI.Business.Models;
+﻿using SGONGA.WebAPI.Business.Interfaces.Services;
 
 namespace SGONGA.WebAPI.API.Middlewares;
 
@@ -13,13 +11,9 @@ public class TenantIdentifierMiddleware
         this.next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context, TenantProvider tenantProvider)
+    public async Task InvokeAsync(HttpContext context, ITenantProvider tenantProvider)
     {
-        StringValues tenantIdValues = context.Request.Headers["TenantId"];
-
-        tenantProvider.TenantId = tenantIdValues.Count > 0
-            ? tenantIdValues[0].TryParseGuid()
-            : null;
+        tenantProvider.SetTenantId(context.Request.Headers);
 
         await next(context);
     }
