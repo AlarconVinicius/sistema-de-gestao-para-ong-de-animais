@@ -5,7 +5,7 @@ namespace SGONGA.WebAPI.Business.Models;
 
 public class Animal : Entity
 {
-    public Guid TenantId { get; private set; }
+    public Guid TenantId { get; init; }
     public string Nome { get; private set; } = string.Empty;
     public string Especie { get; private set; } = string.Empty;
     public string Raca { get; private set; } = string.Empty;
@@ -25,7 +25,7 @@ public class Animal : Entity
 
     public Animal() { }
 
-    public Animal(Guid id, Guid tenantId, string nome, string especie, string raca, bool sexo, bool castrado, string cor, string porte, string idade, string descricao, string observacao, string foto, string chavePix = "") : base(id)
+    private Animal(Guid id, Guid tenantId, string nome, string especie, string raca, bool sexo, bool castrado, string cor, string porte, string idade, string descricao, string observacao, string foto, string chavePix = "") : base(id)
     {
         if (tenantId == Guid.Empty)
             throw new ArgumentException("TenantId não pode ser vazio.");

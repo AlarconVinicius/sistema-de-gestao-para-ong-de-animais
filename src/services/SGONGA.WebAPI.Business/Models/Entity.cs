@@ -1,7 +1,7 @@
 ﻿namespace SGONGA.WebAPI.Business.Models;
 public abstract class Entity
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; init; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
 
