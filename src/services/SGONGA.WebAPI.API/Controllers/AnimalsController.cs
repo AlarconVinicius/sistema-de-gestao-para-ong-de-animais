@@ -6,6 +6,7 @@ using SGONGA.Core.Notifications;
 using SGONGA.WebAPI.API.Animals.Command.Create;
 using SGONGA.WebAPI.API.Animals.Command.Delete;
 using SGONGA.WebAPI.API.Animals.Command.Update;
+using SGONGA.WebAPI.API.Animals.Queries;
 using SGONGA.WebAPI.API.Animals.Queries.GetAll;
 using SGONGA.WebAPI.API.Animals.Queries.GetById;
 using SGONGA.WebAPI.API.Controllers.Shared;
