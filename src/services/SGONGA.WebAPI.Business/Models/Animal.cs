@@ -27,26 +27,31 @@ public sealed class Animal : Entity
 
     private Animal(Guid id, Guid tenantId, string nome, string especie, string raca, bool sexo, bool castrado, string cor, string porte, string idade, string descricao, string observacao, string foto, string chavePix = "") : base(id)
     {
+        var errors = new List<string>();
+
         if (tenantId == Guid.Empty)
-            throw new ArgumentException("TenantId não pode ser vazio.");
+            errors.Add("TenantId não pode ser vazio.");
         if (string.IsNullOrWhiteSpace(nome))
-            throw new ArgumentException("Nome não pode ser nulo ou vazio.");
+            errors.Add("Nome não pode ser nulo ou vazio.");
         if (string.IsNullOrWhiteSpace(especie))
-            throw new ArgumentException("Espécie não pode ser nula ou vazia.");
+            errors.Add("Espécie não pode ser nula ou vazia.");
         if (string.IsNullOrWhiteSpace(raca))
-            throw new ArgumentException("Raça não pode ser nula ou vazia.");
+            errors.Add("Raça não pode ser nula ou vazia.");
         if (string.IsNullOrWhiteSpace(cor))
-            throw new ArgumentException("Cor não pode ser nula ou vazia.");
+            errors.Add("Cor não pode ser nula ou vazia.");
         if (string.IsNullOrWhiteSpace(porte))
-            throw new ArgumentException("Porte não pode ser nulo ou vazio.");
+            errors.Add("Porte não pode ser nulo ou vazio.");
         if (string.IsNullOrWhiteSpace(descricao))
-            throw new ArgumentException("Descrição não pode ser nula ou vazia.");
+            errors.Add("Descrição não pode ser nula ou vazia.");
         if (string.IsNullOrWhiteSpace(observacao))
-            throw new ArgumentException("Observação não pode ser nula ou vazia.");
+            errors.Add("Observação não pode ser nula ou vazia.");
         if (string.IsNullOrWhiteSpace(foto))
-            throw new ArgumentException("Foto não pode ser nula ou vazia.");
+            errors.Add("Foto não pode ser nula ou vazia.");
         if (string.IsNullOrWhiteSpace(idade))
-            throw new ArgumentException("Idade não pode ser nula ou vazia.");
+            errors.Add("Idade não pode ser nula ou vazia.");
+
+        if (errors.Any())
+            throw new DomainException(string.Join(Environment.NewLine, errors));
 
         TenantId = tenantId;
         Nome = nome;
@@ -69,88 +74,41 @@ public sealed class Animal : Entity
 
     public void Update(string nome, string especie, string raca, bool sexo, bool castrado, string cor, string porte, string idade, string descricao, string observacao, string foto, string chavePix)
     {
-        SetNome(nome);
-        SetEspecie(especie);
-        SetRaca(raca);
-        SetSexo(sexo);
-        SetCastrado(castrado);
-        SetCor(cor);
-        SetPorte(porte);
-        SetIdade(idade);
-        SetDescricao(descricao);
-        SetObservacao(observacao);
-        SetFoto(foto);
-        SetChavePix(chavePix);
-    }
-    private static void ValidarFotos(List<string> fotos)
-    {
-        if (fotos == null || fotos.Count == 0)
-            throw new DomainException("A lista de fotos deve conter pelo menos uma foto.");
-    }
+        var errors = new List<string>();
 
-    #region Setters
-    public void SetNome(string nome)
-    {
         if (string.IsNullOrWhiteSpace(nome))
-            throw new DomainException("Nome não pode ser nulo ou vazio.");
-        Nome = nome;
-    }
-    public void SetSexo(bool sexo)
-    {
-        Sexo = sexo;
-    }
-    public void SetCastrado(bool castrado)
-    {
-        Castrado = castrado;
-    }
-    public void SetEspecie(string especie)
-    {
+            errors.Add("Nome não pode ser nulo ou vazio.");
         if (string.IsNullOrWhiteSpace(especie))
-            throw new DomainException("Espécie não pode ser nula ou vazia.");
-        Especie = especie;
-    }
-    public void SetRaca(string raca)
-    {
+            errors.Add("Espécie não pode ser nula ou vazia.");
         if (string.IsNullOrWhiteSpace(raca))
-            throw new DomainException("Raça não pode ser nula ou vazia.");
-        Raca = raca;
-    }
-    public void SetCor(string cor)
-    {
+            errors.Add("Raça não pode ser nula ou vazia.");
         if (string.IsNullOrWhiteSpace(cor))
-            throw new DomainException("Cor não pode ser nula ou vazia.");
-        Cor = cor;
-    }
-    public void SetPorte(string porte)
-    {
+            errors.Add("Cor não pode ser nula ou vazia.");
         if (string.IsNullOrWhiteSpace(porte))
-            throw new DomainException("Porte não pode ser nulo ou vazio.");
-        Porte = porte;
-    }
-    public void SetIdade(string idade)
-    {
-        if (string.IsNullOrWhiteSpace(idade))
-            throw new DomainException("Idade não pode ser nulo ou vazio.");
-        Idade = idade;
-    }
-    public void SetDescricao(string descricao)
-    {
+            errors.Add("Porte não pode ser nulo ou vazio.");
         if (string.IsNullOrWhiteSpace(descricao))
-            throw new DomainException("Descrição não pode ser nula ou vazia.");
+            errors.Add("Descrição não pode ser nula ou vazia.");
+        if (string.IsNullOrWhiteSpace(observacao))
+            errors.Add("Observação não pode ser nula ou vazia.");
+        if (string.IsNullOrWhiteSpace(foto))
+            errors.Add("Foto não pode ser nula ou vazia.");
+        if (string.IsNullOrWhiteSpace(idade))
+            errors.Add("Idade não pode ser nula ou vazia.");
+
+        if (errors.Any())
+            throw new DomainException(string.Join(Environment.NewLine, errors));
+
+        Nome = nome;
+        Especie = especie;
+        Raca = raca;
+        Sexo = sexo;
+        Castrado = castrado;
+        Cor = cor;
+        Porte = porte;
+        Idade = idade;
         Descricao = descricao;
-    }
-    public void SetObservacao(string observacao)
-    {
         Observacao = observacao;
-    }
-    public void SetChavePix(string chavePix)
-    {
+        Foto = foto;
         ChavePix = chavePix;
     }
-
-    public void SetFoto(string foto)
-    {
-        Foto = foto;
-    }
-    #endregion
 }
