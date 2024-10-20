@@ -41,6 +41,7 @@ public class BaseAnimalCommandValidator : AbstractValidator<BaseAnimalCommand>
             .MaximumLength(500).WithMessage("A descrição pode ter no máximo 500 caracteres.");
 
         RuleFor(a => a.Observacao)
+            .NotEmpty().WithMessage("A observação é obrigatória.")
             .MaximumLength(500).WithMessage("A observação pode ter no máximo 500 caracteres.");
 
         RuleFor(a => a.Foto)
