@@ -15,7 +15,7 @@ public static class DependencyInjectionConfig
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection") ??
                 throw new InvalidOperationException("Connection String is not found")));
 
-        services.AddScoped<ONGDbContext>();
+        services.AddScoped<IONGDbContext, ONGDbContext>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IONGRepository, ONGRepository>();

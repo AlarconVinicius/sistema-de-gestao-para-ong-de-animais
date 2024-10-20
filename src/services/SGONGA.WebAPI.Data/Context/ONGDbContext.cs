@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Models;
 
 namespace SGONGA.WebAPI.Data.Context;
 
-public class ONGDbContext : DbContext
+public class ONGDbContext : DbContext, IONGDbContext
 {
     private readonly Guid? _tenantId;
     public ONGDbContext(DbContextOptions<ONGDbContext> options, TenantProvider tenantProvider) : base(options)
@@ -30,13 +31,13 @@ public class ONGDbContext : DbContext
 
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 
-        modelBuilder
-            .Entity<Usuario>()
-            .HasQueryFilter(x => x.TenantId == _tenantId);
+        //modelBuilder
+        //    .Entity<Usuario>()
+        //    .HasQueryFilter(x => x.TenantId == _tenantId);
 
-        modelBuilder
-            .Entity<Animal>()
-            .HasQueryFilter(x => x.TenantId == _tenantId);
+        //modelBuilder
+        //    .Entity<Animal>()
+        //    .HasQueryFilter(x => x.TenantId == _tenantId);
 
         base.OnModelCreating(modelBuilder);
     }
