@@ -2,7 +2,6 @@
 using SGONGA.Tests.Animals.Shared;
 using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.Models.DomainObjects;
-using System.ComponentModel;
 
 namespace SGONGA.Tests.Animals.Models;
 
@@ -36,7 +35,7 @@ public sealed class AnimalTests
     public void Create_Should_ReturnAnimal_WhenCalledWithValidParameters()
     {
         // Arrange
-        Animal expectedAnimal = AnimalDataFaker.GenerateValidData();
+        Animal expectedAnimal = AnimalDataFaker.GenerateValidAnimal();
 
         // Act
         var actualAnimal = Animal.Create(
@@ -66,7 +65,7 @@ public sealed class AnimalTests
     public void Create_Should_ThrowDomainException_WhenCalledWithInvalidParameters()
     {
         // Arrange
-        var (tenantId, nome, especie, raca, sexo, castrado, cor, porte, idade, descricao, observacao, foto, chavePix) = AnimalDataFaker.GenerateInvalidData();
+        var (tenantId, nome, especie, raca, sexo, castrado, cor, porte, idade, descricao, observacao, foto, chavePix) = AnimalDataFaker.GenerateInvalidAnimal();
 
         // Act
         Action action = () => Animal.Create(
@@ -106,8 +105,8 @@ public sealed class AnimalTests
     public void Update_Should_UpdateAnimal_WhenCalledWithValidParameters()
     {
         // Arrange
-        Animal expectedAnimal = AnimalDataFaker.GenerateValidData();
-        Animal actualAnimal = AnimalDataFaker.GenerateValidData();
+        Animal expectedAnimal = AnimalDataFaker.GenerateValidAnimal();
+        Animal actualAnimal = AnimalDataFaker.GenerateValidAnimal();
 
         // Act
         actualAnimal.Update(
@@ -137,8 +136,8 @@ public sealed class AnimalTests
     public void Update_Should_ThrowDomainException_WhenCalledWithInvalidParameters()
     {
         // Arrange
-        Animal validAnimal = AnimalDataFaker.GenerateValidData();
-        var (tenantId, nome, especie, raca, sexo, castrado, cor, porte, idade, descricao, observacao, foto, chavePix) = AnimalDataFaker.GenerateInvalidData();
+        Animal validAnimal = AnimalDataFaker.GenerateValidAnimal();
+        var (tenantId, nome, especie, raca, sexo, castrado, cor, porte, idade, descricao, observacao, foto, chavePix) = AnimalDataFaker.GenerateInvalidAnimal();
 
         // Act
         Action action = () => validAnimal.Update(
