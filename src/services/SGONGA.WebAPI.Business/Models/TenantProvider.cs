@@ -1,20 +1,24 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Interfaces.Services;
 
 namespace SGONGA.WebAPI.Business.Models;
 
-internal sealed class TenantProvider : ITenantProvider
+internal sealed class TenantProvider(IONGDbContext Context) : ITenantProvider
 {
     private Guid TenantId = Guid.Empty;
 
-    public Result<Guid> GetTenantId()
+    public async Task<Result<Guid>> GetTenantId()
     {
         if (TenantId == Guid.Empty)
             return Error.NotFound("TENANT_ID_NOT_FOUND", "O Tenant ID não foi encontrado. Certifique-se de que o cabeçalho 'TenantId' está presente na requisição e tente novamente.");
-
-        return TenantId;
+        
+        return await Context.ONGs.AnyAsync(q => q.TenantId == TenantId)
+            ? TenantId
+            : Error.NotFound("INVALID_TENANT_ID", "TenantId não encontrado.");
     }
 
     public Result SetTenantId(IHeaderDictionary headerDictionary)
@@ -32,5 +36,9 @@ internal sealed class TenantProvider : ITenantProvider
         TenantId = parsedTenantId;
 
         return Result.Ok();
+    }
+    public async Task<bool> IsTenantValid(Guid tenantId)
+    {
+        return await Context.ONGs.AnyAsync(q => q.TenantId == tenantId);
     }
 }
