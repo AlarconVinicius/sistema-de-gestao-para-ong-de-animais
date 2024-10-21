@@ -1,20 +1,16 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Interfaces.Services;
 using SGONGA.WebAPI.Business.Models;
 
 namespace SGONGA.WebAPI.Data.Context;
 
 public class ONGDbContext : DbContext, IONGDbContext
 {
-    private readonly Result<Guid> _tenantId;
-    public ONGDbContext(DbContextOptions<ONGDbContext> options, ITenantProvider tenantProvider) : base(options)
+    public ONGDbContext(DbContextOptions<ONGDbContext> options) : base(options)
     {
         ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         ChangeTracker.AutoDetectChangesEnabled = false;
-        _tenantId = tenantProvider.GetTenantId();
     }
 
     public DbSet<Usuario> Usuarios { get; set; }
@@ -51,13 +47,13 @@ public class ONGDbContext : DbContext, IONGDbContext
             var tenantProperty = entry.Properties.FirstOrDefault(p => p.Metadata.Name == "TenantId");
             var tenantEmpty = Guid.Empty;
             //if (tenantProperty != null && tenantProperty.CurrentValue == null)
-            if (tenantProperty != null && tenantProperty.CurrentValue!.ToString() == tenantEmpty!.ToString() && entry.State == EntityState.Added)
-            {
-                if (_tenantId.IsFailed) 
-                    throw new InvalidOperationException("O TenantId não pode ser nulo ao salvar entidades com a propriedade TenantId.");
+            //if (tenantProperty != null && tenantProperty.CurrentValue!.ToString() == tenantEmpty!.ToString() && entry.State == EntityState.Added)
+            //{
+            //    if (_tenantId.IsFailed) 
+            //        throw new InvalidOperationException("O TenantId não pode ser nulo ao salvar entidades com a propriedade TenantId.");
 
-                tenantProperty.CurrentValue = _tenantId.Value;
-            }
+            //    tenantProperty.CurrentValue = _tenantId.Value;
+            //}
 
             var createdAtProperty = entry.Properties.FirstOrDefault(p => p.Metadata.Name == "CreatedAt");
             var updatedAtProperty = entry.Properties.FirstOrDefault(p => p.Metadata.Name == "UpdatedAt");

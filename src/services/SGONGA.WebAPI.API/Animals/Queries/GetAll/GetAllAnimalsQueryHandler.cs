@@ -18,7 +18,7 @@ internal sealed class GetAllAnimalsQueryHandler(IONGDbContext Context, ITenantPr
 
         if (query.TenantFiltro)
         {
-            Result<Guid> tenantId = TenantProvider.GetTenantId();
+            Result<Guid> tenantId = await TenantProvider.GetTenantId();
             if (tenantId.IsFailed)
                 return tenantId.Errors;
 
