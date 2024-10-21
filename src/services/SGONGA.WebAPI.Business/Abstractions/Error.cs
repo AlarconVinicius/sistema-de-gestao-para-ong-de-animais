@@ -16,6 +16,9 @@ public sealed record Error
     public static Error NotFound(string code, string message) =>
         new(code, message, ErrorType.NotFound);
 
+    public static Error Validation(string message) =>
+        new("VALIDATION_ERROR", message, ErrorType.Validation);
+
     public static Error Validation(string code, string message) =>
         new(code, message, ErrorType.Validation);
 
