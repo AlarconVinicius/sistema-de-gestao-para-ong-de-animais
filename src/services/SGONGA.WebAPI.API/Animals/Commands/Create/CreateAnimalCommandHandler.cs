@@ -4,17 +4,19 @@ using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Interfaces.Services;
 using SGONGA.WebAPI.Business.Models;
 
-namespace SGONGA.WebAPI.API.Animals.Command.Create;
+namespace SGONGA.WebAPI.API.Animals.Commands.Create;
 
 internal sealed class CreateAnimalCommandHandler(IONGDbContext Context, ITenantProvider TenantProvider) : ICommandHandler<CreateAnimalCommand>
 {
     public async Task<Result> Handle(CreateAnimalCommand command, CancellationToken cancellationToken)
     {
-        Result validationResult = RequestValidator.IsValid(command, new CreateAnimalCommandValidator());
+        Result validationResult = command.IsValid();
         if(validationResult.IsFailed)
+        {
             return validationResult.Errors;
+        }
 
-        Result<Guid> tenantId = TenantProvider.GetTenantId();
+        Result<Guid> tenantId = await TenantProvider.GetTenantId();
         if (tenantId.IsFailed)
             return tenantId.Errors;
 

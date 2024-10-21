@@ -5,17 +5,17 @@ using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Interfaces.Services;
 
-namespace SGONGA.WebAPI.API.Animals.Command.Update;
+namespace SGONGA.WebAPI.API.Animals.Commands.Update;
 
 internal sealed class UpdateAnimalCommandHandler(IONGDbContext Context, ITenantProvider TenantProvider) : ICommandHandler<UpdateAnimalCommand>
 {
     public async Task<Result> Handle(UpdateAnimalCommand command, CancellationToken cancellationToken)
     {
-        Result validationResult = RequestValidator.IsValid(command, new UpdateAnimalCommandValidator());
+        Result validationResult = command.IsValid();
         if (validationResult.IsFailed)
             return validationResult.Errors;
 
-        Result<Guid> tenantId = TenantProvider.GetTenantId();
+        Result<Guid> tenantId = await TenantProvider.GetTenantId();
         if (tenantId.IsFailed)
             return tenantId.Errors;
 

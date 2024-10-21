@@ -6,17 +6,17 @@ using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Interfaces.Services;
 using SGONGA.WebAPI.Business.Models;
 
-namespace SGONGA.WebAPI.API.Animals.Command.Delete;
+namespace SGONGA.WebAPI.API.Animals.Commands.Delete;
 
 internal sealed class DeleteAnimalCommandHandler(IONGDbContext Context, ITenantProvider TenantProvider) : ICommandHandler<DeleteAnimalCommand>
 {
     public async Task<Result> Handle(DeleteAnimalCommand command, CancellationToken cancellationToken)
     {
-        Result validationResult = RequestValidator.IsValid(command, new DeleteAnimalCommandValidator());
+        Result validationResult = command.IsValid();
         if (validationResult.IsFailed)
             return validationResult.Errors;
 
-        Result<Guid> tenantId = TenantProvider.GetTenantId();
+        Result<Guid> tenantId = await TenantProvider.GetTenantId();
         if (tenantId.IsFailed)
             return tenantId.Errors;
 

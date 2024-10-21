@@ -1,4 +1,4 @@
-﻿namespace SGONGA.WebAPI.API.Animals.Command.Update;
+﻿namespace SGONGA.WebAPI.API.Animals.Commands.Update;
 
 public sealed record UpdateAnimalRequest(
     string Nome,
