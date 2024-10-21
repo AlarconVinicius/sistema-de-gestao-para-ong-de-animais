@@ -1,9 +1,12 @@
 ﻿using Bogus;
 using SGONGA.WebAPI.API.Animals.Commands.Create;
 using SGONGA.WebAPI.Business.Models;
+using System.Diagnostics.CodeAnalysis;
 
-namespace SGONGA.Tests.Animals.Shared;
+namespace SGONGA.WebAPI.Mocks;
 
+
+[ExcludeFromCodeCoverage]
 public static class AnimalDataFaker
 {
     public static Animal GenerateValidAnimal()
