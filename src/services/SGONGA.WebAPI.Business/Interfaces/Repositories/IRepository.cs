@@ -9,6 +9,7 @@ public interface IRepository<T> : IDisposable where T : Entity
     Task<Result> AddAsync(T entity);
     Result Update(T entity);
     Result Delete(Guid id);
+    Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate);
     Task<Result<T>> GetByIdAsync(Guid id);
     Task<Result<T>> GetByIdWithoutTenantAsync(Guid id);
     Task<Result<List<T>>> GetAllAsync();

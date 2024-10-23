@@ -17,6 +17,11 @@ public class Repository<T> : IRepository<T> where T : Entity, new()
         Db = db;
         DbSet = db.Set<T>();
     }
+    public virtual async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await DbSet.AnyAsync(predicate);
+    }
+
     public virtual async Task<Result<IEnumerable<T>>> SearchAsync(Expression<Func<T, bool>> predicate)
     {
         return await DbSet.AsNoTracking()
