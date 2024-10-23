@@ -9,7 +9,7 @@ namespace SGONGA.WebAPI.API.Tests.Animals.Command.Create;
 [Trait("Animal", "Commands")]
 public class CreateAnimalCommandTests
 {
-    [Fact(DisplayName = "Constructor initialze all properties when called with valid parameters")]
+    [Fact(DisplayName = "Constructor Initialze All Properties")]
     public void Constructor_Should_InitializeAllProperties_WhenCalledWithValidParameters()
     {
         // Arrange
@@ -35,7 +35,7 @@ public class CreateAnimalCommandTests
         actualCommand.Should().BeEquivalentTo(expectedCommand);
     }
 
-    [Fact(DisplayName = "Constructor should initialize with default ChavePix when not provided")]
+    [Fact(DisplayName = "Constructor Initialize With Default ChavePix")]
     public void Constructor_Should_InitializeWithDefaultChavePix_WhenNotProvided()
     {
         // Arrange
@@ -61,7 +61,7 @@ public class CreateAnimalCommandTests
         actualCommand.ChavePix.Should().Be(expectedChavePix);
     }
 
-    [Fact(DisplayName = "IsValid should return success when command is valid")]
+    [Fact(DisplayName = "IsValid Return Success")]
     public void IsValid_Should_ReturnSuccess_WhenCommandIsValid()
     {
         // Arrange
@@ -75,7 +75,7 @@ public class CreateAnimalCommandTests
         result.Errors.Should().BeEmpty();
     }
 
-    [Fact(DisplayName = "IsValid should return validation errors when command is invalid")]
+    [Fact(DisplayName = "IsValid Return Validation Failures")]
     public void IsValid_Should_ReturnValidationFailures_WhenCommandIsInvalid()
     {
         // Arrange
