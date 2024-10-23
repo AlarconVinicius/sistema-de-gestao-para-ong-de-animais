@@ -17,6 +17,7 @@ public static class DependencyInjectionConfig
 
         services.AddScoped<IONGDbContext, ONGDbContext>();
 
+        services.AddScoped<IGenericUnitOfWork, GenericUnitOfWork>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IONGRepository, ONGRepository>();
 
