@@ -1,4 +1,5 @@
 ﻿using SGONGA.WebAPI.API.Shared;
+using SGONGA.WebAPI.Business.Animals.Responses;
 
 namespace SGONGA.WebAPI.API.Animals.Queries.GetAll;
 

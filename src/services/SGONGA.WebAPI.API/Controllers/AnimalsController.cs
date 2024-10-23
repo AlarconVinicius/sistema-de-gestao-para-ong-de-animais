@@ -6,12 +6,12 @@ using SGONGA.Core.Notifications;
 using SGONGA.WebAPI.API.Animals.Commands.Create;
 using SGONGA.WebAPI.API.Animals.Commands.Delete;
 using SGONGA.WebAPI.API.Animals.Commands.Update;
-using SGONGA.WebAPI.API.Animals.Queries;
 using SGONGA.WebAPI.API.Animals.Queries.GetAll;
 using SGONGA.WebAPI.API.Animals.Queries.GetById;
 using SGONGA.WebAPI.API.Controllers.Shared;
 using SGONGA.WebAPI.API.Extensions;
 using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.Animals.Responses;
 using SGONGA.WebAPI.Business.Responses;
 
 namespace SGONGA.WebAPI.API.Controllers;

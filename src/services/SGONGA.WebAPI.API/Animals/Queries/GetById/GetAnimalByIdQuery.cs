@@ -1,4 +1,5 @@
 ﻿using SGONGA.WebAPI.API.Abstractions.Messaging;
+using SGONGA.WebAPI.Business.Animals.Responses;
 
 namespace SGONGA.WebAPI.API.Animals.Queries.GetById;
 

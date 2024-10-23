@@ -1,5 +1,4 @@
-﻿using SGONGA.WebAPI.API.Animals.Queries;
-using SGONGA.WebAPI.API.Shared;
+﻿using SGONGA.WebAPI.Business.Animals.Responses;
 using SGONGA.WebAPI.Business.Models;
 
 namespace SGONGA.WebAPI.API.Animals.Shared;
