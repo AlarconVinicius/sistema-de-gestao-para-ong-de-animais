@@ -21,7 +21,7 @@ public sealed class Animal : Entity
     //public bool Adotado { get; set; }
 
     [ForeignKey(nameof(TenantId))]
-    public ONG? ONG { get; private set; }
+    public ONG ONG { get; private set; } = null!;
 
     public Animal() { }
 
