@@ -1,13 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SGONGA.WebAPI.API.Abstractions.Messaging;
+﻿using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.API.Animals.Errors;
 using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.Animals.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Interfaces.Services;
+using SGONGA.WebAPI.Business.Models;
 
 namespace SGONGA.WebAPI.API.Animals.Commands.Update;
 
-internal sealed class UpdateAnimalCommandHandler(IONGDbContext Context, ITenantProvider TenantProvider) : ICommandHandler<UpdateAnimalCommand>
+internal sealed class UpdateAnimalCommandHandler(IGenericUnitOfWork UnitOfWork, IAnimalRepository AnimalRepository, ITenantProvider TenantProvider) : ICommandHandler<UpdateAnimalCommand>
 {
     public async Task<Result> Handle(UpdateAnimalCommand command, CancellationToken cancellationToken)
     {
@@ -19,10 +20,7 @@ internal sealed class UpdateAnimalCommandHandler(IONGDbContext Context, ITenantP
         if (tenantId.IsFailed)
             return tenantId.Errors;
 
-        var animal = await Context.Animais
-            .AsNoTracking()
-            .Where(q => q.Id == command.Id && q.TenantId == tenantId.Value)
-            .FirstOrDefaultAsync(cancellationToken);
+        Animal animal = await AnimalRepository.SearchAsync(q => q.Id == command.Id && q.TenantId == tenantId.Value, cancellationToken);
 
         if(animal is null)
             return AnimalErrors.AnimalNotFound(command.Id);
@@ -42,9 +40,9 @@ internal sealed class UpdateAnimalCommandHandler(IONGDbContext Context, ITenantP
             command.Foto, 
             command.ChavePix);
 
-        Context.Animais.Update(animal);
+        UnitOfWork.Update(animal);
 
-        await Context.SaveChangesAsync(cancellationToken);
+        await UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok();
     }

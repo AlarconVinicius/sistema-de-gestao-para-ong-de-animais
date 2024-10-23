@@ -6,7 +6,7 @@ using SGONGA.WebAPI.Business.Models;
 
 namespace SGONGA.WebAPI.API.Animals.Commands.Create;
 
-internal sealed class CreateAnimalCommandHandler(IONGDbContext Context, ITenantProvider TenantProvider) : ICommandHandler<CreateAnimalCommand>
+internal sealed class CreateAnimalCommandHandler(IGenericUnitOfWork UnitOfWork, ITenantProvider TenantProvider) : ICommandHandler<CreateAnimalCommand>
 {
     public async Task<Result> Handle(CreateAnimalCommand command, CancellationToken cancellationToken)
     {
@@ -35,9 +35,9 @@ internal sealed class CreateAnimalCommandHandler(IONGDbContext Context, ITenantP
             command.Foto, 
             command.ChavePix);
 
-        await Context.Animais.AddAsync(animal, cancellationToken);
+        await UnitOfWork.InsertAsync(animal, cancellationToken);
 
-        await Context.SaveChangesAsync(cancellationToken);
+        await UnitOfWork.SaveChangesAsync(cancellationToken);
 
         return Result.Ok();
     }
