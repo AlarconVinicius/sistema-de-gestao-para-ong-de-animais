@@ -1,4 +1,5 @@
 ﻿using SGONGA.WebAPI.API.Abstractions.Messaging;
+using SGONGA.WebAPI.API.Animals.Errors;
 using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Animals.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Animals.Responses;
@@ -10,14 +11,22 @@ internal sealed class GetAnimalByIdQueryHandler(IAnimalRepository AnimalReposito
 {
     public async Task<Result<AnimalResponse>> Handle(GetAnimalByIdQuery query, CancellationToken cancellationToken)
     {
+        AnimalResponse result;
         if (query.TenantFiltro)
         {
             Result<Guid> tenantId = await TenantProvider.GetTenantId();
             if (tenantId.IsFailed)
                 return tenantId.Errors;
-
-            return await AnimalRepository.GetByIdAsync(query.Id, tenantId.Value);
+            result = await AnimalRepository.GetByIdAsync(query.Id, tenantId.Value);
         }
-        return await AnimalRepository.GetByIdAsync(query.Id, null);
+        else 
+        {
+            result = await AnimalRepository.GetByIdAsync(query.Id, null);
+        }
+
+        if(result is null)
+            return AnimalErrors.AnimalNotFound(query.Id);
+
+        return result;
     }
 }
