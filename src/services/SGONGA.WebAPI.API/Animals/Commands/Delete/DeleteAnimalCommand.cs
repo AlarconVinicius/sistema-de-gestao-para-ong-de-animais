@@ -18,9 +18,10 @@ public sealed record DeleteAnimalCommand(Guid Id) : BaseCommand
     }
     public class DeleteAnimalCommandValidator : AbstractValidator<DeleteAnimalCommand>
     {
+        public static string IdRequired = "O Id é obrigatório.";
         public DeleteAnimalCommandValidator()
         {
-            RuleFor(x => x.Id).NotEmpty().WithMessage("O Id é obrigatório.");
+            RuleFor(x => x.Id).NotEmpty().WithMessage(IdRequired);
         }
     }
 
