@@ -1,7 +1,9 @@
 ﻿using Bogus;
 using SGONGA.WebAPI.API.Animals.Commands.Create;
+using SGONGA.WebAPI.Business.Animals.Responses;
 using SGONGA.WebAPI.Business.Models;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing.Printing;
 
 namespace SGONGA.WebAPI.Mocks;
 
@@ -117,5 +119,73 @@ public static class AnimalDataFaker
             "",
             ""
         );
+    }
+
+    public static AnimalResponse GenerateValidAnimalResponse()
+    {
+        var faker = new Faker<AnimalResponse>("pt_BR")
+            .CustomInstantiator(f =>
+            {
+                var name = f.Name.FirstName();
+                return new AnimalResponse(
+                        Guid.NewGuid(),
+                        Guid.NewGuid(),
+                        name,
+                        f.PickRandom(new[] { "Cachorro", "Gato" }),
+                        f.PickRandom(new[] { "SRD" }),
+                        f.Random.Bool(),
+                        f.Random.Bool(),
+                        f.PickRandom(new[] { "Branco", "Preto", "Laranja", "Caramelo" }),
+                        f.PickRandom(new[] { "Pequeno", "Médio", "Grande" }),
+                        f.Random.Int(1, 15).ToString() + " anos",
+                        f.Company.CompanyName(),
+                        $"${f.Address.State()}, {f.Address.City()}",
+                        f.Lorem.Sentence(),
+                        f.Lorem.Sentence(),
+                        f.Internet.Email(name, "").ToLower(),
+                        f.Image.PicsumUrl(),
+                        DateTime.UtcNow,
+                        DateTime.UtcNow
+                );
+            });
+        return faker.Generate();
+    }
+    public static BasePagedResponse<AnimalResponse> GenerateValidAnimalsResponse(int count)
+    {
+        var faker = new Faker<AnimalResponse>("pt_BR")
+            .CustomInstantiator(f =>
+            {
+                var name = f.Name.FirstName();
+                return new AnimalResponse(
+                        Guid.NewGuid(),
+                        Guid.NewGuid(),
+                        name,
+                        f.PickRandom(new[] { "Cachorro", "Gato" }),
+                        f.PickRandom(new[] { "SRD" }),
+                        f.Random.Bool(),
+                        f.Random.Bool(),
+                        f.PickRandom(new[] { "Branco", "Preto", "Laranja", "Caramelo" }),
+                        f.PickRandom(new[] { "Pequeno", "Médio", "Grande" }),
+                        f.Random.Int(1, 15).ToString() + " anos",
+                        f.Company.CompanyName(),
+                        $"${f.Address.State()}, {f.Address.City()}",
+                        f.Lorem.Sentence(),
+                        f.Lorem.Sentence(),
+                        f.Internet.Email(name, "").ToLower(),
+                        f.Image.PicsumUrl(),
+                        DateTime.UtcNow,
+                        DateTime.UtcNow
+                );
+            });
+
+        List<AnimalResponse> list = faker.Generate(count);
+
+        return new BasePagedResponse<AnimalResponse>()
+        {
+            List = list,
+            TotalResults = list.Count,
+            PageIndex = 1,
+            PageSize = list.Count
+        };
     }
 }

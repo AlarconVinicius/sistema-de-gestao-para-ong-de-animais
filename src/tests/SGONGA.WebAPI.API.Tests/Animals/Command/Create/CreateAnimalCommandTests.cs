@@ -2,14 +2,15 @@
 using SGONGA.WebAPI.API.Animals.Commands.Create;
 using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Mocks;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static SGONGA.WebAPI.API.Animals.Commands.Create.CreateAnimalCommand;
 
 namespace SGONGA.WebAPI.API.Tests.Animals.Command.Create;
 
-[Trait("Animal", "Commands")]
+[Trait("Animal", "Command - Create")]
 public class CreateAnimalCommandTests
 {
-    [Fact(DisplayName = "Constructor Initialze All Properties")]
+    [Fact(DisplayName = "Constructor Initialize All Properties")]
     public void Constructor_Should_InitializeAllProperties_WhenCalledWithValidParameters()
     {
         // Arrange
@@ -40,7 +41,6 @@ public class CreateAnimalCommandTests
     {
         // Arrange
         var expectedCommand = AnimalDataFaker.GenerateValidCreateAnimalCommand();
-        var expectedChavePix = string.Empty;
 
         // Act
         var actualCommand = new CreateAnimalCommand(
@@ -58,7 +58,7 @@ public class CreateAnimalCommandTests
         );
 
         // Assert
-        actualCommand.ChavePix.Should().Be(expectedChavePix);
+        actualCommand.ChavePix.Should().Be(string.Empty);
     }
 
     [Fact(DisplayName = "IsValid Return Success")]

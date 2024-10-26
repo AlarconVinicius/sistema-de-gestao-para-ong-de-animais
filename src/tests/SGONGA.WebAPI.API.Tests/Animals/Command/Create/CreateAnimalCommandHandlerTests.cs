@@ -11,7 +11,7 @@ using static SGONGA.WebAPI.API.Animals.Commands.Create.CreateAnimalCommand;
 
 namespace SGONGA.WebAPI.API.Tests.Animals.Command.Create;
 
-[Trait("Animal", "Handler")]
+[Trait("Animal", "Handler - Create")]
 public class CreateAnimalCommandHandlerTests
 {
     private readonly Mock<IGenericUnitOfWork> _unitOfWorkMock;
@@ -26,7 +26,7 @@ public class CreateAnimalCommandHandlerTests
     }
 
     [Fact(DisplayName = "Handle Return Validation Failures")]
-    public async Task Handle_Should_ReturnValidationFailures_WhenCommandNotValid()
+    public async Task Handle_Should_ReturnValidationFailures_WhenCommandIsNotValid()
     {
         // Arrange
         CreateAnimalCommand command = AnimalDataFaker.GenerateInvalidCreateAnimalCommand();
@@ -53,7 +53,7 @@ public class CreateAnimalCommandHandlerTests
         });
     }
 
-    [Fact(DisplayName = "Handle Return Not Found Error")]
+    [Fact(DisplayName = "Handle Return TenantId Not Found Error")]
     public async Task Handle_Should_ReturnNotFoundError_WhenTenantIdIsNotValid()
     {
         // Arrange

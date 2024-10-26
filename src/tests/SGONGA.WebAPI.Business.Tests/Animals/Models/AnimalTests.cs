@@ -3,7 +3,7 @@ using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.Models.DomainObjects;
 using SGONGA.WebAPI.Mocks;
 
-namespace SGONGA.WebAPI.Business.Tests.Models;
+namespace SGONGA.WebAPI.Business.Tests.Animals.Models;
 
 [Trait("Animal", "Models")]
 public sealed class AnimalTests
