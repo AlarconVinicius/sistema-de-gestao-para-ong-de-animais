@@ -37,7 +37,7 @@ public sealed record UpdateAnimalCommand : BaseAnimalCommand
 
     public class UpdateAnimalCommandValidator : BaseAnimalCommandValidator<UpdateAnimalCommand>
     {
-        public static string IdRequired = "O Id é obrigatório.";
+        public const string IdRequired = "O Id é obrigatório.";
         public UpdateAnimalCommandValidator()
         {
             RuleFor(x => x.Id).NotEmpty().WithMessage(IdRequired);

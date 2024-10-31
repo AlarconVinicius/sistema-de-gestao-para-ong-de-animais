@@ -19,26 +19,26 @@ public abstract record BaseAnimalCommand(
 {
     public class BaseAnimalCommandValidator<T> : AbstractValidator<T> where T : BaseAnimalCommand
     {
-        public static string NameRequired = "O nome é obrigatório.";
-        public static string SpeciesRequired = "A espécie é obrigatória.";
-        public static string BreedRequired = "A raça é obrigatória.";
-        public static string SexRequired = "O sexo é obrigatório.";
-        public static string CastratedRequired = "A informação de castração é obrigatória.";
-        public static string ColorRequired = "A cor é obrigatória.";
-        public static string SizeRequired = "O porte é obrigatório.";
-        public static string AgeRequired = "A idade é obrigatória.";
-        public static string DescriptionRequired = "A descrição é obrigatória.";
-        public static string ObservationRequired = "A observação é obrigatória.";
-        public static string PhotoRequired = "A foto é obrigatória.";
-        public static string PixKeyMaxLength = "A chave Pix pode ter no máximo 100 caracteres.";
-        public static string NameMaxLength = "O nome pode ter no máximo 100 caracteres.";
-        public static string SpeciesMaxLength = "A espécie pode ter no máximo 50 caracteres.";
-        public static string BreedMaxLength = "A raça pode ter no máximo 50 caracteres.";
-        public static string ColorMaxLength = "A cor pode ter no máximo 50 caracteres.";
-        public static string SizeMaxLength = "O porte pode ter no máximo 50 caracteres.";
-        public static string AgeMaxLength = "A idade pode ter no máximo 100 caracteres.";
-        public static string DescriptionMaxLength = "A descrição pode ter no máximo 500 caracteres.";
-        public static string ObservationMaxLength = "A observação pode ter no máximo 500 caracteres.";
+        public const string NameRequired = "O nome é obrigatório.";
+        public const string SpeciesRequired = "A espécie é obrigatória.";
+        public const string BreedRequired = "A raça é obrigatória.";
+        public const string SexRequired = "O sexo é obrigatório.";
+        public const string CastratedRequired = "A informação de castração é obrigatória.";
+        public const string ColorRequired = "A cor é obrigatória.";
+        public const string SizeRequired = "O porte é obrigatório.";
+        public const string AgeRequired = "A idade é obrigatória.";
+        public const string DescriptionRequired = "A descrição é obrigatória.";
+        public const string ObservationRequired = "A observação é obrigatória.";
+        public const string PhotoRequired = "A foto é obrigatória.";
+        public const string PixKeyMaxLength = "A chave Pix pode ter no máximo 100 caracteres.";
+        public const string NameMaxLength = "O nome pode ter no máximo 100 caracteres.";
+        public const string SpeciesMaxLength = "A espécie pode ter no máximo 50 caracteres.";
+        public const string BreedMaxLength = "A raça pode ter no máximo 50 caracteres.";
+        public const string ColorMaxLength = "A cor pode ter no máximo 50 caracteres.";
+        public const string SizeMaxLength = "O porte pode ter no máximo 50 caracteres.";
+        public const string AgeMaxLength = "A idade pode ter no máximo 100 caracteres.";
+        public const string DescriptionMaxLength = "A descrição pode ter no máximo 500 caracteres.";
+        public const string ObservationMaxLength = "A observação pode ter no máximo 500 caracteres.";
 
         public BaseAnimalCommandValidator()
         {
