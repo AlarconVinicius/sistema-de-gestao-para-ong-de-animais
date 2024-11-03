@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace SGONGA.WebAPI.Data.Repositories;
 
-public class Repository<T> : IRepository<T> where T : Entity, new()
+public class Repository<T> : IRepository<T> where T : Entity
 {
     protected readonly ONGDbContext Db;
     protected readonly DbSet<T> DbSet;
@@ -17,9 +17,9 @@ public class Repository<T> : IRepository<T> where T : Entity, new()
         Db = db;
         DbSet = db.Set<T>();
     }
-    public virtual async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
+    public virtual async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        return await DbSet.AnyAsync(predicate);
+        return await DbSet.AnyAsync(predicate, cancellationToken);
     }
 
     public virtual async Task<Result<IEnumerable<T>>> SearchAsync(Expression<Func<T, bool>> predicate)
@@ -35,6 +35,13 @@ public class Repository<T> : IRepository<T> where T : Entity, new()
                           .AsNoTracking()
                           .Where(predicate)
                           .ToListAsync();
+    }
+
+    public virtual async Task<T> SearchAsync2(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
+    {
+        return await DbSet.AsNoTracking()
+                          .Where(predicate)
+                          .FirstOrDefaultAsync(cancellationToken) ?? null!;
     }
 
     public virtual async Task<Result<T>> GetByIdAsync(Guid id)
@@ -125,7 +132,7 @@ public class Repository<T> : IRepository<T> where T : Entity, new()
 
     public virtual Result Delete(Guid id)
     {
-        DbSet.Remove(new T { Id = id });
+        //DbSet.Remove(new T { Id = id });
         return Result.Ok();
     }
 
