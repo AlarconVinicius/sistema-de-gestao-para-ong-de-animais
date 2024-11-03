@@ -5,26 +5,29 @@ using System.Text.RegularExpressions;
 namespace SGONGA.WebAPI.Business.Models;
 public abstract class Usuario : Entity
 {
-    public Guid TenantId { get; private set; }
-    public EUsuarioTipo UsuarioTipo { get; private set; }
-    public string Nome { get; private set; } = string.Empty;
-    public string Apelido { get; private set; } = string.Empty;
-    public string Slug { get; private set; } = string.Empty;
-    public string Documento { get; private set; } = string.Empty;
-    public string Site { get; private set; } = string.Empty;
-    public Contato Contato { get; private set; } = null!;
-    public bool TelefoneVisivel { get; private set; } = false;
-    public bool AssinarNewsletter { get; private set; } = false;
-    public DateTime DataNascimento { get; private set; }
-    public string Estado { get; private set; } = string.Empty;
-    public string Cidade { get; private set; } = string.Empty;
-    public string? Sobre { get; private set; } = string.Empty;
+    public Guid TenantId { get; init; }
+    public EUsuarioTipo UsuarioTipo { get; protected set; }
+    public string Nome { get; protected set; } = string.Empty;
+    public string Apelido { get; protected set; } = string.Empty;
+    public string Slug { get; protected set; } = string.Empty;
+    public string Documento { get; init; } = string.Empty;
+    public string Site { get; protected set; } = string.Empty;
+    public Contato Contato { get; protected set; } = null!;
+    public bool TelefoneVisivel { get; protected set; } = false;
+    public bool AssinarNewsletter { get; protected set; } = false;
+    public DateTime DataNascimento { get; init; }
+    public string Estado { get; protected set; } = string.Empty;
+    public string Cidade { get; protected set; } = string.Empty;
+    public string? Sobre { get; protected set; } = string.Empty;
 
     protected Usuario(){ }
 
+    protected Usuario(Guid id) : base(id) { }
+
     protected Usuario(Guid id, Guid tenantId, EUsuarioTipo usuarioTipo, string nome, string apelido, string documento, string site, Contato contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre) : base(id)
     {
-        SetDataNascimento(dataNascimento);
+        ValidarIdade(dataNascimento);
+        DataNascimento = dataNascimento;
         SetSite(site);
         SetSlug(apelido);
         TenantId = tenantId;
@@ -90,15 +93,6 @@ public abstract class Usuario : Entity
     {
         Estado = estado;
         Cidade = cidade;
-    }
-    public void SetTenant(Guid tenantId)
-    {
-        TenantId = tenantId;
-    }
-    public void SetDataNascimento(DateTime dataNascimento)
-    {
-        ValidarIdade(dataNascimento);
-        DataNascimento = dataNascimento;
     }
 
     public void SetSite(string site)
