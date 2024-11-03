@@ -83,7 +83,7 @@ public class DeleteAnimalCommandHandlerTests
             .Setup(x => x.GetTenantId())
             .ReturnsAsync(Result.Ok(tenantId));
         _animalRepositoryMock
-            .Setup(x => x.ExistsAsync(It.IsAny<Expression<Func<Animal, bool>>>()))
+            .Setup(x => x.ExistsAsync(It.IsAny<Expression<Func<Animal, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
         // Act
@@ -110,7 +110,7 @@ public class DeleteAnimalCommandHandlerTests
             .Setup(x => x.GetTenantId())
             .ReturnsAsync(Result.Ok(tenantId));
         _animalRepositoryMock
-            .Setup(x => x.ExistsAsync(It.IsAny<Expression<Func<Animal, bool>>>()))
+            .Setup(x => x.ExistsAsync(It.IsAny<Expression<Func<Animal, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
         // Act
