@@ -7,11 +7,12 @@ using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Interfaces.Services;
 using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.People.Entities;
+using SGONGA.WebAPI.Business.People.Enum;
 using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
 
-namespace SGONGA.WebAPI.API.Users.Commands.Update;
+namespace SGONGA.WebAPI.API.People.Commands.Update;
 
-internal sealed class UpdateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IUserRepository UserRepository, IIdentityHandler IdentityHandler, ITenantProvider TenantProvider, IAspNetUser AppUser) : ICommandHandler<UpdateUserCommand>
+internal sealed class UpdateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRepository UserRepository, IIdentityHandler IdentityHandler, ITenantProvider TenantProvider, IAspNetUser AppUser) : ICommandHandler<UpdateUserCommand>
 {
     public async Task<Result> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
@@ -23,17 +24,17 @@ internal sealed class UpdateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IU
             return tenantId.Errors;
 
         var personResult = await GetUserByIdAsync(request.Id, tenantId.Value, request.UsuarioTipo, cancellationToken);
-        if(personResult.IsFailed)
+        if (personResult.IsFailed)
             return personResult.Errors;
 
         var person = personResult.Value;
-        if (request.Contato.Email != person.Contato.Email.Endereco)
+        if (request.Email != person.Email.Address)
         {
-            var emailIsAvailable = await EmailDisponivel(request.Contato.Email, request.UsuarioTipo);
+            var emailIsAvailable = await EmailDisponivel(request.Email, request.UsuarioTipo);
             if (emailIsAvailable.IsFailed)
                 return emailIsAvailable.Errors;
 
-            var identityEmailUpdated = await IdentityHandler.UpdateEmailAsync(new(request.Id, request.Contato.Email));
+            var identityEmailUpdated = await IdentityHandler.UpdateEmailAsync(new(request.Id, request.Email));
             if (identityEmailUpdated.IsFailed)
                 return identityEmailUpdated.Errors;
         }
@@ -45,7 +46,7 @@ internal sealed class UpdateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IU
     }
     private async Task<Result<Person>> GetUserByIdAsync(Guid userId, Guid tenantId, EUsuarioTipo usuarioTipo, CancellationToken cancellationToken)
     {
-        switch(usuarioTipo)
+        switch (usuarioTipo)
         {
             case EUsuarioTipo.Adotante:
                 var adotante = await UserRepository.SearchAsync(q => q.Id == userId && q.TenantId == tenantId && q.UsuarioTipo == EUsuarioTipo.Adotante, cancellationToken) as Adopter;
@@ -54,7 +55,7 @@ internal sealed class UpdateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IU
                 return adotante;
             case EUsuarioTipo.ONG:
                 var ngo = await UserRepository.SearchAsync(q => q.Id == userId && q.TenantId == tenantId && q.UsuarioTipo == EUsuarioTipo.ONG, cancellationToken) as NGO;
-                if(ngo is null)
+                if (ngo is null)
                     return UsuarioErrors.UsuarioNaoEncontrado(userId);
                 return ngo;
             default:
@@ -63,7 +64,7 @@ internal sealed class UpdateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IU
     }
     private async Task<Result> EmailDisponivel(string email, EUsuarioTipo tipo)
     {
-        var available = !await UserRepository.ExistsAsync(f => f.Contato.Email.Endereco == email && f.UsuarioTipo == tipo);
+        var available = !await UserRepository.ExistsAsync(f => f.Email.Address == email && f.UsuarioTipo == tipo);
 
         return available ? Result.Ok() : ValidationErrors.EmailEmUso(email);
     }
@@ -75,7 +76,8 @@ internal sealed class UpdateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IU
                 request.Nome,
                 request.Apelido,
                 request.Site,
-                new(request.Contato.Telefone, request.Contato.Email),
+                request.Telefone, 
+                request.Email,
                 request.TelefoneVisivel,
                 request.Estado,
                 request.Cidade,
@@ -90,7 +92,8 @@ internal sealed class UpdateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IU
                 request.Nome,
                 request.Apelido,
                 request.Site,
-                new(request.Contato.Telefone, request.Contato.Email),
+                request.Telefone,
+                request.Email,
                 request.TelefoneVisivel,
                 request.Estado,
                 request.Cidade,

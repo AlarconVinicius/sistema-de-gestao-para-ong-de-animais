@@ -1,15 +1,15 @@
 ﻿using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Animals.Responses;
 using SGONGA.WebAPI.Business.Errors;
 using SGONGA.WebAPI.Business.Interfaces.Services;
-using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.People.Enum;
 using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.People.Responses;
+using SGONGA.WebAPI.Business.Shared.Responses;
 
-namespace SGONGA.WebAPI.API.Users.Queries.GetAll;
+namespace SGONGA.WebAPI.API.People.Queries.GetAll;
 
-public class GetAllUsersQueryHandler(IUserRepository UserRepository, ITenantProvider TenantProvider) : IQueryHandler<GetAllUsersQuery, BasePagedResponse<PersonResponse>>
+public class GetAllUsersQueryHandler(IPersonRepository UserRepository, ITenantProvider TenantProvider) : IQueryHandler<GetAllUsersQuery, BasePagedResponse<PersonResponse>>
 {
     public async Task<Result<BasePagedResponse<PersonResponse>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
     {

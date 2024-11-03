@@ -1,9 +1,9 @@
 ﻿using SGONGA.WebAPI.API.Shared;
-using SGONGA.WebAPI.Business.Animals.Responses;
-using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.People.Enum;
 using SGONGA.WebAPI.Business.People.Responses;
+using SGONGA.WebAPI.Business.Shared.Responses;
 
-namespace SGONGA.WebAPI.API.Users.Queries.GetAll;
+namespace SGONGA.WebAPI.API.People.Queries.GetAll;
 
 public class GetAllUsersQuery : BasePagedQuery<BasePagedResponse<PersonResponse>>
 {

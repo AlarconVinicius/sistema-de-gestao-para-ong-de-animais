@@ -24,24 +24,4 @@ public static class DomainObjectMappings
 
         return new Endereco(request.Cidade, request.Estado, request.CEP, request.Logradouro, request.Bairro, request.Numero, request.Complemento, request.Referencia);
     }
-
-    public static ContatoResponse MapDomainToResponse(this Contato request)
-    {
-        if (request == null)
-        {
-            return null!;
-        }
-
-        return new ContatoResponse(request.Telefone.Numero, request.Email.Endereco);
-    }
-
-    public static Contato MapRequestToDomain(this ContatoRequest request)
-    {
-        if (request == null)
-        {
-            return null!;
-        }
-
-        return new Contato(request.Telefone, request.Email);
-    }
 }

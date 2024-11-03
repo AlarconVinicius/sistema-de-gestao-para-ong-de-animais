@@ -5,15 +5,15 @@ using SGONGA.Core.Configurations;
 using SGONGA.Core.Notifications;
 using SGONGA.WebAPI.API.Controllers.Shared;
 using SGONGA.WebAPI.API.Extensions;
-using SGONGA.WebAPI.API.Users.Commands.Create;
-using SGONGA.WebAPI.API.Users.Commands.Delete;
-using SGONGA.WebAPI.API.Users.Commands.Update;
-using SGONGA.WebAPI.API.Users.Queries.GetAll;
-using SGONGA.WebAPI.API.Users.Queries.GetById;
+using SGONGA.WebAPI.API.People.Commands.Create;
+using SGONGA.WebAPI.API.People.Commands.Delete;
+using SGONGA.WebAPI.API.People.Commands.Update;
+using SGONGA.WebAPI.API.People.Queries.GetAll;
+using SGONGA.WebAPI.API.People.Queries.GetById;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Animals.Responses;
-using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.People.Enum;
 using SGONGA.WebAPI.Business.People.Responses;
+using SGONGA.WebAPI.Business.Shared.Responses;
 
 namespace SGONGA.WebAPI.API.Controllers;
 
@@ -241,7 +241,7 @@ public class PeopleController(INotifier notifier, ISender sender) : ApiControlle
     [HttpPut("{id:guid}")]
     public async Task<IResult> Update(Guid id, UpdateUserRequest request, CancellationToken cancellationToken = default)
     {
-        UpdateUserCommand command = new(id, request.UsuarioTipo, request.Nome, request.Apelido, request.Documento, request.Site, new(request.Contato.Telefone, request.Contato.Email), request.TelefoneVisivel, request.AssinarNewsletter, request.DataNascimento, request.Estado, request.Estado, request.Sobre, request.ChavePix);
+        UpdateUserCommand command = new(id, request.UsuarioTipo, request.Nome, request.Apelido, request.Documento, request.Site, request.Email, request.Telefone, request.TelefoneVisivel, request.AssinarNewsletter, request.DataNascimento, request.Estado, request.Estado, request.Sobre, request.ChavePix);
 
         var result = await Sender.Send(command, cancellationToken);
 

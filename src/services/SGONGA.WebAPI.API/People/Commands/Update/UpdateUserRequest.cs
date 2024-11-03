@@ -1,7 +1,6 @@
-﻿using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Requests.Shared;
+﻿using SGONGA.WebAPI.Business.People.Enum;
 
-namespace SGONGA.WebAPI.API.Users.Commands.Update;
+namespace SGONGA.WebAPI.API.People.Commands.Update;
 
 public sealed record UpdateUserRequest(
         Guid Id,
@@ -10,7 +9,8 @@ public sealed record UpdateUserRequest(
         string Apelido,
         string Documento,
         string Site,
-        ContatoRequest Contato,
+        string Email,
+        string Telefone,
         string Senha,
         string ConfirmarSenha,
         bool TelefoneVisivel,

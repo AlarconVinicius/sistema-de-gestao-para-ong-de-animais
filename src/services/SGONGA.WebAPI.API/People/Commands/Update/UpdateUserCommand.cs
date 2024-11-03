@@ -1,9 +1,8 @@
 ﻿using FluentValidation;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Requests.Shared;
+using SGONGA.WebAPI.Business.People.Enum;
 
-namespace SGONGA.WebAPI.API.Users.Commands.Update;
+namespace SGONGA.WebAPI.API.People.Commands.Update;
 
 public sealed record UpdateUserCommand(
         Guid Id,
@@ -12,14 +11,15 @@ public sealed record UpdateUserCommand(
         string Apelido,
         string Documento,
         string Site,
-        ContatoRequest Contato,
+        string Email,
+        string Telefone,
         bool TelefoneVisivel,
         bool AssinarNewsletter,
         DateTime DataNascimento,
         string Estado,
         string Cidade,
         string? Sobre,
-        string? ChavePix) : BaseUserCommand(UsuarioTipo, Nome, Apelido, Documento, Site, Contato, TelefoneVisivel, AssinarNewsletter, DataNascimento, Estado, Cidade, Sobre, ChavePix)
+        string? ChavePix) : BaseUserCommand(UsuarioTipo, Nome, Apelido, Documento, Site, Email, Telefone, TelefoneVisivel, AssinarNewsletter, DataNascimento, Estado, Cidade, Sobre, ChavePix)
 {
     public override Result IsValid()
     {

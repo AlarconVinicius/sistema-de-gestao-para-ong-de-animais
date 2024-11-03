@@ -1,10 +1,9 @@
-﻿using SGONGA.WebAPI.API.Users.Commands.Create;
-using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Requests.Shared;
+﻿using SGONGA.WebAPI.API.People.Commands.Create;
+using SGONGA.WebAPI.Business.People.Enum;
 using Swashbuckle.AspNetCore.Filters;
 using System.Diagnostics.CodeAnalysis;
 
-namespace SGONGA.WebAPI.API.Users.Examples;
+namespace SGONGA.WebAPI.API.People.Examples;
 
 [ExcludeFromCodeCoverage]
 public class CreatePersonExample : IMultipleExamplesProvider<CreateUserCommand>
@@ -19,10 +18,8 @@ public class CreatePersonExample : IMultipleExamplesProvider<CreateUserCommand>
             Apelido: "João Silva",
             Documento: "12345678900",
             Site: "www.joaosilva.com.br",
-            Contato: new ContatoRequest(
-                telefone: "(11) 98765-4321",
-                email: "joao.silva@email.com"
-            ),
+            Telefone: "11987654321",
+            Email: "joao.silva@email.com",
             Senha: "Senha@123456",
             ConfirmarSenha: "Senha@123456",
             TelefoneVisivel: true,
@@ -42,10 +39,8 @@ public class CreatePersonExample : IMultipleExamplesProvider<CreateUserCommand>
                 Apelido: "Amigos dos Animais",
                 Documento: "12345678000199",
                 Site: "www.amigosdosanimais.org.br",
-                Contato: new ContatoRequest(
-                    telefone: "(11) 3456-7890",
-                    email: "contato@amigosdosanimais.org.br"
-                ),
+                Telefone: "11987654321",
+                Email: "joao.silva@email.com",
                 Senha: "Senha@123456",
                 ConfirmarSenha: "Senha@123456",
                 TelefoneVisivel: true,

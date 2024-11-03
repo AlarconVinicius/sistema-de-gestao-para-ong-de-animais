@@ -1,23 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Animals.Responses;
 using SGONGA.WebAPI.Business.Errors;
 using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.People.Entities;
+using SGONGA.WebAPI.Business.People.Enum;
 using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.People.Responses;
-using SGONGA.WebAPI.Business.Requests.Shared;
+using SGONGA.WebAPI.Business.Shared.Responses;
 using SGONGA.WebAPI.Data.Context;
 using System.Linq.Expressions;
 
 namespace SGONGA.WebAPI.Data.Repositories;
 
-public class UserRepository : Repository<Person>, IUserRepository
+public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPersonRepository
 {
-    public UserRepository(ONGDbContext db) : base(db)
-    {
-    }
-
     public async Task<Person> SearchAsync(Expression<Func<Person, bool>> predicate, CancellationToken cancellationToken = default) =>
         await DbSet
             .Where(predicate)
@@ -85,9 +81,8 @@ public class UserRepository : Repository<Person>, IUserRepository
             q.UsuarioTipo,
             q.Documento,
             q.Site,
-            new ContatoResponse(
-                q.Contato.Telefone.Numero,
-                q.Contato.Email.Endereco),
+            q.Telefone.Number,
+            q.Email.Address,
             q.TelefoneVisivel,
             q.AssinarNewsletter,
             q.DataNascimento,
@@ -121,9 +116,8 @@ public class UserRepository : Repository<Person>, IUserRepository
             q.UsuarioTipo,
             q.Documento,
             q.Site,
-            new ContatoResponse(
-                q.Contato.Telefone.Numero,
-                q.Contato.Email.Endereco),
+            q.Telefone.Number,
+            q.Email.Address,
             q.TelefoneVisivel,
             q.AssinarNewsletter,
             q.DataNascimento,
@@ -156,9 +150,8 @@ public class UserRepository : Repository<Person>, IUserRepository
             q.UsuarioTipo,
             q.Documento,
             q.Site,
-            new ContatoResponse(
-                q.Contato.Telefone.Numero,
-                q.Contato.Email.Endereco),
+            q.Telefone.Number,
+            q.Email.Address,
             q.TelefoneVisivel,
             q.AssinarNewsletter,
             q.DataNascimento,
@@ -203,9 +196,8 @@ public class UserRepository : Repository<Person>, IUserRepository
             q.UsuarioTipo,
             q.Documento,
             q.Site,
-            new ContatoResponse(
-                q.Contato.Telefone.Numero,
-                q.Contato.Email.Endereco),
+            q.Telefone.Number,
+            q.Email.Address,
             q.TelefoneVisivel,
             q.AssinarNewsletter,
             q.DataNascimento,

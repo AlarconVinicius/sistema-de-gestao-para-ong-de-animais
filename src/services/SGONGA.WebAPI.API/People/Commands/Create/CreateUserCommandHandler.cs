@@ -5,15 +5,15 @@ using SGONGA.WebAPI.Business.Errors;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Models.DomainObjects;
 using SGONGA.WebAPI.Business.People.Entities;
+using SGONGA.WebAPI.Business.People.Enum;
 using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
 
-namespace SGONGA.WebAPI.API.Users.Commands.Create;
+namespace SGONGA.WebAPI.API.People.Commands.Create;
 
-public class CreateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IUserRepository UserRepository, IIdentityHandler IdentityHandler) : ICommandHandler<CreateUserCommand>
+public class CreateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRepository UserRepository, IIdentityHandler IdentityHandler) : ICommandHandler<CreateUserCommand>
 {
     public async Task<Result> Handle(CreateUserCommand command, CancellationToken cancellationToken)
     {
@@ -40,9 +40,8 @@ public class CreateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IUserReposi
                         command.Apelido,
                         command.Documento,
                         command.Site,
-                        new Contato(
-                            command.Contato.Telefone,
-                            command.Contato.Email),
+                        command.Telefone,
+                        command.Email,
                         command.TelefoneVisivel,
                         command.AssinarNewsletter,
                         command.DataNascimento,
@@ -61,9 +60,8 @@ public class CreateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IUserReposi
                         command.Apelido,
                         command.Documento,
                         command.Site,
-                        new Contato(
-                            command.Contato.Telefone,
-                            command.Contato.Email),
+                        command.Telefone,
+                        command.Email,
                         command.TelefoneVisivel,
                         command.AssinarNewsletter,
                         command.DataNascimento,
@@ -78,7 +76,7 @@ public class CreateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IUserReposi
                 return UsuarioErrors.NaoFoiPossivelCriarUsuario;
         }
 
-        identityResult = await IdentityHandler.CreateAsync(new CreateUserRequest(newUserId, command.Contato.Email, command.Senha, command.ConfirmarSenha));
+        identityResult = await IdentityHandler.CreateAsync(new CreateUserRequest(newUserId, command.Email, command.Senha, command.ConfirmarSenha));
         if (identityResult.IsFailed)
             return identityResult.Errors;
 
@@ -96,8 +94,8 @@ public class CreateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IUserReposi
         if ((await ApelidoDisponivel(command.Apelido, command.UsuarioTipo)).IsFailed)
             return ValidationErrors.ApelidoEmUso(command.Apelido);
 
-        if ((await EmailDisponivel(command.Contato.Email, command.UsuarioTipo)).IsFailed)
-            return ValidationErrors.EmailEmUso(command.Contato.Email);
+        if ((await EmailDisponivel(command.Email)).IsFailed)
+            return ValidationErrors.EmailEmUso(command.Email);
 
         return Result.Ok();
     }
@@ -114,9 +112,9 @@ public class CreateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IUserReposi
 
         return available ? Result.Ok() : ValidationErrors.DocumentoEmUso(documento);
     }
-    private async Task<Result> EmailDisponivel(string email, EUsuarioTipo tipo)
+    private async Task<Result> EmailDisponivel(string email)
     {
-        var available = !await UserRepository.ExistsAsync(f => f.Contato.Email.Endereco == email && f.UsuarioTipo == tipo);
+        var available = !await UserRepository.ExistsAsync(f => f.Email.Address == email);
 
         return available ? Result.Ok() : ValidationErrors.EmailEmUso(email);
     }

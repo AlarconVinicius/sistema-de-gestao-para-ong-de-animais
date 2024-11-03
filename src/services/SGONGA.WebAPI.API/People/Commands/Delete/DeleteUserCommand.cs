@@ -2,7 +2,7 @@
 using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.Business.Abstractions;
 
-namespace SGONGA.WebAPI.API.Users.Commands.Delete;
+namespace SGONGA.WebAPI.API.People.Commands.Delete;
 
 public sealed record DeleteUserCommand(Guid Id) : BaseCommand
 {

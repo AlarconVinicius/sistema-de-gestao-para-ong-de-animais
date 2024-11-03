@@ -22,7 +22,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<IGenericUnitOfWork, GenericUnitOfWork>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IAnimalRepository, AnimalRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IPersonRepository, PersonRepository>();
         services.AddScoped<IONGRepository, ONGRepository>();
 
         return services;

@@ -1,10 +1,9 @@
 ﻿using FluentValidation;
 using SGONGA.WebAPI.API.Abstractions.Messaging;
-using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Requests.Shared;
-using static SGONGA.WebAPI.Business.Requests.Shared.ContatoRequest;
+using SGONGA.WebAPI.Business.People.Enum;
+using SiteValueObject = SGONGA.WebAPI.Business.People.ValueObjects.Site;
 
-namespace SGONGA.WebAPI.API.Users.Commands;
+namespace SGONGA.WebAPI.API.People.Commands;
 
 public abstract record BaseUserCommand(
         EUsuarioTipo UsuarioTipo,
@@ -12,7 +11,8 @@ public abstract record BaseUserCommand(
         string Apelido,
         string Documento,
         string Site,
-        ContatoRequest Contato,
+        string Email,
+        string Telefone,
         bool TelefoneVisivel,
         bool AssinarNewsletter,
         DateTime DataNascimento,
@@ -68,16 +68,14 @@ public abstract record BaseUserCommand(
             RuleFor(c => c.Cidade)
                 .NotEmpty().WithMessage(CityRequired)
                 .MaximumLength(50).WithMessage(MaxLengthExceeded);
-
-            RuleFor(c => c.Contato)
-            .NotNull().WithMessage(ContactRequired)
-            .SetValidator(new ContatoRequestValidator());
         }
 
         private bool BeAValidUrl(string url)
         {
-            return Uri.TryCreate(url, UriKind.Absolute, out Uri? uriResult)
-                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            if (string.IsNullOrWhiteSpace(url))
+                return false;
+
+            return SiteValueObject.SiteRegex.IsMatch(url);
         }
     }
 }

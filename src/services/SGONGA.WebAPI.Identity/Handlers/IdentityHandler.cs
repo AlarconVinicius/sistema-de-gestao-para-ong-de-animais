@@ -9,6 +9,7 @@ using SGONGA.WebAPI.Business.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
+using SGONGA.WebAPI.Business.Shared.Responses;
 using SGONGA.WebAPI.Identity.Errors;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -166,7 +167,7 @@ public class IdentityHandler(INotifier notifier, IAspNetUser appUser, SignInMana
         return new UserResponse(Guid.Parse(userDb!.Id), userDb.Email!);
     }
 
-    public Task<Result<PagedResponse<UserResponse>>> GetAllAsync(GetAllUsersRequest request)
+    public Task<Result<BasePagedResponse<UserResponse>>> GetAllAsync(GetAllUsersRequest request)
     {
         throw new NotImplementedException();
     }

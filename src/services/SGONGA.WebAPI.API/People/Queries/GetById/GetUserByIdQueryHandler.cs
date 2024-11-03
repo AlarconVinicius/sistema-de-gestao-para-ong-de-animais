@@ -2,13 +2,13 @@
 using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Errors;
 using SGONGA.WebAPI.Business.Interfaces.Services;
-using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.People.Enum;
 using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.People.Responses;
 
-namespace SGONGA.WebAPI.API.Users.Queries.GetById;
+namespace SGONGA.WebAPI.API.People.Queries.GetById;
 
-public class GetUserByIdQueryHandler(IUserRepository UserRepository, ITenantProvider TenantProvider) : IQueryHandler<GetUserByIdQuery, PersonResponse>
+public class GetUserByIdQueryHandler(IPersonRepository UserRepository, ITenantProvider TenantProvider) : IQueryHandler<GetUserByIdQuery, PersonResponse>
 {
     public async Task<Result<PersonResponse>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {

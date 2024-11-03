@@ -12,7 +12,7 @@ using SGONGA.WebAPI.API.Controllers.Shared;
 using SGONGA.WebAPI.API.Extensions;
 using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Animals.Responses;
-using SGONGA.WebAPI.Business.Responses;
+using SGONGA.WebAPI.Business.Shared.Responses;
 
 namespace SGONGA.WebAPI.API.Controllers;
 
@@ -65,7 +65,7 @@ public class AnimalsController(INotifier notifier, ISender sender) : ApiControll
     /// <response code="200">Lista de animais retornada com sucesso</response>
     /// <response code="400">Retorna erros relacionados à requisição</response>
     [AllowAnonymous]
-    [ProducesResponseType(typeof(PagedResponse<AnimalResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(BasePagedResponse<AnimalResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpGet("/api/v1/animais")]
     public async Task<IResult> GetAllPublic(CancellationToken cancellationToken, [FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!)
@@ -140,7 +140,7 @@ public class AnimalsController(INotifier notifier, ISender sender) : ApiControll
     /// <response code="400">Retorna erros relacionados à requisição</response>
     /// <response code="401">Usuário não autorizado. Token de autenticação ausente ou inválido</response>
     /// <response code="403">Permissão negada. Usuário não possui privilégios para acessar este recurso</response>
-    [ProducesResponseType(typeof(PagedResponse<AnimalResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(BasePagedResponse<AnimalResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]

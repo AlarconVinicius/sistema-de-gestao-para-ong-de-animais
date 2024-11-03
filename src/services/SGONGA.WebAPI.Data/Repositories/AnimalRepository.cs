@@ -2,6 +2,7 @@
 using SGONGA.WebAPI.Business.Animals.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Animals.Responses;
 using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Shared.Responses;
 using SGONGA.WebAPI.Data.Context;
 using System.Linq.Expressions;
 

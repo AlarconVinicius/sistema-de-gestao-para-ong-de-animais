@@ -1,9 +1,8 @@
 ﻿using FluentValidation;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Requests.Shared;
+using SGONGA.WebAPI.Business.People.Enum;
 
-namespace SGONGA.WebAPI.API.Users.Commands.Create;
+namespace SGONGA.WebAPI.API.People.Commands.Create;
 
 public record CreateUserCommand(
     EUsuarioTipo UsuarioTipo,
@@ -11,7 +10,8 @@ public record CreateUserCommand(
     string Apelido,
     string Documento,
     string Site,
-    ContatoRequest Contato,
+    string Email,
+    string Telefone,
     string Senha,
     string ConfirmarSenha,
     bool TelefoneVisivel,
@@ -20,7 +20,7 @@ public record CreateUserCommand(
     string Estado,
     string Cidade,
     string? Sobre,
-    string? ChavePix) : BaseUserCommand(UsuarioTipo, Nome, Apelido, Documento, Site, Contato, TelefoneVisivel, AssinarNewsletter, DataNascimento, Estado, Cidade, Sobre, ChavePix)
+    string? ChavePix) : BaseUserCommand(UsuarioTipo, Nome, Apelido, Documento, Site, Email, Telefone, TelefoneVisivel, AssinarNewsletter, DataNascimento, Estado, Cidade, Sobre, ChavePix)
 {
     public override Result IsValid()
     {
