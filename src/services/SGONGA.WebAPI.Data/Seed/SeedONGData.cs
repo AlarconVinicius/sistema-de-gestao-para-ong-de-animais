@@ -18,7 +18,7 @@ public static class SeedONGData
 
             if (!context.ONGs.IgnoreQueryFilters().Any(o => o.Id == userId))
             {
-                var user = new ONG(
+                var user = ONG.Create(
                     id: userId,
                     tenantId: tenantId,
                     nome: "Tenant Default",

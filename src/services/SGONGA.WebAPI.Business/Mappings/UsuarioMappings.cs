@@ -59,6 +59,6 @@ public static class UsuarioMappings
             return null!;
         }
 
-        return new ONG(request.Id, request.TenantId, request.Nome, request.Apelido, request.Documento, request.Site, request.Contato.MapRequestToDomain(), request.TelefoneVisivel, request.AssinarNewsletter, request.DataNascimento, request.Estado, request.Cidade, request.Sobre, request.ChavePix);
+        return ONG.Create(request.Id, request.TenantId, request.Nome, request.Apelido, request.Documento, request.Site, request.Contato.MapRequestToDomain(), request.TelefoneVisivel, request.AssinarNewsletter, request.DataNascimento, request.Estado, request.Cidade, request.Sobre, request.ChavePix);
     }
 }
