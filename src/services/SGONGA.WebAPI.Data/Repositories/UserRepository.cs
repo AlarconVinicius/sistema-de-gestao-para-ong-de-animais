@@ -64,7 +64,7 @@ public class UserRepository : Repository<Usuario>, IUserRepository
                               .FirstOrDefaultAsync(cancellationToken) ?? null!;
     }
 
-    public async Task<UserResponse> GetAdopterByIdAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
+    public async Task<PersonResponse> GetAdopterByIdAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
     {
         var queryable = Db.Set<Adotante>()
                           .AsNoTracking()
@@ -76,7 +76,7 @@ public class UserRepository : Repository<Usuario>, IUserRepository
         }
 
         return await queryable.Where(q => q.Id == id)
-            .Select(q => new UserResponse(
+            .Select(q => new PersonResponse(
             q.Id,
             q.TenantId,
             q.Nome,
@@ -100,7 +100,7 @@ public class UserRepository : Repository<Usuario>, IUserRepository
         .FirstOrDefaultAsync(cancellationToken) ?? null!;
     }
 
-    public async Task<UserResponse> GetNGOByIdAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
+    public async Task<PersonResponse> GetNGOByIdAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
     {
         var queryable = Db.Set<ONG>()
                           .AsNoTracking()
@@ -112,7 +112,7 @@ public class UserRepository : Repository<Usuario>, IUserRepository
         }
 
         return await queryable.Where(q => q.Id == id)
-            .Select(q => new UserResponse(
+            .Select(q => new PersonResponse(
             q.Id,
             q.TenantId,
             q.Nome,
@@ -136,7 +136,7 @@ public class UserRepository : Repository<Usuario>, IUserRepository
         .FirstOrDefaultAsync(cancellationToken) ?? null!;
     }
 
-    public async Task<BasePagedResponse<UserResponse>> GetAllAdoptersPagedAsync(Guid? tenantId, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false, CancellationToken cancellationToken = default)
+    public async Task<BasePagedResponse<PersonResponse>> GetAllAdoptersPagedAsync(Guid? tenantId, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false, CancellationToken cancellationToken = default)
     {
         var queryable = Db.Set<Adotante>().AsNoTracking().AsQueryable();
 
@@ -147,7 +147,7 @@ public class UserRepository : Repository<Usuario>, IUserRepository
 
         queryable = queryable.OrderByDescending(q => q.UpdatedAt)
             .ThenBy(q => q.Nome);
-        var responses = queryable.Select(q => new UserResponse(
+        var responses = queryable.Select(q => new PersonResponse(
             q.Id,
             q.TenantId,
             q.Nome,
@@ -175,7 +175,7 @@ public class UserRepository : Repository<Usuario>, IUserRepository
         }
         var list = await responses.ToListAsync(cancellationToken);
 
-        return new BasePagedResponse<UserResponse>()
+        return new BasePagedResponse<PersonResponse>()
         {
             List = list,
             TotalResults = totalResults,
@@ -183,7 +183,7 @@ public class UserRepository : Repository<Usuario>, IUserRepository
             PageSize = pageSize
         };
     }
-    public async Task<BasePagedResponse<UserResponse>> GetAllNGOsPagedAsync(Guid? tenantId, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false, CancellationToken cancellationToken = default)
+    public async Task<BasePagedResponse<PersonResponse>> GetAllNGOsPagedAsync(Guid? tenantId, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false, CancellationToken cancellationToken = default)
     {
         var queryable = Db.Set<ONG>().AsNoTracking().AsQueryable();
 
@@ -194,7 +194,7 @@ public class UserRepository : Repository<Usuario>, IUserRepository
 
         queryable = queryable.OrderByDescending(q => q.UpdatedAt)
             .ThenBy(q => q.Nome);
-        var responses = queryable.Select(q => new UserResponse(
+        var responses = queryable.Select(q => new PersonResponse(
             q.Id,
             q.TenantId,
             q.Nome,
@@ -222,7 +222,7 @@ public class UserRepository : Repository<Usuario>, IUserRepository
         }
         var list = await responses.ToListAsync(cancellationToken);
 
-        return new BasePagedResponse<UserResponse>()
+        return new BasePagedResponse<PersonResponse>()
         {
             List = list,
             TotalResults = totalResults,
