@@ -1,7 +1,6 @@
-﻿using SGONGA.Core.Extensions;
-using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Models.DomainObjects;
-using System.Text.RegularExpressions;
+﻿using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.People.Enum;
+using SGONGA.WebAPI.Business.People.ValueObjects;
 
 namespace SGONGA.WebAPI.Business.People.Entities;
 public abstract class Person : Entity
@@ -10,10 +9,11 @@ public abstract class Person : Entity
     public EUsuarioTipo UsuarioTipo { get; protected set; }
     public string Nome { get; protected set; } = string.Empty;
     public string Apelido { get; protected set; } = string.Empty;
-    public string Slug { get; protected set; } = string.Empty;
+    public Slug Slug { get; protected set; } = string.Empty;
     public string Documento { get; init; } = string.Empty;
-    public string Site { get; protected set; } = string.Empty;
-    public Contato Contato { get; protected set; } = null!;
+    public Site Site { get; protected set; } = string.Empty;
+    public Email Email { get; protected set; } = string.Empty;
+    public PhoneNumber Telefone { get; protected set; } = string.Empty;
     public bool TelefoneVisivel { get; protected set; } = false;
     public bool AssinarNewsletter { get; protected set; } = false;
     public DateTime DataNascimento { get; init; }
@@ -25,18 +25,19 @@ public abstract class Person : Entity
 
     protected Person(Guid id) : base(id) { }
 
-    protected Person(Guid id, Guid tenantId, EUsuarioTipo usuarioTipo, string nome, string apelido, string documento, string site, Contato contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre) : base(id)
+    protected Person(Guid id, Guid tenantId, EUsuarioTipo usuarioTipo, string nome, string apelido, string documento, string site, string email, string telefone, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre) : base(id)
     {
         ValidarIdade(dataNascimento);
         DataNascimento = dataNascimento;
-        SetSite(site);
-        SetSlug(apelido);
+        Site = site;
+        Email = email;
+        Telefone = telefone;
+        Slug = apelido;
         TenantId = tenantId;
         UsuarioTipo = usuarioTipo;
         Nome = nome;
         Apelido = apelido;
         Documento = documento;
-        Contato = contato;
         TelefoneVisivel = telefoneVisivel;
         AssinarNewsletter = assinarNewsletter;
         Estado = estado;
@@ -44,7 +45,7 @@ public abstract class Person : Entity
         Sobre = sobre;
     }
 
-    #region Validators
+    #region Methods
     public static void ValidarIdade(DateTime dataNascimento)
     {
         DateTime dataAtual = DateTime.Now;
@@ -60,47 +61,5 @@ public abstract class Person : Entity
             throw new ArgumentException("O usuário deve ter mais de 18 anos.");
         }
     }
-    public static void ValidarUrl(string url)
-    {
-        string pattern = @"^(https?:\/\/)?([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}(\/[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+)*\/?$";
-        Regex rgx = new(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        if (!rgx.IsMatch(url))
-        {
-            throw new ArgumentException("URL inválida.");
-        }
-    }
     #endregion
-
-    #region Setters
-    private void SetSlug(string slug)
-    {
-        Slug = slug.SlugifyString();
-    }
-    public void SetNome(string nome)
-    {
-        Nome = nome;
-    }
-    public void SetApelido(string apelido)
-    {
-        Apelido = apelido;
-        SetSlug(apelido);
-    }
-    public void SetContato(Contato contato)
-    {
-        Contato = contato;
-    }
-    public void SetEndereco(string estado, string cidade)
-    {
-        Estado = estado;
-        Cidade = cidade;
-    }
-
-    public void SetSite(string site)
-    {
-        ValidarUrl(site);
-        Site = site;
-    }
-    #endregion
-
 }

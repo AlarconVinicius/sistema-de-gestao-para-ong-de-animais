@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SGONGA.WebAPI.Business.Models.DomainObjects;
 using SGONGA.WebAPI.Business.People.Entities;
 using SGONGA.WebAPI.Data.Context;
 
@@ -25,7 +24,8 @@ public static class SeedONGData
                     apelido: "Tenant Default",
                     documento: "10136070078",
                     site: "https://www.instagram.com/Tenant-Default/?hl=pt-br",
-                    contato: new Contato("(24) 96978-4572", "tenant@email.com"),
+                    email: "tenant@email.com",
+                    telefone: "24969784572",
                     telefoneVisivel: true,
                     assinarNewsletter: true,
                     dataNascimento: new DateTime(1990, 1, 1),

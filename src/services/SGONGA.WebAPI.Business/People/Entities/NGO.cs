@@ -1,5 +1,6 @@
 ﻿using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.Models.DomainObjects;
+using SGONGA.WebAPI.Business.People.Enum;
 
 namespace SGONGA.WebAPI.Business.People.Entities;
 
@@ -11,11 +12,11 @@ public sealed class NGO : Person
     private NGO() { }
     private NGO(Guid id) : base(id) { }
 
-    private NGO(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, Contato contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, string? chavePix) : base(id, tenantId, EUsuarioTipo.ONG, nome, apelido, documento, site, contato, telefoneVisivel, assinarNewsletter, dataNascimento, estado, cidade, sobre)
+    private NGO(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, string email, string telefone, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, string? chavePix) : base(id, tenantId, EUsuarioTipo.ONG, nome, apelido, documento, site, email, telefone, telefoneVisivel, assinarNewsletter, dataNascimento, estado, cidade, sobre)
     {
         ChavePix = string.IsNullOrEmpty(chavePix) ? documento : chavePix;
     }
-    public static NGO Create(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, Contato contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, string? chavePix)
+    public static NGO Create(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, string email, string telefone, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, string? chavePix)
     {
         return new NGO(
             id,
@@ -24,7 +25,8 @@ public sealed class NGO : Person
             apelido,
             documento,
             site,
-            contato,
+            email,
+            telefone,
             telefoneVisivel,
             assinarNewsletter,
             dataNascimento,
@@ -39,19 +41,14 @@ public sealed class NGO : Person
         return new NGO(id);
     }
 
-    public void Update(string nome, string apelido, string site, Contato contato, bool telefoneVisivel, string estado, string cidade, string? sobre, string? chavePix)
+    public void Update(string nome, string apelido, string site, string email, string telefone, bool telefoneVisivel, string estado, string cidade, string? sobre, string? chavePix)
     {
         var errors = new List<string>();
 
-        // Validações
         if (string.IsNullOrWhiteSpace(nome))
             errors.Add("Nome não pode ser nulo ou vazio.");
         if (string.IsNullOrWhiteSpace(apelido))
             errors.Add("Apelido não pode ser nulo ou vazio.");
-        if (string.IsNullOrWhiteSpace(site))
-            errors.Add("Site não pode ser nulo ou vazio.");
-        if (contato == null)
-            errors.Add("Contato deve conter telefone ou email.");
         if (string.IsNullOrWhiteSpace(estado))
             errors.Add("Estado não pode ser nulo ou vazio.");
         if (string.IsNullOrWhiteSpace(cidade))
@@ -62,8 +59,10 @@ public sealed class NGO : Person
 
         Nome = nome;
         Apelido = apelido;
+        Slug = apelido;
         Site = site;
-        Contato = contato!;
+        Email = email;
+        Telefone = telefone;
         TelefoneVisivel = telefoneVisivel;
         Estado = estado;
         Cidade = cidade;

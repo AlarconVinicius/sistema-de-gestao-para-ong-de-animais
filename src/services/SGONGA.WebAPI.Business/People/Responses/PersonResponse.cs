@@ -1,5 +1,4 @@
-﻿using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Requests.Shared;
+﻿using SGONGA.WebAPI.Business.People.Enum;
 using System.ComponentModel;
 
 namespace SGONGA.WebAPI.Business.People.Responses;
@@ -12,7 +11,8 @@ public class PersonResponse(
     EUsuarioTipo userType,
     string document,
     string website,
-    ContatoResponse contact,
+    string email,
+    string phoneNumber,
     bool phoneVisible,
     bool subscribeToNewsletter,
     DateTime birthDate,
@@ -44,7 +44,11 @@ public class PersonResponse(
     [DisplayName("Site")]
     public string Website { get; } = website;
 
-    public ContatoResponse Contact { get; } = contact;
+    [DisplayName("E=mail")]
+    public string Email { get; } = email;
+
+    [DisplayName("Telefone")]
+    public string PhoneNumber { get; } = phoneNumber;
 
     [DisplayName("Whatsapp Visível")]
     public bool PhoneVisible { get; } = phoneVisible;

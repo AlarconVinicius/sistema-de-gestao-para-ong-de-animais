@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SGONGA.WebAPI.Business.Models.DomainObjects;
 using SGONGA.WebAPI.Business.People.Entities;
+using SGONGA.WebAPI.Business.People.ValueObjects;
 
 namespace SGONGA.WebAPI.Data.Mappings;
 
@@ -38,20 +38,47 @@ public class UsuarioMapping : IEntityTypeConfiguration<Person>
             .HasMaxLength(100)
             .HasColumnType("varchar(100)");
 
-        builder.Property(o => o.Slug)
+        builder.OwnsOne(o => o.Slug, p =>
+        {
+            p.Property(p => p.UrlPath)
+            .HasColumnName("Slug")
             .IsRequired()
-            .HasMaxLength(100)
-            .HasColumnType("varchar(100)");
+            .HasMaxLength(Slug.MaxLength)
+            .HasColumnType($"varchar({Slug.MaxLength})");
+        });
+
+        builder.OwnsOne(o => o.Site, p =>
+        {
+            p.Property(p => p.Url)
+            .HasColumnName("Site")
+            .IsRequired()
+            .HasMaxLength(Site.MaxLength)
+            .HasColumnType($"varchar({Site.MaxLength})");
+        });
+
+        builder.OwnsOne(c => c.Email, t =>
+        {
+            t.Property(t => t.Address)
+                .HasColumnName("Email")
+                .IsRequired()
+                .HasMaxLength(Email.ComprimentoMaxEndereco)
+                .HasColumnType($"varchar({Email.ComprimentoMaxEndereco})");
+        });
+
+        builder.OwnsOne(c => c.Telefone, t =>
+        {
+            t.Property(t => t.Number)
+                .HasColumnName("Telefone")
+                .HasColumnType("Telefone")
+                .IsRequired()
+                .HasMaxLength(PhoneNumber.MaxLength)
+                .HasColumnType($"varchar({PhoneNumber.MaxLength})");
+        });
 
         builder.Property(c => c.Documento)
                 .IsRequired()
                 .HasMaxLength(11)
                 .HasColumnType("varchar(11)");
-
-        builder.Property(o => o.Site)
-            .IsRequired()
-            .HasMaxLength(200)
-            .HasColumnType("varchar(200)");
 
         builder.Property(e => e.Cidade)
                 .IsRequired()
@@ -69,27 +96,5 @@ public class UsuarioMapping : IEntityTypeConfiguration<Person>
 
         builder.Property(c => c.DataNascimento)
                 .IsRequired();
-
-        builder.OwnsOne(o => o.Contato, c =>
-        {
-            c.OwnsOne(c => c.Telefone, t =>
-            {
-                t.Property(t => t.Numero)
-                    .HasColumnName("Telefone")
-                    .HasColumnType("Telefone")
-                    .IsRequired()
-                    .HasMaxLength(Telefone.ComprimentoMaxNumero)
-                    .HasColumnType($"varchar({Telefone.ComprimentoMaxNumero})");
-            });
-
-            c.OwnsOne(c => c.Email, t =>
-            {
-                t.Property(t => t.Endereco)
-                    .HasColumnName("Email")
-                    .IsRequired()
-                    .HasMaxLength(Email.ComprimentoMaxEndereco)
-                    .HasColumnType($"varchar({Email.ComprimentoMaxEndereco})");
-            });
-        });
     }
 }
