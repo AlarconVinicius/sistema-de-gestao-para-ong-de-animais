@@ -9,7 +9,7 @@ public sealed record Site : ValueObject
     public const short MinLength = 10;
     public static readonly Regex SiteRegex = new(
         @"^(?:https?:\/\/)?(?:www\.)?(?:[a-z0-9]+(?:\.[a-z0-9]+)*\.)?[a-z0-9]+\.[a-z]{2,}(?:\/[\w\-\.\/]*)*$",
-        RegexOptions.Compiled
+        RegexOptions.Compiled | RegexOptions.IgnoreCase
     );
     #endregion
 
