@@ -56,10 +56,10 @@ internal sealed class AnimalRepository(ONGDbContext db) : Repository<Animal>(db)
     }
 
     public async Task<BasePagedResponse<AnimalResponse>> GetAllAsync(
+        Guid? tenantId,
         int page = 1,
         int pageSize = 10,
         string? query = null,
-        Guid? tenantId = null,
         bool returnAll = false,
         CancellationToken cancellationToken = default)
     {
