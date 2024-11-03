@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SGONGA.WebAPI.Business.Animals.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
+using SGONGA.WebAPI.Business.Users.Interfaces.Repositories;
 using SGONGA.WebAPI.Data.Context;
 using SGONGA.WebAPI.Data.Repositories;
 
@@ -21,6 +22,7 @@ public static class DependencyInjectionConfig
         services.AddScoped<IGenericUnitOfWork, GenericUnitOfWork>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IAnimalRepository, AnimalRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IONGRepository, ONGRepository>();
 
         return services;
