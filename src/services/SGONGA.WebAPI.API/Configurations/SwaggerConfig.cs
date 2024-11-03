@@ -1,6 +1,7 @@
 ﻿using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
 
@@ -59,12 +60,12 @@ public static class SwaggerConfig
                     new string[] {}
                 }
             });
-            //c.ExampleFilters();
+            c.ExampleFilters();
             c.OperationFilter<TenantHeaderParameter>();
         });
 
-        //services.AddSwaggerExamplesFromAssemblyOf<TenantHeaderParameter>();
-        //services.AddSwaggerExamplesFromAssemblies(Assembly.GetEntryAssembly());
+        services.AddSwaggerExamplesFromAssemblyOf<Program>();
+        services.AddSwaggerExamplesFromAssemblies(Assembly.GetEntryAssembly());
 
         return services;
     }
