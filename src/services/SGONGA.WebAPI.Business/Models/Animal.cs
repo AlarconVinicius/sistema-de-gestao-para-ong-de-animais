@@ -1,4 +1,5 @@
 ﻿using SGONGA.WebAPI.Business.Models.DomainObjects;
+using SGONGA.WebAPI.Business.People.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SGONGA.WebAPI.Business.Models;
@@ -21,7 +22,7 @@ public sealed class Animal : Entity
     //public bool Adotado { get; set; }
 
     [ForeignKey(nameof(TenantId))]
-    public ONG ONG { get; private set; } = null!;
+    public NGO ONG { get; private set; } = null!;
 
     public Animal() { }
 

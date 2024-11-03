@@ -3,21 +3,22 @@ using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Animals.Responses;
 using SGONGA.WebAPI.Business.Errors;
 using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.People.Entities;
+using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
+using SGONGA.WebAPI.Business.People.Responses;
 using SGONGA.WebAPI.Business.Requests.Shared;
-using SGONGA.WebAPI.Business.Users.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Users.Responses;
 using SGONGA.WebAPI.Data.Context;
 using System.Linq.Expressions;
 
 namespace SGONGA.WebAPI.Data.Repositories;
 
-public class UserRepository : Repository<Usuario>, IUserRepository
+public class UserRepository : Repository<Person>, IUserRepository
 {
     public UserRepository(ONGDbContext db) : base(db)
     {
     }
 
-    public async Task<Usuario> SearchAsync(Expression<Func<Usuario, bool>> predicate, CancellationToken cancellationToken = default) =>
+    public async Task<Person> SearchAsync(Expression<Func<Person, bool>> predicate, CancellationToken cancellationToken = default) =>
         await DbSet
             .Where(predicate)
             .FirstOrDefaultAsync(cancellationToken) ?? null!;
@@ -36,9 +37,9 @@ public class UserRepository : Repository<Usuario>, IUserRepository
 
         return UsuarioErrors.UsuarioNaoEncontrado(id);
     }
-    public async Task<ONG> GetNGOByIdWithAnimalsAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
+    public async Task<NGO> GetNGOByIdWithAnimalsAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
     {
-        var queryable = Db.Set<ONG>()
+        var queryable = Db.Set<NGO>()
                           .AsNoTracking()
                           .Include(c => c.Animais)
                           .AsQueryable();
@@ -50,9 +51,9 @@ public class UserRepository : Repository<Usuario>, IUserRepository
         return await queryable.Where(q => q.Id == id)
                               .FirstOrDefaultAsync(cancellationToken) ?? null!;
     }
-    public async Task<Result<ONG>> GetBySlugAsync(string slug, Guid? tenantId, CancellationToken cancellationToken = default)
+    public async Task<Result<NGO>> GetBySlugAsync(string slug, Guid? tenantId, CancellationToken cancellationToken = default)
     {
-        var queryable = Db.Set<ONG>()
+        var queryable = Db.Set<NGO>()
                           .AsNoTracking()
                           .AsQueryable();
 
@@ -66,7 +67,7 @@ public class UserRepository : Repository<Usuario>, IUserRepository
 
     public async Task<PersonResponse> GetAdopterByIdAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
     {
-        var queryable = Db.Set<Adotante>()
+        var queryable = Db.Set<Adopter>()
                           .AsNoTracking()
                           .AsQueryable();
 
@@ -102,7 +103,7 @@ public class UserRepository : Repository<Usuario>, IUserRepository
 
     public async Task<PersonResponse> GetNGOByIdAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
     {
-        var queryable = Db.Set<ONG>()
+        var queryable = Db.Set<NGO>()
                           .AsNoTracking()
                           .AsQueryable();
 
@@ -138,7 +139,7 @@ public class UserRepository : Repository<Usuario>, IUserRepository
 
     public async Task<BasePagedResponse<PersonResponse>> GetAllAdoptersPagedAsync(Guid? tenantId, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false, CancellationToken cancellationToken = default)
     {
-        var queryable = Db.Set<Adotante>().AsNoTracking().AsQueryable();
+        var queryable = Db.Set<Adopter>().AsNoTracking().AsQueryable();
 
         if (tenantId.HasValue)
         {
@@ -185,7 +186,7 @@ public class UserRepository : Repository<Usuario>, IUserRepository
     }
     public async Task<BasePagedResponse<PersonResponse>> GetAllNGOsPagedAsync(Guid? tenantId, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false, CancellationToken cancellationToken = default)
     {
-        var queryable = Db.Set<ONG>().AsNoTracking().AsQueryable();
+        var queryable = Db.Set<NGO>().AsNoTracking().AsQueryable();
 
         if (tenantId.HasValue)
         {

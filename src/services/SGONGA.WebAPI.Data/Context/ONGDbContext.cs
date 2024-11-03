@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.People.Entities;
 
 namespace SGONGA.WebAPI.Data.Context;
 
@@ -13,9 +14,9 @@ public class ONGDbContext : DbContext, IONGDbContext
         ChangeTracker.AutoDetectChangesEnabled = false;
     }
 
-    public DbSet<Usuario> Usuarios { get; set; }
-    public DbSet<Adotante> Adotantes { get; set; }
-    public DbSet<ONG> ONGs { get; set; }
+    public DbSet<Person> Usuarios { get; set; }
+    public DbSet<Adopter> Adotantes { get; set; }
+    public DbSet<NGO> ONGs { get; set; }
     public DbSet<Animal> Animais { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

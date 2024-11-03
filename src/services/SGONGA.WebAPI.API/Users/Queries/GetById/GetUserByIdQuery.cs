@@ -1,6 +1,6 @@
 ﻿
 using SGONGA.WebAPI.API.Abstractions.Messaging;
-using SGONGA.WebAPI.Business.Users.Responses;
+using SGONGA.WebAPI.Business.People.Responses;
 
 namespace SGONGA.WebAPI.API.Users.Queries.GetById;
 

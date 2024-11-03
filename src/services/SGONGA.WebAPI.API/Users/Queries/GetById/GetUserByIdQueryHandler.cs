@@ -3,8 +3,8 @@ using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Errors;
 using SGONGA.WebAPI.Business.Interfaces.Services;
 using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Users.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Users.Responses;
+using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
+using SGONGA.WebAPI.Business.People.Responses;
 
 namespace SGONGA.WebAPI.API.Users.Queries.GetById;
 

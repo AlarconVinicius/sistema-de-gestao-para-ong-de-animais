@@ -1,9 +1,10 @@
 ﻿using SGONGA.Core.Extensions;
+using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.Models.DomainObjects;
 using System.Text.RegularExpressions;
 
-namespace SGONGA.WebAPI.Business.Models;
-public abstract class Usuario : Entity
+namespace SGONGA.WebAPI.Business.People.Entities;
+public abstract class Person : Entity
 {
     public Guid TenantId { get; init; }
     public EUsuarioTipo UsuarioTipo { get; protected set; }
@@ -20,11 +21,11 @@ public abstract class Usuario : Entity
     public string Cidade { get; protected set; } = string.Empty;
     public string? Sobre { get; protected set; } = string.Empty;
 
-    protected Usuario(){ }
+    protected Person() { }
 
-    protected Usuario(Guid id) : base(id) { }
+    protected Person(Guid id) : base(id) { }
 
-    protected Usuario(Guid id, Guid tenantId, EUsuarioTipo usuarioTipo, string nome, string apelido, string documento, string site, Contato contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre) : base(id)
+    protected Person(Guid id, Guid tenantId, EUsuarioTipo usuarioTipo, string nome, string apelido, string documento, string site, Contato contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre) : base(id)
     {
         ValidarIdade(dataNascimento);
         DataNascimento = dataNascimento;

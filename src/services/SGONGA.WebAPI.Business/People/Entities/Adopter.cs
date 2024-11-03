@@ -1,20 +1,21 @@
 ﻿using Microsoft.AspNetCore.Routing;
 using SGONGA.WebAPI.Business.Models.DomainObjects;
+using SGONGA.WebAPI.Business.People.Entities;
 using System.Runtime.ConstrainedExecution;
 
 namespace SGONGA.WebAPI.Business.Models;
-public sealed class Adotante : Usuario
+public sealed class Adopter : Person
 {
-    private Adotante() { }
-    private Adotante(Guid id) : base(id) { }
+    private Adopter() { }
+    private Adopter(Guid id) : base(id) { }
 
-    public Adotante(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, Contato contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre) : base(id, tenantId, EUsuarioTipo.Adotante, nome, apelido, documento, site, contato, telefoneVisivel, assinarNewsletter, dataNascimento, estado, cidade, sobre)
+    public Adopter(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, Contato contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre) : base(id, tenantId, EUsuarioTipo.Adotante, nome, apelido, documento, site, contato, telefoneVisivel, assinarNewsletter, dataNascimento, estado, cidade, sobre)
     {
     }
 
-    public static Adotante Create(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, Contato contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre)
+    public static Adopter Create(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, Contato contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre)
     {
-        return new Adotante(
+        return new Adopter(
             id,
             tenantId,
             nome,
@@ -30,9 +31,9 @@ public sealed class Adotante : Usuario
             sobre);
     }
 
-    public static Adotante Create(Guid id)
+    public static Adopter Create(Guid id)
     {
-        return new Adotante(id);
+        return new Adopter(id);
     }
 
     public void Update(string nome, string apelido, string site, Contato contato, bool telefoneVisivel, string estado, string cidade, string? sobre)

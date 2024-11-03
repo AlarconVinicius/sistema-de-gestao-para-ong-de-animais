@@ -1,22 +1,23 @@
-﻿using SGONGA.WebAPI.Business.Models.DomainObjects;
+﻿using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Models.DomainObjects;
 
-namespace SGONGA.WebAPI.Business.Models;
+namespace SGONGA.WebAPI.Business.People.Entities;
 
-public sealed class ONG : Usuario
+public sealed class NGO : Person
 {
     public string? ChavePix { get; private set; } = string.Empty;
     public List<Animal> Animais { get; private set; } = new();
 
-    private ONG() { }
-    private ONG(Guid id) : base(id) { }
+    private NGO() { }
+    private NGO(Guid id) : base(id) { }
 
-    private ONG(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, Contato contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, string? chavePix) : base(id, tenantId, EUsuarioTipo.ONG, nome, apelido, documento, site, contato, telefoneVisivel, assinarNewsletter, dataNascimento, estado, cidade, sobre)
+    private NGO(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, Contato contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, string? chavePix) : base(id, tenantId, EUsuarioTipo.ONG, nome, apelido, documento, site, contato, telefoneVisivel, assinarNewsletter, dataNascimento, estado, cidade, sobre)
     {
         ChavePix = string.IsNullOrEmpty(chavePix) ? documento : chavePix;
     }
-    public static ONG Create(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, Contato contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, string? chavePix)
+    public static NGO Create(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, Contato contato, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, string? chavePix)
     {
-        return new ONG(
+        return new NGO(
             id,
             tenantId,
             nome,
@@ -33,9 +34,9 @@ public sealed class ONG : Usuario
             chavePix);
     }
 
-    public static ONG Create(Guid id)
+    public static NGO Create(Guid id)
     {
-        return new ONG(id);
+        return new NGO(id);
     }
 
     public void Update(string nome, string apelido, string site, Contato contato, bool telefoneVisivel, string estado, string cidade, string? sobre, string? chavePix)

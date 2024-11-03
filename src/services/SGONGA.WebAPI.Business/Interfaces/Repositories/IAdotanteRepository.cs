@@ -2,6 +2,6 @@
 
 namespace SGONGA.WebAPI.Business.Interfaces.Repositories;
 
-public interface IAdotanteRepository : IRepository<Adotante>
+public interface IAdotanteRepository : IRepository<Adopter>
 {
 }

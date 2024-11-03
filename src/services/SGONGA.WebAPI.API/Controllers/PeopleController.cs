@@ -13,7 +13,7 @@ using SGONGA.WebAPI.API.Users.Queries.GetById;
 using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Animals.Responses;
 using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Users.Responses;
+using SGONGA.WebAPI.Business.People.Responses;
 
 namespace SGONGA.WebAPI.API.Controllers;
 

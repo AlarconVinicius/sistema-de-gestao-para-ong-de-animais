@@ -2,7 +2,7 @@
 using SGONGA.WebAPI.Business.Requests.Shared;
 using System.ComponentModel;
 
-namespace SGONGA.WebAPI.Business.Users.Responses;
+namespace SGONGA.WebAPI.Business.People.Responses;
 
 public class PersonResponse(
     Guid id,

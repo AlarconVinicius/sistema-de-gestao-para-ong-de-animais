@@ -6,9 +6,10 @@ using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.Models.DomainObjects;
+using SGONGA.WebAPI.Business.People.Entities;
+using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
-using SGONGA.WebAPI.Business.Users.Interfaces.Repositories;
 
 namespace SGONGA.WebAPI.API.Users.Commands.Create;
 
@@ -32,7 +33,7 @@ public class CreateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IUserReposi
         {
             case EUsuarioTipo.Adotante:
                 await UnitOfWork.InsertAsync(
-                    Adotante.Create(
+                    Adopter.Create(
                         newUserId,
                         newTenantId,
                         command.Nome,
@@ -53,7 +54,7 @@ public class CreateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IUserReposi
 
             case EUsuarioTipo.ONG:
                 await UnitOfWork.InsertAsync(
-                    ONG.Create(
+                    NGO.Create(
                         newUserId,
                         newTenantId,
                         command.Nome,

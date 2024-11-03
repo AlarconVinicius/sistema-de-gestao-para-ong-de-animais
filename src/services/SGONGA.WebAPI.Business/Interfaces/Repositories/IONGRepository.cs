@@ -1,15 +1,15 @@
 ﻿using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.People.Entities;
 
 namespace SGONGA.WebAPI.Business.Interfaces.Repositories;
 
-public interface IONGRepository : IRepository<ONG>
+public interface IONGRepository : IRepository<NGO>
 {
-    Task<Result<ONG>> GetByIdWithAnimalsAsync(Guid id);
+    Task<Result<NGO>> GetByIdWithAnimalsAsync(Guid id);
 
-    Task<Result<ONG>> GetByIdWithAnimalsWithoutTenantAsync(Guid id);
+    Task<Result<NGO>> GetByIdWithAnimalsWithoutTenantAsync(Guid id);
     
-    Task<Result<ONG>> GetBySlugAsync(string slug);
+    Task<Result<NGO>> GetBySlugAsync(string slug);
 
-    Task<Result<ONG>> GetBySlugWithoutTenantAsync(string slug);
+    Task<Result<NGO>> GetBySlugWithoutTenantAsync(string slug);
 }

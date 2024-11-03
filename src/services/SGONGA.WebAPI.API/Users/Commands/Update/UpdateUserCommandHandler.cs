@@ -6,7 +6,8 @@ using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Interfaces.Services;
 using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Users.Interfaces.Repositories;
+using SGONGA.WebAPI.Business.People.Entities;
+using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
 
 namespace SGONGA.WebAPI.API.Users.Commands.Update;
 
@@ -42,17 +43,17 @@ internal sealed class UpdateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IU
 
         return Result.Ok();
     }
-    private async Task<Result<Usuario>> GetUserByIdAsync(Guid userId, Guid tenantId, EUsuarioTipo usuarioTipo, CancellationToken cancellationToken)
+    private async Task<Result<Person>> GetUserByIdAsync(Guid userId, Guid tenantId, EUsuarioTipo usuarioTipo, CancellationToken cancellationToken)
     {
         switch(usuarioTipo)
         {
             case EUsuarioTipo.Adotante:
-                var adotante = await UserRepository.SearchAsync(q => q.Id == userId && q.TenantId == tenantId && q.UsuarioTipo == EUsuarioTipo.Adotante, cancellationToken) as Adotante;
+                var adotante = await UserRepository.SearchAsync(q => q.Id == userId && q.TenantId == tenantId && q.UsuarioTipo == EUsuarioTipo.Adotante, cancellationToken) as Adopter;
                 if (adotante is null)
                     return UsuarioErrors.UsuarioNaoEncontrado(userId);
                 return adotante;
             case EUsuarioTipo.ONG:
-                var ngo = await UserRepository.SearchAsync(q => q.Id == userId && q.TenantId == tenantId && q.UsuarioTipo == EUsuarioTipo.ONG, cancellationToken) as ONG;
+                var ngo = await UserRepository.SearchAsync(q => q.Id == userId && q.TenantId == tenantId && q.UsuarioTipo == EUsuarioTipo.ONG, cancellationToken) as NGO;
                 if(ngo is null)
                     return UsuarioErrors.UsuarioNaoEncontrado(userId);
                 return ngo;
@@ -66,9 +67,9 @@ internal sealed class UpdateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IU
 
         return available ? Result.Ok() : ValidationErrors.EmailEmUso(email);
     }
-    private void UpdateUser(Usuario user, UpdateUserCommand request)
+    private void UpdateUser(Person user, UpdateUserCommand request)
     {
-        if (user is ONG ngo && request.UsuarioTipo == EUsuarioTipo.ONG)
+        if (user is NGO ngo && request.UsuarioTipo == EUsuarioTipo.ONG)
         {
             ngo.Update(
                 request.Nome,
@@ -83,7 +84,7 @@ internal sealed class UpdateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IU
             );
             UnitOfWork.Update(ngo);
         }
-        else if (user is Adotante adopter && request.UsuarioTipo == EUsuarioTipo.Adotante)
+        else if (user is Adopter adopter && request.UsuarioTipo == EUsuarioTipo.Adotante)
         {
             adopter.Update(
                 request.Nome,

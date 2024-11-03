@@ -7,8 +7,8 @@ using SGONGA.WebAPI.Business.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Interfaces.Services;
 using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Requests;
-using SGONGA.WebAPI.Business.Users.Interfaces.Repositories;
 
 namespace SGONGA.WebAPI.API.Animals.Commands.Delete;
 
@@ -33,7 +33,7 @@ internal sealed class DeleteUserCommandHandler(IGenericUnitOfWork UnitOfWork, IU
         switch (userType.Value)
         {
             case EUsuarioTipo.Adotante:
-                UnitOfWork.Delete(Adotante.Create(request.Id));
+                UnitOfWork.Delete(Adopter.Create(request.Id));
                 break;
 
             case EUsuarioTipo.ONG:

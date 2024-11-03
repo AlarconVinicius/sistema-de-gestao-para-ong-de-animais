@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.Models.DomainObjects;
+using SGONGA.WebAPI.Business.People.Entities;
 using SGONGA.WebAPI.Data.Context;
 
 namespace SGONGA.WebAPI.Data.Seed;
@@ -18,7 +18,7 @@ public static class SeedONGData
 
             if (!context.ONGs.IgnoreQueryFilters().Any(o => o.Id == userId))
             {
-                var user = ONG.Create(
+                var user = NGO.Create(
                     id: userId,
                     tenantId: tenantId,
                     nome: "Tenant Default",

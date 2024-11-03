@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.People.Entities;
 
 namespace SGONGA.WebAPI.Data.Mappings;
 
-public class ONGMapping : IEntityTypeConfiguration<ONG>
+public class ONGMapping : IEntityTypeConfiguration<NGO>
 {
-    public void Configure(EntityTypeBuilder<ONG> builder)
+    public void Configure(EntityTypeBuilder<NGO> builder)
     {
         builder.ToTable("tbl_ongs");
 

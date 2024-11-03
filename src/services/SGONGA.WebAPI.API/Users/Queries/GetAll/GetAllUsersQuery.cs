@@ -1,7 +1,7 @@
 ﻿using SGONGA.WebAPI.API.Shared;
 using SGONGA.WebAPI.Business.Animals.Responses;
 using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Users.Responses;
+using SGONGA.WebAPI.Business.People.Responses;
 
 namespace SGONGA.WebAPI.API.Users.Queries.GetAll;
 

@@ -2,16 +2,17 @@
 using SGONGA.WebAPI.Business.Animals.Responses;
 using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Users.Responses;
+using SGONGA.WebAPI.Business.People.Entities;
+using SGONGA.WebAPI.Business.People.Responses;
 using System.Linq.Expressions;
 
-namespace SGONGA.WebAPI.Business.Users.Interfaces.Repositories;
-public interface IUserRepository : IRepository<Usuario>
+namespace SGONGA.WebAPI.Business.People.Interfaces.Repositories;
+public interface IUserRepository : IRepository<Person>
 {
-    Task<Usuario> SearchAsync(Expression<Func<Usuario, bool>> predicate, CancellationToken cancellationToken = default);
-    Task<ONG> GetNGOByIdWithAnimalsAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default);
+    Task<Person> SearchAsync(Expression<Func<Person, bool>> predicate, CancellationToken cancellationToken = default);
+    Task<NGO> GetNGOByIdWithAnimalsAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default);
 
-    Task<Result<ONG>> GetBySlugAsync(string slug, Guid? tenantId, CancellationToken cancellationToken = default);
+    Task<Result<NGO>> GetBySlugAsync(string slug, Guid? tenantId, CancellationToken cancellationToken = default);
 
     Task<Result<EUsuarioTipo>> IdentifyUserType(Guid id, Guid? tenantId, CancellationToken cancellationToken = default);
     Task<PersonResponse> GetAdopterByIdAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default);
