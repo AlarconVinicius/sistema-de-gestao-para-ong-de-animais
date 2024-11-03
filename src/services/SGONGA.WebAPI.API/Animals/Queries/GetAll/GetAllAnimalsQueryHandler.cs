@@ -8,16 +8,16 @@ namespace SGONGA.WebAPI.API.Animals.Queries.GetAll;
 
 internal sealed class GetAllAnimalsQueryHandler(IAnimalRepository AnimalRepository, ITenantProvider TenantProvider) : IQueryHandler<GetAllAnimalsQuery, BasePagedResponse<AnimalResponse>>
 {
-    public async Task<Result<BasePagedResponse<AnimalResponse>>> Handle(GetAllAnimalsQuery query, CancellationToken cancellationToken)
+    public async Task<Result<BasePagedResponse<AnimalResponse>>> Handle(GetAllAnimalsQuery request, CancellationToken cancellationToken)
     {
-        if (query.TenantFiltro)
+        Guid? tenantId = null;
+        if (request.TenantFiltro)
         {
-            Result<Guid> tenantId = await TenantProvider.GetTenantId();
-            if (tenantId.IsFailed)
-                return tenantId.Errors;
-
-            return await AnimalRepository.GetAllAsync(query.PageNumber, query.PageSize, query.Query, tenantId.Value, query.ReturnAll, cancellationToken);
+            Result<Guid> tenantResult = await TenantProvider.GetTenantId();
+            if (tenantResult.IsFailed)
+                return tenantResult.Errors;
+            tenantId = tenantResult.Value;
         }
-        return await AnimalRepository.GetAllAsync(query.PageNumber, query.PageSize, query.Query, null, query.ReturnAll, cancellationToken);
+        return await AnimalRepository.GetAllAsync(tenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll, cancellationToken);
     }
 }
