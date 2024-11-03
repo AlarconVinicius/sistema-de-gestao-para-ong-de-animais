@@ -15,10 +15,10 @@ public class UpdateAnimalCommandTests
     {
         // Arrange
         CreateAnimalCommand expectedCommand = AnimalDataFaker.GenerateValidCreateAnimalCommand();
-
+        Guid animalId = Guid.NewGuid();
         // Act
         var actualCommand = new UpdateAnimalCommand(
-            Guid.NewGuid(),
+            animalId,
             expectedCommand.Nome,
             expectedCommand.Especie,
             expectedCommand.Raca,
@@ -34,6 +34,7 @@ public class UpdateAnimalCommandTests
         );
 
         // Assert
+        actualCommand.Id.Should().Be(animalId);
         actualCommand.Should().BeEquivalentTo(expectedCommand);
     }
 
