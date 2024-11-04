@@ -17,4 +17,9 @@ public static class StringExtensions
         SlugHelper helper = new();
         return helper.GenerateSlug(input);
     }
+
+    public static string OnlyNumbers(this string input)
+    {
+        return new string(input.Where(char.IsDigit).ToArray());
+    }
 }
