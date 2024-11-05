@@ -2,6 +2,7 @@
 using SGONGA.WebAPI.API.Animals.Commands.Create;
 using SGONGA.WebAPI.Business.Animals.Responses;
 using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Shared.Responses;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Printing;
 

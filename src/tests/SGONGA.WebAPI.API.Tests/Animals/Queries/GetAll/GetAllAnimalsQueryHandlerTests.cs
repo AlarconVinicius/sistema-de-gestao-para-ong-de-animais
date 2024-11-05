@@ -5,6 +5,7 @@ using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Animals.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Animals.Responses;
 using SGONGA.WebAPI.Business.Interfaces.Services;
+using SGONGA.WebAPI.Business.Shared.Responses;
 using SGONGA.WebAPI.Mocks;
 
 namespace SGONGA.WebAPI.API.Tests.Animals.Queries.GetAll;
