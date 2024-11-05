@@ -1,23 +1,19 @@
-﻿using System.Text.RegularExpressions;
+﻿using SGONGA.Core.Utils;
 
 namespace SGONGA.WebAPI.Business.People.ValueObjects;
 
 public class Email
 {
     #region Constants
-    public const int ComprimentoMaxEndereco = 254;
-    public const int ComprimentoMinEndereco = 5;
-    public static readonly Regex EmailRegex = new(
-        @"^(?("")("".+?""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]\.)+[a-z]{2,6}))$",
-        RegexOptions.Compiled
-    );
+    public const short MaxLength = 254;
+    public const short MinLength = 5;
     #endregion
 
     #region Constructors
     public Email(string address)
     {
         ValidateEmail(address);
-        Address = address;
+        Address = address.ToLower();
     }
     #endregion
 
@@ -32,7 +28,7 @@ public class Email
     #region Methods
     private static void ValidateEmail(string address)
     {
-        if (!EmailRegex.IsMatch(address))
+        if (!RegexUtils.EmailRegex.IsMatch(address))
         {
             throw new ArgumentException("Email inválido");
         }

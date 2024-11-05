@@ -1,30 +1,26 @@
-﻿using System;
-using System.Text.RegularExpressions;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using SGONGA.Core.Extensions;
+using SGONGA.Core.Utils;
 
 namespace SGONGA.WebAPI.Business.People.ValueObjects;
 
 public class PhoneNumber
 {
     #region Constants
-    public const int MaxLength = 15;
-    public const int MinLength = 9;
-    public static readonly Regex PhoneRegex = new(
-        @"(\(?\d{2}\)?\s)?(\d{4,5}\-\d{4})",
-        RegexOptions.Compiled
-    );
+    public const short LengthWithDDD = 11;
+    public const short LengthWithoutDDD = 9;
     #endregion
 
     #region Constructors
     public PhoneNumber(string number)
     {
-        ValidatePhoneNumber(number);
-        Number = number;
+        var cleanNumber = number.OnlyNumbers();
+        ValidatePhoneNumber(cleanNumber);
+        Number = cleanNumber;
     }
     #endregion
 
     #region Properties
-    public string Number { get; private set; } = string.Empty;
+    public string Number { get; }
     #endregion
 
     #region Operators
@@ -34,9 +30,10 @@ public class PhoneNumber
     #region Methods
     public static void ValidatePhoneNumber(string number)
     {
-        if (!PhoneRegex.IsMatch(number))
+        if (!RegexUtils.PhoneRegex.IsMatch(number) ||
+            (number.Length != LengthWithoutDDD && number.Length != LengthWithDDD))
         {
-            throw new ArgumentException("Número de telefone inválido.");
+            throw new ArgumentException("Número de telefone inválido. Deve conter exatamente 9 ou 11 dígitos.");
         }
     }
     #endregion

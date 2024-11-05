@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using SGONGA.Core.Utils;
 using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.Business.People.Enum;
 using SiteValueObject = SGONGA.WebAPI.Business.People.ValueObjects.Site;
@@ -74,8 +75,7 @@ public abstract record BaseUserCommand(
         {
             if (string.IsNullOrWhiteSpace(url))
                 return false;
-
-            return SiteValueObject.SiteRegex.IsMatch(url);
+            return RegexUtils.SiteRegex.IsMatch(url);
         }
     }
 }
