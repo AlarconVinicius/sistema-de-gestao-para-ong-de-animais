@@ -2,7 +2,7 @@
 using SGONGA.Core.Utils;
 using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.Business.People.Enum;
-using SiteValueObject = SGONGA.WebAPI.Business.People.ValueObjects.Site;
+using SGONGA.WebAPI.Business.People.ValueObjects;
 
 namespace SGONGA.WebAPI.API.People.Commands;
 
@@ -28,6 +28,7 @@ public abstract record BaseUserCommand(
         public const string NameRequired = "O nome é obrigatório.";
         public const string NicknameRequired = "O apelido é obrigatório.";
         public const string DocumentRequired = "O documento é obrigatório.";
+        public const string DocumentInvalid = "O documento informado é inválido.";
         public const string SiteRequired = "O site é obrigatório.";
         public const string BirthdateRequired = "A data de nascimento é obrigatória.";
         public const string StateRequired = "O estado é obrigatório.";
@@ -52,7 +53,7 @@ public abstract record BaseUserCommand(
 
             RuleFor(c => c.Documento)
                 .NotEmpty().WithMessage(DocumentRequired)
-                .MaximumLength(11).WithMessage(MaxLengthExceeded);
+                .Must(BeAValidDocument).WithMessage(DocumentInvalid);
 
             RuleFor(c => c.Site)
                 .NotEmpty().WithMessage(SiteRequired)
@@ -70,7 +71,17 @@ public abstract record BaseUserCommand(
                 .NotEmpty().WithMessage(CityRequired)
                 .MaximumLength(50).WithMessage(MaxLengthExceeded);
         }
-
+        private bool BeAValidDocument(string document)
+        {
+            try
+            {
+                return Document.Validate(document);
+            }
+            catch
+            {
+                return false;
+            }
+        }
         private bool BeAValidUrl(string url)
         {
             if (string.IsNullOrWhiteSpace(url))

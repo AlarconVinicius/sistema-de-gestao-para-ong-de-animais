@@ -5,11 +5,11 @@ using SGONGA.WebAPI.Business.People.ValueObjects;
 
 namespace SGONGA.WebAPI.Data.Mappings;
 
-public class UsuarioMapping : IEntityTypeConfiguration<Person>
+public class PersonMapping : IEntityTypeConfiguration<Person>
 {
     public void Configure(EntityTypeBuilder<Person> builder)
     {
-        builder.ToTable("tbl_usuarios");
+        builder.ToTable("tbl_people");
 
         builder.HasKey(a => a.Id);
 
@@ -61,8 +61,8 @@ public class UsuarioMapping : IEntityTypeConfiguration<Person>
             t.Property(t => t.Address)
                 .HasColumnName("Email")
                 .IsRequired()
-                .HasMaxLength(Email.ComprimentoMaxEndereco)
-                .HasColumnType($"varchar({Email.ComprimentoMaxEndereco})");
+                .HasMaxLength(Email.MaxLength)
+                .HasColumnType($"varchar({Email.MaxLength})");
         });
 
         builder.OwnsOne(c => c.Telefone, t =>
@@ -71,14 +71,18 @@ public class UsuarioMapping : IEntityTypeConfiguration<Person>
                 .HasColumnName("Telefone")
                 .HasColumnType("Telefone")
                 .IsRequired()
-                .HasMaxLength(PhoneNumber.MaxLength)
-                .HasColumnType($"varchar({PhoneNumber.MaxLength})");
+                .HasMaxLength(PhoneNumber.LengthWithDDD)
+                .HasColumnType($"varchar({PhoneNumber.LengthWithDDD})");
         });
 
-        builder.Property(c => c.Documento)
+        builder.OwnsOne(c => c.Documento, t =>
+        {
+            t.Property(t => t.Number)
+                .HasColumnName("Documento")
                 .IsRequired()
-                .HasMaxLength(11)
-                .HasColumnType("varchar(11)");
+                .HasMaxLength(Document.CnpjLength)
+                .HasColumnType($"varchar({Document.CnpjLength})");
+        });
 
         builder.Property(e => e.Cidade)
                 .IsRequired()
