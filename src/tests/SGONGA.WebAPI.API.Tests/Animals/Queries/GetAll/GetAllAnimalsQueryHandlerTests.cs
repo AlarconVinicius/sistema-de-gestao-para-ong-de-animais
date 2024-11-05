@@ -4,8 +4,8 @@ using SGONGA.WebAPI.API.Animals.Queries.GetAll;
 using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Animals.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Animals.Responses;
-using SGONGA.WebAPI.Business.Interfaces.Services;
 using SGONGA.WebAPI.Business.Shared.Responses;
+using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
 using SGONGA.WebAPI.Mocks;
 
 namespace SGONGA.WebAPI.API.Tests.Animals.Queries.GetAll;
@@ -59,7 +59,7 @@ public class GetAllAnimalsQueryHandlerTests
             .ReturnsAsync(tenantId);
 
         _animalRepositoryMock.Setup(
-            x => x.GetAllAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            x => x.GetAllAsync(It.IsAny<Guid?>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((BasePagedResponse<AnimalResponse>)null!);
 
         // Act
@@ -84,7 +84,7 @@ public class GetAllAnimalsQueryHandlerTests
             .ReturnsAsync(tenantId);
 
         _animalRepositoryMock.Setup(
-            x => x.GetAllAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            x => x.GetAllAsync(It.IsAny<Guid?>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(animalsResponse);
 
         // Act
@@ -104,7 +104,7 @@ public class GetAllAnimalsQueryHandlerTests
         GetAllAnimalsQueryHandler handler = new(_animalRepositoryMock.Object, _tenantProvider.Object);
 
         _animalRepositoryMock.Setup(
-            x => x.GetAllAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            x => x.GetAllAsync(It.IsAny<Guid?>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((BasePagedResponse<AnimalResponse>)null!);
 
         // Act
@@ -124,7 +124,7 @@ public class GetAllAnimalsQueryHandlerTests
         GetAllAnimalsQueryHandler handler = new(_animalRepositoryMock.Object, _tenantProvider.Object);
 
         _animalRepositoryMock.Setup(
-            x => x.GetAllAsync(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<Guid?>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
+            x => x.GetAllAsync(It.IsAny<Guid?>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<bool>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(animalsResponse);
 
         // Act

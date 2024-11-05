@@ -1,6 +1,6 @@
 ﻿using SGONGA.Core.Extensions;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Models.DomainObjects;
+using SGONGA.WebAPI.Business.Shared.Exceptions;
 
 namespace SGONGA.WebAPI.Business.People.ValueObjects;
 

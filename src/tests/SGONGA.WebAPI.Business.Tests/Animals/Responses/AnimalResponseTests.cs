@@ -1,7 +1,5 @@
 ﻿using FluentAssertions;
 using SGONGA.WebAPI.Business.Animals.Responses;
-using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Models.DomainObjects;
 using SGONGA.WebAPI.Mocks;
 
 namespace SGONGA.WebAPI.Business.Tests.Animals.Models;

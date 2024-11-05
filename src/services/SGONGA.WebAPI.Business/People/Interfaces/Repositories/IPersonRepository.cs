@@ -1,15 +1,13 @@
 ﻿using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.People.Entities;
 using SGONGA.WebAPI.Business.People.Enum;
 using SGONGA.WebAPI.Business.People.Responses;
+using SGONGA.WebAPI.Business.Shared.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Shared.Responses;
-using System.Linq.Expressions;
 
 namespace SGONGA.WebAPI.Business.People.Interfaces.Repositories;
 public interface IPersonRepository : IRepository<Person>
 {
-    Task<Person> SearchAsync(Expression<Func<Person, bool>> predicate, CancellationToken cancellationToken = default);
     Task<NGO> GetNGOByIdWithAnimalsAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default);
 
     Task<Result<NGO>> GetBySlugAsync(string slug, Guid? tenantId, CancellationToken cancellationToken = default);

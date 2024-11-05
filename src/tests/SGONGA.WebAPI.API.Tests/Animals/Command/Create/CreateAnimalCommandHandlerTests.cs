@@ -2,10 +2,10 @@
 using Moq;
 using SGONGA.WebAPI.API.Animals.Commands.Create;
 using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.Animals.Entities;
 using SGONGA.WebAPI.Business.Animals.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Interfaces.Services;
-using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Shared.Interfaces.Repositories;
+using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
 using SGONGA.WebAPI.Mocks;
 using static SGONGA.WebAPI.API.Animals.Commands.Create.CreateAnimalCommand;
 

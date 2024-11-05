@@ -1,4 +1,4 @@
-﻿using SGONGA.WebAPI.Business.Interfaces.Services;
+﻿using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
 
 namespace SGONGA.WebAPI.API.Middlewares;
 

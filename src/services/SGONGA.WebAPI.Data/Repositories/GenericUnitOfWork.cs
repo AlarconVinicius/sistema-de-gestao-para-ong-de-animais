@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SGONGA.WebAPI.Business.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Shared.Entities;
+using SGONGA.WebAPI.Business.Shared.Interfaces.Repositories;
 using SGONGA.WebAPI.Data.Context;
 using System.Linq.Expressions;
 

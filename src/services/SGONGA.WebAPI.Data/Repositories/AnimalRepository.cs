@@ -1,20 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SGONGA.WebAPI.Business.Animals.Entities;
 using SGONGA.WebAPI.Business.Animals.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Animals.Responses;
-using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.Shared.Responses;
 using SGONGA.WebAPI.Data.Context;
-using System.Linq.Expressions;
 
 namespace SGONGA.WebAPI.Data.Repositories;
 
 internal sealed class AnimalRepository(ONGDbContext db) : Repository<Animal>(db), IAnimalRepository
 {
-    public async Task<Animal> SearchAsync(Expression<Func<Animal, bool>> predicate, CancellationToken cancellationToken = default) => 
-        await DbSet
-            .Where(predicate)
-            .FirstOrDefaultAsync(cancellationToken) ?? null!;
-
     public async Task<AnimalResponse> GetByIdAsync(
         Guid id, 
         Guid? tenantId = null, 

@@ -2,8 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SGONGA.WebAPI.Business.Animals.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
+using SGONGA.WebAPI.Business.Shared.Interfaces.Repositories;
 using SGONGA.WebAPI.Data.Context;
 using SGONGA.WebAPI.Data.Repositories;
 
@@ -17,13 +17,9 @@ public static class DependencyInjectionConfig
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection") ??
                 throw new InvalidOperationException("Connection String is not found")));
 
-        services.AddScoped<IONGDbContext, ONGDbContext>();
-
         services.AddScoped<IGenericUnitOfWork, GenericUnitOfWork>();
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IAnimalRepository, AnimalRepository>();
         services.AddScoped<IPersonRepository, PersonRepository>();
-        services.AddScoped<IONGRepository, ONGRepository>();
 
         return services;
     }

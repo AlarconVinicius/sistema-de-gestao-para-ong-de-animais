@@ -1,6 +1,6 @@
-﻿using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.People.Enum;
+﻿using SGONGA.WebAPI.Business.People.Enum;
 using SGONGA.WebAPI.Business.People.ValueObjects;
+using SGONGA.WebAPI.Business.Shared.Entities;
 
 namespace SGONGA.WebAPI.Business.People.Entities;
 public abstract class Person : Entity

@@ -5,7 +5,7 @@ using SGONGA.WebAPI.API.Animals.Queries.GetById;
 using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Animals.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Animals.Responses;
-using SGONGA.WebAPI.Business.Interfaces.Services;
+using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
 using SGONGA.WebAPI.Mocks;
 
 namespace SGONGA.WebAPI.API.Tests.Animals.Queries.GetById;

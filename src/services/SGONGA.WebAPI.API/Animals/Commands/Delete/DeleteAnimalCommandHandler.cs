@@ -1,10 +1,10 @@
 ﻿using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.API.Animals.Errors;
 using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.Animals.Entities;
 using SGONGA.WebAPI.Business.Animals.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Interfaces.Services;
-using SGONGA.WebAPI.Business.Models;
+using SGONGA.WebAPI.Business.Shared.Interfaces.Repositories;
+using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
 
 namespace SGONGA.WebAPI.API.Animals.Commands.Delete;
 

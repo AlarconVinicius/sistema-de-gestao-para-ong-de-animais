@@ -5,8 +5,8 @@ using SGONGA.Core.Notifications;
 using SGONGA.WebAPI.API.Controllers.Shared;
 using SGONGA.WebAPI.API.Extensions;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Interfaces.Handlers;
-using SGONGA.WebAPI.Business.Requests;
+using SGONGA.WebAPI.Business.Users.Interfaces.Handlers;
+using SGONGA.WebAPI.Business.Users.Requests;
 
 namespace SGONGA.WebAPI.API.Controllers;
 

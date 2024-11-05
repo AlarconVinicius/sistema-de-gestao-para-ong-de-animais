@@ -1,10 +1,10 @@
 ﻿using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Errors;
-using SGONGA.WebAPI.Business.Interfaces.Services;
 using SGONGA.WebAPI.Business.People.Enum;
+using SGONGA.WebAPI.Business.People.Errors;
 using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.People.Responses;
+using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
 
 namespace SGONGA.WebAPI.API.People.Queries.GetById;
 
@@ -34,7 +34,7 @@ public class GetUserByIdQueryHandler(IPersonRepository UserRepository, ITenantPr
                 return await UserRepository.GetNGOByIdAsync(request.Id, tenantId, cancellationToken);
 
             default:
-                return UsuarioErrors.NaoFoiPossivelRecuperarUsuario;
+                return PersonErrors.NaoFoiPossivelRecuperarUsuario;
         }
     }
 }

@@ -1,11 +1,11 @@
 ﻿using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Errors;
-using SGONGA.WebAPI.Business.Interfaces.Services;
 using SGONGA.WebAPI.Business.People.Enum;
+using SGONGA.WebAPI.Business.People.Errors;
 using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.People.Responses;
 using SGONGA.WebAPI.Business.Shared.Responses;
+using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
 
 namespace SGONGA.WebAPI.API.People.Queries.GetAll;
 
@@ -29,7 +29,7 @@ public class GetAllUsersQueryHandler(IPersonRepository UserRepository, ITenantPr
             case EUsuarioTipo.ONG:
                 return await UserRepository.GetAllNGOsPagedAsync(tenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll, cancellationToken);
             default:
-                return UsuarioErrors.NaoFoiPossivelRecuperarUsuarios;
+                return PersonErrors.NaoFoiPossivelRecuperarUsuarios;
         }
     }
 }

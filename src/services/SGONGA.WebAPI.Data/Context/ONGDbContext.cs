@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using SGONGA.WebAPI.Business.Interfaces.Repositories;
+using SGONGA.WebAPI.Business.Animals.Entities;
 using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.People.Entities;
 
 namespace SGONGA.WebAPI.Data.Context;
 
-public class ONGDbContext : DbContext, IONGDbContext
+public class ONGDbContext : DbContext
 {
     public ONGDbContext(DbContextOptions<ONGDbContext> options) : base(options)
     {

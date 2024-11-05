@@ -1,15 +1,15 @@
 ﻿using SGONGA.Core.Extensions;
 using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Errors;
-using SGONGA.WebAPI.Business.Interfaces.Handlers;
-using SGONGA.WebAPI.Business.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.People.Entities;
 using SGONGA.WebAPI.Business.People.Enum;
+using SGONGA.WebAPI.Business.People.Errors;
 using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Requests;
 using SGONGA.WebAPI.Business.Responses;
+using SGONGA.WebAPI.Business.Shared.Interfaces.Repositories;
+using SGONGA.WebAPI.Business.Users.Interfaces.Handlers;
+using SGONGA.WebAPI.Business.Users.Requests;
 
 namespace SGONGA.WebAPI.API.People.Commands.Create;
 
@@ -73,7 +73,7 @@ public class CreateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRepo
                 break;
 
             default:
-                return UsuarioErrors.NaoFoiPossivelCriarUsuario;
+                return PersonErrors.NaoFoiPossivelCriarUsuario;
         }
 
         identityResult = await IdentityHandler.CreateAsync(new CreateUserRequest(newUserId, command.Email, command.Senha, command.ConfirmarSenha));
@@ -89,13 +89,13 @@ public class CreateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRepo
     private async Task<Result> CheckAvailabilityAsync(CreateUserCommand command)
     {
         if ((await DocumentoDisponivel(command.Documento, command.UsuarioTipo)).IsFailed)
-            return ValidationErrors.DocumentoEmUso(command.Documento);
+            return PersonErrors.DocumentoEmUso(command.Documento);
 
         if ((await ApelidoDisponivel(command.Apelido, command.UsuarioTipo)).IsFailed)
-            return ValidationErrors.ApelidoEmUso(command.Apelido);
+            return PersonErrors.ApelidoEmUso(command.Apelido);
 
         if ((await EmailDisponivel(command.Email)).IsFailed)
-            return ValidationErrors.EmailEmUso(command.Email);
+            return PersonErrors.EmailEmUso(command.Email);
 
         return Result.Ok();
     }
@@ -104,18 +104,18 @@ public class CreateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRepo
     {
         var available = !await UserRepository.ExistsAsync(f => (f.Apelido == apelido || f.Slug == apelido.SlugifyString()) && f.UsuarioTipo == tipo);
 
-        return available ? Result.Ok() : ValidationErrors.ApelidoEmUso(apelido);
+        return available ? Result.Ok() : PersonErrors.ApelidoEmUso(apelido);
     }
     private async Task<Result> DocumentoDisponivel(string documento, EUsuarioTipo tipo)
     {
         var available = !await UserRepository.ExistsAsync(f => f.Documento == documento && f.UsuarioTipo == tipo);
 
-        return available ? Result.Ok() : ValidationErrors.DocumentoEmUso(documento);
+        return available ? Result.Ok() : PersonErrors.DocumentoEmUso(documento);
     }
     private async Task<Result> EmailDisponivel(string email)
     {
         var available = !await UserRepository.ExistsAsync(f => f.Email.Address == email);
 
-        return available ? Result.Ok() : ValidationErrors.EmailEmUso(email);
+        return available ? Result.Ok() : PersonErrors.EmailEmUso(email);
     }
 }

@@ -1,6 +1,6 @@
-﻿using SGONGA.WebAPI.Business.Models.DomainObjects;
-using SGONGA.WebAPI.Business.People.Entities;
+﻿using SGONGA.WebAPI.Business.People.Entities;
 using SGONGA.WebAPI.Business.People.Enum;
+using SGONGA.WebAPI.Business.Shared.Exceptions;
 
 namespace SGONGA.WebAPI.Business.Models;
 public sealed class Adopter : Person

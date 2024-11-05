@@ -1,23 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Errors;
 using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.People.Entities;
 using SGONGA.WebAPI.Business.People.Enum;
+using SGONGA.WebAPI.Business.People.Errors;
 using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.People.Responses;
 using SGONGA.WebAPI.Business.Shared.Responses;
 using SGONGA.WebAPI.Data.Context;
-using System.Linq.Expressions;
 
 namespace SGONGA.WebAPI.Data.Repositories;
 
 public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPersonRepository
 {
-    public async Task<Person> SearchAsync(Expression<Func<Person, bool>> predicate, CancellationToken cancellationToken = default) =>
-        await DbSet
-            .Where(predicate)
-            .FirstOrDefaultAsync(cancellationToken) ?? null!;
     public async Task<Result<EUsuarioTipo>> IdentifyUserType(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
     {
         var tipos = (EUsuarioTipo[])Enum.GetValues(typeof(EUsuarioTipo));
@@ -31,7 +26,7 @@ public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPerson
                 return tipo;
         }
 
-        return UsuarioErrors.UsuarioNaoEncontrado(id);
+        return PersonErrors.UsuarioNaoEncontrado(id);
     }
     public async Task<NGO> GetNGOByIdWithAnimalsAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
     {

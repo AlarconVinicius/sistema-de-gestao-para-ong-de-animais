@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Models.DomainObjects;
+using SGONGA.WebAPI.Business.Animals.Entities;
+using SGONGA.WebAPI.Business.Shared.Exceptions;
 using SGONGA.WebAPI.Mocks;
 
 namespace SGONGA.WebAPI.Business.Tests.Animals.Models;

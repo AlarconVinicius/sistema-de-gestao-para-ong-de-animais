@@ -1,14 +1,14 @@
 ﻿using SGONGA.Core.User;
 using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Errors;
-using SGONGA.WebAPI.Business.Interfaces.Handlers;
-using SGONGA.WebAPI.Business.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Interfaces.Services;
 using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.People.Enum;
+using SGONGA.WebAPI.Business.People.Errors;
 using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Requests;
+using SGONGA.WebAPI.Business.Shared.Interfaces.Repositories;
+using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
+using SGONGA.WebAPI.Business.Users.Interfaces.Handlers;
+using SGONGA.WebAPI.Business.Users.Requests;
 
 namespace SGONGA.WebAPI.API.People.Commands.Delete;
 
@@ -43,7 +43,7 @@ internal sealed class DeleteUserCommandHandler(IGenericUnitOfWork UnitOfWork, IP
                 UnitOfWork.Delete(NGOResult);
                 break;
             default:
-                return UsuarioErrors.NaoFoiPossivelDeletarUsuario;
+                return PersonErrors.NaoFoiPossivelDeletarUsuario;
         }
 
         identityResult = await IdentityHandler.DeleteAsync(new DeleteUserRequest(request.Id));

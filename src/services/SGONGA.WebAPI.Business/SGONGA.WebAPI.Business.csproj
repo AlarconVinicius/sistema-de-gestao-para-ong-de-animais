@@ -21,4 +21,9 @@
 		</AssemblyAttribute>
 	</ItemGroup>
 
+
+	<ItemGroup>
+	  <Folder Include="Users\Handlers\" />
+	</ItemGroup>
+
 </Project>
