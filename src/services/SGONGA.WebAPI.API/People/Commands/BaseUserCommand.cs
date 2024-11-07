@@ -1,10 +1,11 @@
 ﻿using FluentValidation;
-using SGONGA.Core.Utils;
 using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.Business.People.Enum;
 using SGONGA.WebAPI.Business.People.ValueObjects;
 
 namespace SGONGA.WebAPI.API.People.Commands;
+
+using SiteValueObject = Site;
 
 public abstract record BaseUserCommand(
         EPersonType UsuarioTipo,
@@ -84,9 +85,7 @@ public abstract record BaseUserCommand(
         }
         private bool BeAValidUrl(string url)
         {
-            if (string.IsNullOrWhiteSpace(url))
-                return false;
-            return RegexUtils.SiteRegex.IsMatch(url);
+            return SiteValueObject.IsValidUrl(url);
         }
     }
 }

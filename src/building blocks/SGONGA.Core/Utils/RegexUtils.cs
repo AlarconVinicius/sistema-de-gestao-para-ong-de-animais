@@ -45,11 +45,4 @@ public static class RegexUtils
         RegexOptions.Compiled | RegexOptions.IgnoreCase
     );
     #endregion
-
-    #region Site
-    public static readonly Regex SiteRegex = new(
-        @"^(?:https?:\/\/)?(?:www\.)?(?:[a-z0-9]+(?:\.[a-z0-9]+)*\.)?[a-z0-9]+\.[a-z]{2,}(?:\/[\w\-\.\/]*)*$",
-        RegexOptions.Compiled | RegexOptions.IgnoreCase
-    );
-    #endregion
 }
