@@ -1,7 +1,8 @@
-﻿using SGONGA.WebAPI.Business.People.Enum;
+﻿using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.People.Enum;
+using SGONGA.WebAPI.Business.People.Exceptions;
 using SGONGA.WebAPI.Business.People.ValueObjects;
 using SGONGA.WebAPI.Business.Shared.Entities;
-using SGONGA.WebAPI.Business.Shared.Exceptions;
 
 namespace SGONGA.WebAPI.Business.People.Entities;
 public abstract class Person : Entity
@@ -59,7 +60,7 @@ public abstract class Person : Entity
 
         if (age < 18)
         {
-            throw new PersonUnderageException("O usuário deve ter mais de 18 anos.");
+            throw new PersonValidationException(Error.Validation("O usuário deve ter mais de 18 anos."));
         }
     }
     #endregion

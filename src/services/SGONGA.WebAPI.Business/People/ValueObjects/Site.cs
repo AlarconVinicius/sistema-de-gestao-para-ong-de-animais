@@ -1,5 +1,5 @@
-﻿using SGONGA.Core.Utils;
-using SGONGA.WebAPI.Business.Abstractions;
+﻿using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.People.Exceptions;
 
 namespace SGONGA.WebAPI.Business.People.ValueObjects;
 public sealed record Site : ValueObject
@@ -12,7 +12,8 @@ public sealed record Site : ValueObject
     #region Constructors
     private Site(string url)
     {
-        ValidateUrl(url);
+        if(!IsValidUrl(url))
+            throw new PersonValidationException(Error.Validation("URL inválida.")); 
         Url = url;
     }
     #endregion
@@ -27,12 +28,14 @@ public sealed record Site : ValueObject
     #endregion
 
     #region Methods
-    private static void ValidateUrl(string url)
+    public static bool IsValidUrl(string url)
     {
-        if (!RegexUtils.SiteRegex.IsMatch(url))
+        if (!Uri.TryCreate(url, UriKind.Absolute, out var uri) ||
+        (uri.Scheme != "http" && uri.Scheme != "https"))
         {
-            throw new ArgumentException("URL inválida.");
+            return false;
         }
+        return true;
     }
     #endregion
 }

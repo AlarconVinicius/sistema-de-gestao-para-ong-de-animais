@@ -1,5 +1,7 @@
 ﻿using SGONGA.Core.Extensions;
 using SGONGA.Core.Utils;
+using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.People.Exceptions;
 
 namespace SGONGA.WebAPI.Business.People.ValueObjects;
 
@@ -33,7 +35,7 @@ public class PhoneNumber
         if (!RegexUtils.PhoneRegex.IsMatch(number) ||
             (number.Length != LengthWithoutDDD && number.Length != LengthWithDDD))
         {
-            throw new ArgumentException("Número de telefone inválido. Deve conter exatamente 9 ou 11 dígitos.");
+            throw new PersonValidationException(Error.Validation("Número de telefone inválido. Deve conter exatamente 9 ou 11 dígitos."));
         }
     }
     #endregion

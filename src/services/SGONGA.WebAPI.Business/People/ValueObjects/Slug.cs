@@ -1,5 +1,6 @@
 ﻿using SGONGA.Core.Extensions;
 using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.People.Exceptions;
 
 namespace SGONGA.WebAPI.Business.People.ValueObjects;
 
@@ -14,7 +15,7 @@ public sealed record Slug : ValueObject
     private Slug(string urlPath)
     {
         if (string.IsNullOrEmpty(urlPath))
-            throw new ArgumentException("Slug inválida");
+            throw new PersonValidationException(Error.Validation("Slug inválida"));
 
         UrlPath = urlPath.SlugifyString();
     }

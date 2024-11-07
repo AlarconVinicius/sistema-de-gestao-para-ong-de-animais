@@ -1,4 +1,6 @@
 ﻿using SGONGA.Core.Utils;
+using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.People.Exceptions;
 
 namespace SGONGA.WebAPI.Business.People.ValueObjects;
 
@@ -30,7 +32,7 @@ public class Email
     {
         if (!RegexUtils.EmailRegex.IsMatch(address))
         {
-            throw new ArgumentException("Email inválido");
+            throw new PersonValidationException(Error.Validation("Email inválido"));
         }
     }
     #endregion

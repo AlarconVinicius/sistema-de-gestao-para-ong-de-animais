@@ -1,6 +1,6 @@
 ﻿using SGONGA.Core.Extensions;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Shared.Exceptions;
+using SGONGA.WebAPI.Business.People.Exceptions;
 
 namespace SGONGA.WebAPI.Business.People.ValueObjects;
 
@@ -17,7 +17,7 @@ public sealed record Document : ValueObject
         var cleanNumber = number.OnlyNumbers();
         if (!Validate(cleanNumber))
         {
-            throw new DomainException($"Documento inválido: {number}");
+            throw new PersonValidationException(Error.Validation($"Documento inválido: {number}"));
         }
         Number = cleanNumber;
     }
