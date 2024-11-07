@@ -4,11 +4,11 @@ using SGONGA.WebAPI.Business.Models;
 
 namespace SGONGA.WebAPI.Data.Mappings;
 
-public class AdotanteMapping : IEntityTypeConfiguration<Adopter>
+public class AdopterMapping : IEntityTypeConfiguration<Adopter>
 {
     public void Configure(EntityTypeBuilder<Adopter> builder)
     {
-        builder.ToTable("tbl_adotantes");
+        builder.ToTable("tbl_adopters");
 
     }
 }

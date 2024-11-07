@@ -14,9 +14,9 @@ public class ONGDbContext : DbContext
         ChangeTracker.AutoDetectChangesEnabled = false;
     }
 
-    public DbSet<Person> Usuarios { get; set; }
-    public DbSet<Adopter> Adotantes { get; set; }
-    public DbSet<NGO> ONGs { get; set; }
+    public DbSet<Person> People { get; set; }
+    public DbSet<Adopter> Adopters { get; set; }
+    public DbSet<NGO> NGOs { get; set; }
     public DbSet<Animal> Animais { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

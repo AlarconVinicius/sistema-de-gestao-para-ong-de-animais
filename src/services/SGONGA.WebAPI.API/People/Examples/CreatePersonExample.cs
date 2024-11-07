@@ -13,7 +13,7 @@ public class CreatePersonExample : IMultipleExamplesProvider<CreateUserCommand>
         yield return SwaggerExample.Create(
             "Cadastrar um adotante",
             new CreateUserCommand(
-            UsuarioTipo: EUsuarioTipo.Adotante,
+            UsuarioTipo: EPersonType.Adopter,
             Nome: "João Silva Santos",
             Apelido: "João Silva",
             Documento: "12345678900",
@@ -34,7 +34,7 @@ public class CreatePersonExample : IMultipleExamplesProvider<CreateUserCommand>
         yield return SwaggerExample.Create(
             "Cadastrar uma ONG",
             new CreateUserCommand(
-                UsuarioTipo: EUsuarioTipo.ONG,
+                UsuarioTipo: EPersonType.NGO,
                 Nome: "Amigos dos Animais Proteção e Bem-estar",
                 Apelido: "Amigos dos Animais",
                 Documento: "12345678000199",

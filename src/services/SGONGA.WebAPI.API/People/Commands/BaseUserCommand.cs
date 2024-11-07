@@ -7,7 +7,7 @@ using SGONGA.WebAPI.Business.People.ValueObjects;
 namespace SGONGA.WebAPI.API.People.Commands;
 
 public abstract record BaseUserCommand(
-        EUsuarioTipo UsuarioTipo,
+        EPersonType UsuarioTipo,
         string Nome,
         string Apelido,
         string Documento,

@@ -8,7 +8,7 @@ public class PersonResponse(
     Guid tenantId,
     string name,
     string nickname,
-    EUsuarioTipo userType,
+    EPersonType userType,
     string document,
     string website,
     string email,
@@ -36,7 +36,7 @@ public class PersonResponse(
     public string Nickname { get; } = nickname;
 
     [DisplayName("Tipo de Usuário")]
-    public EUsuarioTipo UserType { get; } = userType;
+    public EPersonType UserType { get; } = userType;
 
     [DisplayName("Documento")]
     public string Document { get; } = document;

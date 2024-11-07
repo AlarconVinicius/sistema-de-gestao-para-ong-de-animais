@@ -13,9 +13,9 @@ public static class AnimalMappings
         {
             return null!;
         }
-        string endereco = $"{request.ONG!.Cidade}, {request.ONG.Estado}";
+        string endereco = $"{request.ONG!.City}, {request.ONG.State}";
 
-        return new AnimalResponse(request.Id, request.TenantId, request.Nome, request.Especie, request.Raca, request.Sexo, request.Castrado, request.Cor, request.Porte, request.Idade, request.ONG.Nome, endereco, request.Descricao, request.Observacao, request.ChavePix, request.Foto, request.CreatedAt, request.UpdatedAt);
+        return new AnimalResponse(request.Id, request.TenantId, request.Nome, request.Especie, request.Raca, request.Sexo, request.Castrado, request.Cor, request.Porte, request.Idade, request.ONG.Name, endereco, request.Descricao, request.Observacao, request.ChavePix, request.Foto, request.CreatedAt, request.UpdatedAt);
     }
     public static BasePagedResponse<AnimalResponse> MapDomainToResponse(this PagedResult<Animal> request)
     {

@@ -8,27 +8,41 @@ public sealed class Adopter : Person
     private Adopter() { }
     private Adopter(Guid id) : base(id) { }
 
-    public Adopter(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, string email, string telefone, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre) : base(id, tenantId, EUsuarioTipo.Adotante, nome, apelido, documento, site, email, telefone, telefoneVisivel, assinarNewsletter, dataNascimento, estado, cidade, sobre)
+    private Adopter(
+        Guid id, 
+        Guid tenantId, 
+        string name, 
+        string nickname, 
+        string document,
+        string site,
+        string email, 
+        string phoneNumber,
+        bool isPhoneNumberVisible,
+        bool subscribeToNewsletter, 
+        DateTime birthDate,
+        string state,
+        string city,
+        string? about) : base(id, tenantId, EPersonType.Adopter, name, nickname, document, site, email, phoneNumber, isPhoneNumberVisible, subscribeToNewsletter, birthDate, state, city, about)
     {
     }
 
-    public static Adopter Create(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, string email, string telefone, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre)
+    public static Adopter Create(Guid id, Guid tenantId, string name, string nickname, string document, string site, string email, string phoneNumber, bool isPhoneNumberVisible, bool subscribeToNewsletter, DateTime birthDate, string state, string city, string? about)
     {
         return new Adopter(
             id,
             tenantId,
-            nome,
-            apelido,
-            documento,
+            name,
+            nickname,
+            document,
             site,
             email,
-            telefone,
-            telefoneVisivel,
-            assinarNewsletter,
-            dataNascimento,
-            estado,
-            cidade,
-            sobre);
+            phoneNumber,
+            isPhoneNumberVisible,
+            subscribeToNewsletter,
+            birthDate,
+            state,
+            city,
+            about);
     }
 
     public static Adopter Create(Guid id)
@@ -36,31 +50,31 @@ public sealed class Adopter : Person
         return new Adopter(id);
     }
 
-    public void Update(string nome, string apelido, string site, string email, string telefone, bool telefoneVisivel, string estado, string cidade, string? sobre)
+    public void Update(string name, string nickname, string site, string email, string phoneNumber, bool isPhoneNumberVisible, string state, string city, string? about)
     {
         var errors = new List<string>();
 
-        if (string.IsNullOrWhiteSpace(nome))
+        if (string.IsNullOrWhiteSpace(name))
             errors.Add("Nome não pode ser nulo ou vazio.");
-        if (string.IsNullOrWhiteSpace(apelido))
+        if (string.IsNullOrWhiteSpace(nickname))
             errors.Add("Apelido não pode ser nulo ou vazio.");
-        if (string.IsNullOrWhiteSpace(estado))
+        if (string.IsNullOrWhiteSpace(state))
             errors.Add("Estado não pode ser nulo ou vazio.");
-        if (string.IsNullOrWhiteSpace(cidade))
+        if (string.IsNullOrWhiteSpace(city))
             errors.Add("Cidade não pode ser nula ou vazia.");
 
         if (errors.Count != 0)
             throw new DomainException(string.Join(Environment.NewLine, errors));
 
-        Nome = nome;
-        Apelido = apelido;
-        Slug = apelido;
+        Name = name;
+        Nickname = nickname;
+        Slug = nickname;
         Site = site;
         Email = email;
-        Telefone = telefone;
-        TelefoneVisivel = telefoneVisivel;
-        Estado = estado;
-        Cidade = cidade;
-        Sobre = sobre;
+        PhoneNumber = phoneNumber;
+        IsPhoneNumberVisible = isPhoneNumberVisible;
+        State = state;
+        City = city;
+        About = about;
     }
 }

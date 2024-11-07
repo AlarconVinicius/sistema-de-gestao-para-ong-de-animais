@@ -23,10 +23,10 @@ public class GetAllUsersQueryHandler(IPersonRepository UserRepository, ITenantPr
         }
         switch (request.UsuarioTipo)
         {
-            case EUsuarioTipo.Adotante:
+            case EPersonType.Adopter:
                 return await UserRepository.GetAllAdoptersPagedAsync(tenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll, cancellationToken);
 
-            case EUsuarioTipo.ONG:
+            case EPersonType.NGO:
                 return await UserRepository.GetAllNGOsPagedAsync(tenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll, cancellationToken);
             default:
                 return PersonErrors.NaoFoiPossivelRecuperarUsuarios;

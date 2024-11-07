@@ -77,7 +77,7 @@ public class AnimalMapping : IEntityTypeConfiguration<Animal>
             .HasColumnType("text");
 
         builder.HasOne(a => a.ONG)
-            .WithMany(o => o.Animais)
+            .WithMany(o => o.Animals)
             .HasForeignKey(a => a.TenantId);
     }
 }

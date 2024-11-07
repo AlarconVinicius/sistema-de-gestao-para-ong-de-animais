@@ -4,7 +4,7 @@ namespace SGONGA.WebAPI.API.People.Commands.Update;
 
 public sealed record UpdateUserRequest(
         Guid Id,
-        EUsuarioTipo UsuarioTipo,
+        EPersonType UsuarioTipo,
         string Nome,
         string Apelido,
         string Documento,

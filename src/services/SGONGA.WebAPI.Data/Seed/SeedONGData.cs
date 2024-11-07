@@ -15,27 +15,27 @@ public static class SeedONGData
             var userId = Guid.Parse("2f805cb2-1c01-4d88-92ec-a989bad5b0af");
             var tenantId = Guid.Parse("05bf1089-6015-4c2d-bf7c-1cbfa920ce23");
 
-            if (!context.ONGs.IgnoreQueryFilters().Any(o => o.Id == userId))
+            if (!context.NGOs.IgnoreQueryFilters().Any(o => o.Id == userId))
             {
                 var user = NGO.Create(
                     id: userId,
                     tenantId: tenantId,
-                    nome: "Tenant Default",
-                    apelido: "Tenant Default",
-                    documento: "10136070078",
+                    name: "Tenant Default",
+                    nickname: "Tenant Default",
+                    document: "10136070078",
                     site: "https://www.instagram.com/Tenant-Default/?hl=pt-br",
                     email: "tenant@email.com",
-                    telefone: "24969784572",
-                    telefoneVisivel: true,
-                    assinarNewsletter: true,
-                    dataNascimento: new DateTime(1990, 1, 1),
-                    estado: "Rio de Janeiro",
-                    cidade: "Rio de Janeiro",
-                    sobre: "Usuário Default da aplicação.",
-                    chavePix: "10136070078"
+                    phoneNumber: "24969784572",
+                    isPhoneNumberVisible: true,
+                    subscribeToNewsletter: true,
+                    birthDate: new DateTime(1990, 1, 1),
+                    state: "RJ",
+                    city: "Rio de Janeiro",
+                    about: "Usuário Default da aplicação.",
+                    pixKey: "10136070078"
                 );
 
-                context.ONGs.Add(user);
+                context.NGOs.Add(user);
                 context.SaveChanges();
             }
         }

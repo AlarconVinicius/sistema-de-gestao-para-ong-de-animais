@@ -27,10 +27,10 @@ public class GetUserByIdQueryHandler(IPersonRepository UserRepository, ITenantPr
 
         switch (userType.Value)
         {
-            case EUsuarioTipo.Adotante:
+            case EPersonType.Adopter:
                 return await UserRepository.GetAdopterByIdAsync(request.Id, tenantId, cancellationToken);
 
-            case EUsuarioTipo.ONG:
+            case EPersonType.NGO:
                 return await UserRepository.GetNGOByIdAsync(request.Id, tenantId, cancellationToken);
 
             default:

@@ -1,6 +1,6 @@
 ﻿namespace SGONGA.WebAPI.Business.People.Enum;
-public enum EUsuarioTipo
+public enum EPersonType
 {
-    Adotante = 0,
-    ONG
+    Adopter = 0,
+    NGO
 }

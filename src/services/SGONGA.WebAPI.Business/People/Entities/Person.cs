@@ -1,64 +1,65 @@
 ﻿using SGONGA.WebAPI.Business.People.Enum;
 using SGONGA.WebAPI.Business.People.ValueObjects;
 using SGONGA.WebAPI.Business.Shared.Entities;
+using SGONGA.WebAPI.Business.Shared.Exceptions;
 
 namespace SGONGA.WebAPI.Business.People.Entities;
 public abstract class Person : Entity
 {
     public Guid TenantId { get; init; }
-    public EUsuarioTipo UsuarioTipo { get; protected set; }
-    public string Nome { get; protected set; } = string.Empty;
-    public string Apelido { get; protected set; } = string.Empty;
-    public Slug Slug { get; protected set; } = string.Empty;
-    public Document Documento { get; init; } = string.Empty;
-    public Site Site { get; protected set; } = string.Empty;
-    public Email Email { get; protected set; } = string.Empty;
-    public PhoneNumber Telefone { get; protected set; } = string.Empty;
-    public bool TelefoneVisivel { get; protected set; } = false;
-    public bool AssinarNewsletter { get; protected set; } = false;
-    public DateTime DataNascimento { get; init; }
-    public string Estado { get; protected set; } = string.Empty;
-    public string Cidade { get; protected set; } = string.Empty;
-    public string? Sobre { get; protected set; } = string.Empty;
+    public EPersonType UserType { get; protected set; }
+    public string Name { get; protected set; }
+    public string Nickname { get; protected set; }
+    public Slug Slug { get; protected set; }
+    public Document Document { get; init; }
+    public Site Site { get; protected set; }
+    public Email Email { get; protected set; }
+    public PhoneNumber PhoneNumber { get; protected set; }
+    public bool IsPhoneNumberVisible { get; protected set; }
+    public bool SubscribeToNewsletter { get; protected set; }
+    public DateTime BirthDate { get; init; }
+    public string State { get; protected set; }
+    public string City { get; protected set; }
+    public string? About { get; protected set; }
 
     protected Person() { }
 
     protected Person(Guid id) : base(id) { }
 
-    protected Person(Guid id, Guid tenantId, EUsuarioTipo usuarioTipo, string nome, string apelido, string documento, string site, string email, string telefone, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre) : base(id)
+    protected Person(Guid id, Guid tenantId, EPersonType userType, string name, string nickname, string document, string site, string email, string phoneNumber, bool isPhoneNumberVisible, bool subscribeToNewsletter, DateTime birthDate, string state, string city, string? about) : base(id)
     {
-        ValidarIdade(dataNascimento);
-        DataNascimento = dataNascimento;
+        ValidateAge(birthDate);
+        BirthDate = birthDate;
         Site = site;
         Email = email;
-        Telefone = telefone;
-        Slug = apelido;
+        PhoneNumber = phoneNumber;
+        Slug = nickname;
         TenantId = tenantId;
-        UsuarioTipo = usuarioTipo;
-        Nome = nome;
-        Apelido = apelido;
-        Documento = documento;
-        TelefoneVisivel = telefoneVisivel;
-        AssinarNewsletter = assinarNewsletter;
-        Estado = estado;
-        Cidade = cidade;
-        Sobre = sobre;
+        UserType = userType;
+        Name = name;
+        Nickname = nickname;
+        Document = document;
+        IsPhoneNumberVisible = isPhoneNumberVisible;
+        SubscribeToNewsletter = subscribeToNewsletter;
+        State = state;
+        City = city;
+        About = about;
     }
 
     #region Methods
-    public static void ValidarIdade(DateTime dataNascimento)
+    protected static void ValidateAge(DateTime birthDate)
     {
-        DateTime dataAtual = DateTime.Now;
-        int idade = dataAtual.Year - dataNascimento.Year;
+        DateTime currentDate = DateTime.Now;
+        int age = currentDate.Year - birthDate.Year;
 
-        if (dataNascimento.Date > dataAtual.AddYears(-idade))
+        if (birthDate.Date > currentDate.AddYears(-age))
         {
-            idade--;
+            age--;
         }
 
-        if (idade < 18)
+        if (age < 18)
         {
-            throw new ArgumentException("O usuário deve ter mais de 18 anos.");
+            throw new PersonUnderageException("O usuário deve ter mais de 18 anos.");
         }
     }
     #endregion

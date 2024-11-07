@@ -96,7 +96,7 @@ public class PeopleController(INotifier notifier, ISender sender) : ApiControlle
     [HttpGet("/api/v1/usuarios/adotantes")]
     public async Task<IResult> GetAllAdoptersPublic([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, [FromQuery] int tipo = 0, CancellationToken cancellationToken = default)
     {
-        GetAllUsersQuery query = new(EUsuarioTipo.Adotante, ps, page, q, false, false);
+        GetAllUsersQuery query = new(EPersonType.Adopter, ps, page, q, false, false);
 
         var result = await Sender.Send(query, cancellationToken);
 
@@ -126,7 +126,7 @@ public class PeopleController(INotifier notifier, ISender sender) : ApiControlle
     [HttpGet("/api/v1/usuarios/ongs")]
     public async Task<IResult> GetAllNGOsPublic([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, [FromQuery] int tipo = 0, CancellationToken cancellationToken = default)
     {
-        GetAllUsersQuery query = new(EUsuarioTipo.ONG, ps, page, q, false, false);
+        GetAllUsersQuery query = new(EPersonType.NGO, ps, page, q, false, false);
 
         var result = await Sender.Send(query, cancellationToken);
 
@@ -204,7 +204,7 @@ public class PeopleController(INotifier notifier, ISender sender) : ApiControlle
     [HttpGet]
     public async Task<IResult> GetAllNGO([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, [FromQuery] int tipo = 0, CancellationToken cancellationToken = default)
     {
-        GetAllUsersQuery query = new(EUsuarioTipo.ONG, ps, page, q, false, true);
+        GetAllUsersQuery query = new(EPersonType.NGO, ps, page, q, false, true);
 
         var result = await Sender.Send(query, cancellationToken);
 

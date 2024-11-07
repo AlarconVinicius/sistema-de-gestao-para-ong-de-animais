@@ -6,34 +6,49 @@ namespace SGONGA.WebAPI.Business.People.Entities;
 
 public sealed class NGO : Person
 {
-    public string? ChavePix { get; private set; } = string.Empty;
-    public List<Animal> Animais { get; private set; } = new();
+    public string? PixKey { get; private set; }
+    public List<Animal> Animals { get; private set; }
 
     private NGO() { }
     private NGO(Guid id) : base(id) { }
 
-    private NGO(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, string email, string telefone, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, string? chavePix) : base(id, tenantId, EUsuarioTipo.ONG, nome, apelido, documento, site, email, telefone, telefoneVisivel, assinarNewsletter, dataNascimento, estado, cidade, sobre)
+    private NGO(
+        Guid id,
+        Guid tenantId,
+        string name,
+        string nickname,
+        string document,
+        string site,
+        string email,
+        string phoneNumber,
+        bool isPhoneNumberVisible,
+        bool subscribeToNewsletter,
+        DateTime birthDate,
+        string state,
+        string city,
+        string? about,
+        string? pixKey) : base(id, tenantId, EPersonType.NGO, name, nickname, document, site, email, phoneNumber, isPhoneNumberVisible, subscribeToNewsletter, birthDate, state, city, about)
     {
-        ChavePix = string.IsNullOrEmpty(chavePix) ? documento : chavePix;
+        PixKey = string.IsNullOrEmpty(pixKey) ? document : pixKey;
     }
-    public static NGO Create(Guid id, Guid tenantId, string nome, string apelido, string documento, string site, string email, string telefone, bool telefoneVisivel, bool assinarNewsletter, DateTime dataNascimento, string estado, string cidade, string? sobre, string? chavePix)
+    public static NGO Create(Guid id, Guid tenantId, string name, string nickname, string document, string site, string email, string phoneNumber, bool isPhoneNumberVisible, bool subscribeToNewsletter, DateTime birthDate, string state, string city, string? about, string? pixKey)
     {
         return new NGO(
             id,
             tenantId,
-            nome,
-            apelido,
-            documento,
+            name,
+            nickname,
+            document,
             site,
             email,
-            telefone,
-            telefoneVisivel,
-            assinarNewsletter,
-            dataNascimento,
-            estado,
-            cidade,
-            sobre,
-            chavePix);
+            phoneNumber,
+            isPhoneNumberVisible,
+            subscribeToNewsletter,
+            birthDate,
+            state,
+            city,
+            about,
+            pixKey);
     }
 
     public static NGO Create(Guid id)
@@ -41,45 +56,45 @@ public sealed class NGO : Person
         return new NGO(id);
     }
 
-    public void Update(string nome, string apelido, string site, string email, string telefone, bool telefoneVisivel, string estado, string cidade, string? sobre, string? chavePix)
+    public void Update(string name, string nickname, string site, string email, string phoneNumber, bool isPhoneNumberVisible, string state, string city, string? about, string? pixKey)
     {
         var errors = new List<string>();
 
-        if (string.IsNullOrWhiteSpace(nome))
+        if (string.IsNullOrWhiteSpace(name))
             errors.Add("Nome não pode ser nulo ou vazio.");
-        if (string.IsNullOrWhiteSpace(apelido))
+        if (string.IsNullOrWhiteSpace(nickname))
             errors.Add("Apelido não pode ser nulo ou vazio.");
-        if (string.IsNullOrWhiteSpace(estado))
+        if (string.IsNullOrWhiteSpace(state))
             errors.Add("Estado não pode ser nulo ou vazio.");
-        if (string.IsNullOrWhiteSpace(cidade))
+        if (string.IsNullOrWhiteSpace(city))
             errors.Add("Cidade não pode ser nula ou vazia.");
 
         if (errors.Count != 0)
             throw new DomainException(string.Join(Environment.NewLine, errors));
 
-        Nome = nome;
-        Apelido = apelido;
-        Slug = apelido;
+        Name = name;
+        Nickname = nickname;
+        Slug = nickname;
         Site = site;
         Email = email;
-        Telefone = telefone;
-        TelefoneVisivel = telefoneVisivel;
-        Estado = estado;
-        Cidade = cidade;
-        Sobre = sobre;
-        ChavePix = chavePix;
+        PhoneNumber = phoneNumber;
+        IsPhoneNumberVisible = isPhoneNumberVisible;
+        State = state;
+        City = city;
+        About = about;
+        PixKey = pixKey;
     }
     public void AddAnimal(Animal animal)
     {
         ArgumentNullException.ThrowIfNull(animal);
 
-        Animais.Add(animal);
+        Animals.Add(animal);
     }
 
     #region Setters
     public void SetChavePix(string? chavePix)
     {
-        ChavePix = chavePix;
+        PixKey = chavePix;
     }
     #endregion
 }

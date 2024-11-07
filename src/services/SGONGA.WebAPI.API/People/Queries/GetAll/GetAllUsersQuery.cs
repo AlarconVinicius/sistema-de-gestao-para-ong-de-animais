@@ -7,11 +7,11 @@ namespace SGONGA.WebAPI.API.People.Queries.GetAll;
 
 public class GetAllUsersQuery : BasePagedQuery<BasePagedResponse<PersonResponse>>
 {
-    public EUsuarioTipo UsuarioTipo { get; }
+    public EPersonType UsuarioTipo { get; }
     public bool TenantFiltro { get; }
     public GetAllUsersQuery() { }
 
-    public GetAllUsersQuery(EUsuarioTipo usuarioTipo, int pageSize = 50, int pageNumber = 1, string? query = null, bool returnAll = false, bool tenantFiltro = false) : base(pageSize, pageNumber, query, returnAll)
+    public GetAllUsersQuery(EPersonType usuarioTipo, int pageSize = 50, int pageNumber = 1, string? query = null, bool returnAll = false, bool tenantFiltro = false) : base(pageSize, pageNumber, query, returnAll)
     {
         UsuarioTipo = usuarioTipo;
         TenantFiltro = tenantFiltro;

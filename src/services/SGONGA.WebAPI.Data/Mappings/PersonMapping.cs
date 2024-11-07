@@ -19,21 +19,21 @@ public class PersonMapping : IEntityTypeConfiguration<Person>
         builder.Property(a => a.TenantId)
             .IsRequired();
 
-        builder.Property(o => o.UsuarioTipo)
+        builder.Property(o => o.UserType)
             .IsRequired();
 
-        builder.Property(o => o.TelefoneVisivel)
+        builder.Property(o => o.IsPhoneNumberVisible)
             .IsRequired();
 
-        builder.Property(o => o.AssinarNewsletter)
+        builder.Property(o => o.SubscribeToNewsletter)
             .IsRequired();
 
-        builder.Property(o => o.Nome)
+        builder.Property(o => o.Name)
             .IsRequired()
             .HasMaxLength(100)
             .HasColumnType("varchar(100)");
 
-        builder.Property(o => o.Apelido)
+        builder.Property(o => o.Nickname)
             .IsRequired()
             .HasMaxLength(100)
             .HasColumnType("varchar(100)");
@@ -65,40 +65,39 @@ public class PersonMapping : IEntityTypeConfiguration<Person>
                 .HasColumnType($"varchar({Email.MaxLength})");
         });
 
-        builder.OwnsOne(c => c.Telefone, t =>
+        builder.OwnsOne(c => c.PhoneNumber, t =>
         {
             t.Property(t => t.Number)
-                .HasColumnName("Telefone")
-                .HasColumnType("Telefone")
+                .HasColumnName("PhoneNumber")
                 .IsRequired()
                 .HasMaxLength(PhoneNumber.LengthWithDDD)
                 .HasColumnType($"varchar({PhoneNumber.LengthWithDDD})");
         });
 
-        builder.OwnsOne(c => c.Documento, t =>
+        builder.OwnsOne(c => c.Document, t =>
         {
             t.Property(t => t.Number)
-                .HasColumnName("Documento")
+                .HasColumnName("Document")
                 .IsRequired()
                 .HasMaxLength(Document.CnpjLength)
                 .HasColumnType($"varchar({Document.CnpjLength})");
         });
 
-        builder.Property(e => e.Cidade)
+        builder.Property(e => e.City)
                 .IsRequired()
                 .HasMaxLength(50)
                 .HasColumnType("varchar(50)");
 
-        builder.Property(e => e.Estado)
+        builder.Property(e => e.State)
             .IsRequired()
             .HasMaxLength(50)
             .HasColumnType("varchar(50)");
 
-        builder.Property(e => e.Sobre)
+        builder.Property(e => e.About)
             .IsRequired(false)
             .HasColumnType("text");
 
-        builder.Property(c => c.DataNascimento)
+        builder.Property(c => c.BirthDate)
                 .IsRequired();
     }
 }

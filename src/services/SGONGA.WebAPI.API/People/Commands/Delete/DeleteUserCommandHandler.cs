@@ -32,14 +32,14 @@ internal sealed class DeleteUserCommandHandler(IGenericUnitOfWork UnitOfWork, IP
         Result identityResult;
         switch (userType.Value)
         {
-            case EUsuarioTipo.Adotante:
+            case EPersonType.Adopter:
                 UnitOfWork.Delete(Adopter.Create(request.Id));
                 break;
 
-            case EUsuarioTipo.ONG:
+            case EPersonType.NGO:
                 var NGOResult = await UserRepository.GetNGOByIdWithAnimalsAsync(request.Id, tenantId, cancellationToken);
 
-                UnitOfWork.DeleteRange(NGOResult.Animais);
+                UnitOfWork.DeleteRange(NGOResult.Animals);
                 UnitOfWork.Delete(NGOResult);
                 break;
             default:

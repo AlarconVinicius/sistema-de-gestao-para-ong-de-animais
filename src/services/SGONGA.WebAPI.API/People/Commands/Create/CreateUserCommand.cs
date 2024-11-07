@@ -5,7 +5,7 @@ using SGONGA.WebAPI.Business.People.Enum;
 namespace SGONGA.WebAPI.API.People.Commands.Create;
 
 public record CreateUserCommand(
-    EUsuarioTipo UsuarioTipo,
+    EPersonType UsuarioTipo,
     string Nome,
     string Apelido,
     string Documento,

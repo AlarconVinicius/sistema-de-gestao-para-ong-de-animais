@@ -31,7 +31,7 @@ public class CreateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRepo
         Guid newTenantId = Guid.NewGuid();
         switch (command.UsuarioTipo)
         {
-            case EUsuarioTipo.Adotante:
+            case EPersonType.Adopter:
                 await UnitOfWork.InsertAsync(
                     Adopter.Create(
                         newUserId,
@@ -51,7 +51,7 @@ public class CreateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRepo
                     cancellationToken);
                 break;
 
-            case EUsuarioTipo.ONG:
+            case EPersonType.NGO:
                 await UnitOfWork.InsertAsync(
                     NGO.Create(
                         newUserId,
@@ -100,15 +100,15 @@ public class CreateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRepo
         return Result.Ok();
     }
 
-    private async Task<Result> ApelidoDisponivel(string apelido, EUsuarioTipo tipo)
+    private async Task<Result> ApelidoDisponivel(string apelido, EPersonType tipo)
     {
-        var available = !await UserRepository.ExistsAsync(f => (f.Apelido == apelido || f.Slug == apelido.SlugifyString()) && f.UsuarioTipo == tipo);
+        var available = !await UserRepository.ExistsAsync(f => (f.Nickname == apelido || f.Slug == apelido.SlugifyString()) && f.UserType == tipo);
 
         return available ? Result.Ok() : PersonErrors.ApelidoEmUso(apelido);
     }
-    private async Task<Result> DocumentoDisponivel(string documento, EUsuarioTipo tipo)
+    private async Task<Result> DocumentoDisponivel(string documento, EPersonType tipo)
     {
-        var available = !await UserRepository.ExistsAsync(f => f.Documento == documento && f.UsuarioTipo == tipo);
+        var available = !await UserRepository.ExistsAsync(f => f.Document == documento && f.UserType == tipo);
 
         return available ? Result.Ok() : PersonErrors.DocumentoEmUso(documento);
     }

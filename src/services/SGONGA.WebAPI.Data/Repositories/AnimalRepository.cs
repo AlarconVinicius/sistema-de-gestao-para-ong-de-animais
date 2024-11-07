@@ -36,8 +36,8 @@ internal sealed class AnimalRepository(ONGDbContext db) : Repository<Animal>(db)
                 a.Cor,
                 a.Porte,
                 a.Idade,
-                a.ONG.Nome,
-                $"{a.ONG.Estado}, {a.ONG.Cidade}",
+                a.ONG.Name,
+                $"{a.ONG.State}, {a.ONG.City}",
                 a.Descricao,
                 a.Observacao,
                 a.ChavePix,
@@ -68,7 +68,7 @@ internal sealed class AnimalRepository(ONGDbContext db) : Repository<Animal>(db)
         }
         if (!string.IsNullOrEmpty(query))
         {
-            queryable = queryable.Where(q => q.Nome.Contains(query) || q.ONG!.Nome.Contains(query));
+            queryable = queryable.Where(q => q.Nome.Contains(query) || q.ONG!.Name.Contains(query));
         }
 
         queryable = queryable.OrderByDescending(q => q.UpdatedAt)
@@ -85,8 +85,8 @@ internal sealed class AnimalRepository(ONGDbContext db) : Repository<Animal>(db)
             a.Cor,
             a.Porte,
             a.Idade,
-            a.ONG.Nome,
-            $"{a.ONG.Estado}, {a.ONG.Cidade}",
+            a.ONG.Name,
+            $"{a.ONG.State}, {a.ONG.City}",
             a.Descricao,
             a.Observacao,
             a.ChavePix,

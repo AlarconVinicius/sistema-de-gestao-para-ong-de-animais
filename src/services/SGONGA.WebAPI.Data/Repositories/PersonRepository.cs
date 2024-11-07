@@ -13,15 +13,15 @@ namespace SGONGA.WebAPI.Data.Repositories;
 
 public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPersonRepository
 {
-    public async Task<Result<EUsuarioTipo>> IdentifyUserType(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
+    public async Task<Result<EPersonType>> IdentifyUserType(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
     {
-        var tipos = (EUsuarioTipo[])Enum.GetValues(typeof(EUsuarioTipo));
+        var tipos = (EPersonType[])Enum.GetValues(typeof(EPersonType));
 
         foreach (var tipo in tipos)
         {
             bool exists = await DbSet.AnyAsync(q => q.Id == id &&
                                                 (tenantId == null || q.TenantId == tenantId) &&
-                                                q.UsuarioTipo == tipo, cancellationToken);
+                                                q.UserType == tipo, cancellationToken);
             if (exists)
                 return tipo;
         }
@@ -32,7 +32,7 @@ public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPerson
     {
         var queryable = Db.Set<NGO>()
                           .AsNoTracking()
-                          .Include(c => c.Animais)
+                          .Include(c => c.Animals)
                           .AsQueryable();
 
         if (tenantId.HasValue)
@@ -71,19 +71,19 @@ public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPerson
             .Select(q => new PersonResponse(
             q.Id,
             q.TenantId,
-            q.Nome,
-            q.Apelido,
-            q.UsuarioTipo,
-            q.Documento,
+            q.Name,
+            q.Nickname,
+            q.UserType,
+            q.Document,
             q.Site,
-            q.Telefone.Number,
+            q.PhoneNumber.Number,
             q.Email.Address,
-            q.TelefoneVisivel,
-            q.AssinarNewsletter,
-            q.DataNascimento,
-            q.Estado,
-            q.Cidade,
-            q.Sobre,
+            q.IsPhoneNumberVisible,
+            q.SubscribeToNewsletter,
+            q.BirthDate,
+            q.State,
+            q.City,
+            q.About,
             null,
             q.CreatedAt,
             q.UpdatedAt
@@ -106,20 +106,20 @@ public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPerson
             .Select(q => new PersonResponse(
             q.Id,
             q.TenantId,
-            q.Nome,
-            q.Apelido,
-            q.UsuarioTipo,
-            q.Documento,
+            q.Name,
+            q.Nickname,
+            q.UserType,
+            q.Document,
             q.Site,
-            q.Telefone.Number,
+            q.PhoneNumber.Number,
             q.Email.Address,
-            q.TelefoneVisivel,
-            q.AssinarNewsletter,
-            q.DataNascimento,
-            q.Estado,
-            q.Cidade,
-            q.Sobre,
-            q.ChavePix,
+            q.IsPhoneNumberVisible,
+            q.SubscribeToNewsletter,
+            q.BirthDate,
+            q.State,
+            q.City,
+            q.About,
+            q.PixKey,
             q.CreatedAt,
             q.UpdatedAt
         ))
@@ -136,23 +136,23 @@ public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPerson
         }
 
         queryable = queryable.OrderByDescending(q => q.UpdatedAt)
-            .ThenBy(q => q.Nome);
+            .ThenBy(q => q.Name);
         var responses = queryable.Select(q => new PersonResponse(
             q.Id,
             q.TenantId,
-            q.Nome,
-            q.Apelido,
-            q.UsuarioTipo,
-            q.Documento,
+            q.Name,
+            q.Nickname,
+            q.UserType,
+            q.Document,
             q.Site,
-            q.Telefone.Number,
+            q.PhoneNumber.Number,
             q.Email.Address,
-            q.TelefoneVisivel,
-            q.AssinarNewsletter,
-            q.DataNascimento,
-            q.Estado,
-            q.Cidade,
-            q.Sobre,
+            q.IsPhoneNumberVisible,
+            q.SubscribeToNewsletter,
+            q.BirthDate,
+            q.State,
+            q.City,
+            q.About,
             null,
             q.CreatedAt,
             q.UpdatedAt
@@ -182,24 +182,24 @@ public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPerson
         }
 
         queryable = queryable.OrderByDescending(q => q.UpdatedAt)
-            .ThenBy(q => q.Nome);
+            .ThenBy(q => q.Name);
         var responses = queryable.Select(q => new PersonResponse(
             q.Id,
             q.TenantId,
-            q.Nome,
-            q.Apelido,
-            q.UsuarioTipo,
-            q.Documento,
+            q.Name,
+            q.Nickname,
+            q.UserType,
+            q.Document,
             q.Site,
-            q.Telefone.Number,
+            q.PhoneNumber.Number,
             q.Email.Address,
-            q.TelefoneVisivel,
-            q.AssinarNewsletter,
-            q.DataNascimento,
-            q.Estado,
-            q.Cidade,
-            q.Sobre,
-            q.ChavePix,
+            q.IsPhoneNumberVisible,
+            q.SubscribeToNewsletter,
+            q.BirthDate,
+            q.State,
+            q.City,
+            q.About,
+            q.PixKey,
             q.CreatedAt,
             q.UpdatedAt
         ));
