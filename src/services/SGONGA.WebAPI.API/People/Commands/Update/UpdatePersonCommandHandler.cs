@@ -12,9 +12,9 @@ using SGONGA.WebAPI.Business.Users.Interfaces.Handlers;
 
 namespace SGONGA.WebAPI.API.People.Commands.Update;
 
-internal sealed class UpdateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRepository UserRepository, IIdentityHandler IdentityHandler, ITenantProvider TenantProvider, IAspNetUser AppUser) : ICommandHandler<UpdateUserCommand>
+internal sealed class UpdatePersonCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRepository UserRepository, IIdentityHandler IdentityHandler, ITenantProvider TenantProvider, IAspNetUser AppUser) : ICommandHandler<UpdatePersonCommand>
 {
-    public async Task<Result> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UpdatePersonCommand request, CancellationToken cancellationToken)
     {
         if (AppUser.GetUserId() != request.Id)
             return PersonErrors.UsuarioNaoEncontrado(request.Id);
@@ -23,14 +23,14 @@ internal sealed class UpdateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IP
         if (tenantId.IsFailed)
             return tenantId.Errors;
 
-        var personResult = await GetUserByIdAsync(request.Id, tenantId.Value, request.UsuarioTipo, cancellationToken);
+        var personResult = await GetUserByIdAsync(request.Id, tenantId.Value, request.PersonType, cancellationToken);
         if (personResult.IsFailed)
             return personResult.Errors;
 
         var person = personResult.Value;
         if (request.Email != person.Email.Address)
         {
-            var emailIsAvailable = await EmailDisponivel(request.Email, request.UsuarioTipo);
+            var emailIsAvailable = await IsEmailAvailable(request.Email, request.PersonType);
             if (emailIsAvailable.IsFailed)
                 return emailIsAvailable.Errors;
 
@@ -44,17 +44,17 @@ internal sealed class UpdateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IP
 
         return Result.Ok();
     }
-    private async Task<Result<Person>> GetUserByIdAsync(Guid userId, Guid tenantId, EPersonType usuarioTipo, CancellationToken cancellationToken)
+    private async Task<Result<Person>> GetUserByIdAsync(Guid userId, Guid tenantId, EPersonType personType, CancellationToken cancellationToken)
     {
-        switch (usuarioTipo)
+        switch (personType)
         {
             case EPersonType.Adopter:
-                var adotante = await UserRepository.SearchAsync(q => q.Id == userId && q.TenantId == tenantId && q.UserType == EPersonType.Adopter, cancellationToken) as Adopter;
-                if (adotante is null)
+                var adopter = await UserRepository.SearchAsync(q => q.Id == userId && q.TenantId == tenantId && q.PersonType == EPersonType.Adopter, cancellationToken) as Adopter;
+                if (adopter is null)
                     return PersonErrors.UsuarioNaoEncontrado(userId);
-                return adotante;
+                return adopter;
             case EPersonType.NGO:
-                var ngo = await UserRepository.SearchAsync(q => q.Id == userId && q.TenantId == tenantId && q.UserType == EPersonType.NGO, cancellationToken) as NGO;
+                var ngo = await UserRepository.SearchAsync(q => q.Id == userId && q.TenantId == tenantId && q.PersonType == EPersonType.NGO, cancellationToken) as NGO;
                 if (ngo is null)
                     return PersonErrors.UsuarioNaoEncontrado(userId);
                 return ngo;
@@ -62,42 +62,42 @@ internal sealed class UpdateUserCommandHandler(IGenericUnitOfWork UnitOfWork, IP
                 return PersonErrors.NaoFoiPossivelAtualizarUsuario;
         };
     }
-    private async Task<Result> EmailDisponivel(string email, EPersonType tipo)
+    private async Task<Result> IsEmailAvailable(string email, EPersonType type)
     {
-        var available = !await UserRepository.ExistsAsync(f => f.Email.Address == email && f.UserType == tipo);
+        var available = !await UserRepository.ExistsAsync(f => f.Email.Address == email && f.PersonType == type);
 
         return available ? Result.Ok() : PersonErrors.EmailEmUso(email);
     }
-    private void UpdateUser(Person user, UpdateUserCommand request)
+    private void UpdateUser(Person user, UpdatePersonCommand request)
     {
-        if (user is NGO ngo && request.UsuarioTipo == EPersonType.NGO)
+        if (user is NGO ngo && request.PersonType == EPersonType.NGO)
         {
             ngo.Update(
-                request.Nome,
-                request.Apelido,
+                request.Name,
+                request.Nickname,
                 request.Site,
-                request.Telefone, 
+                request.PhoneNumber,
                 request.Email,
-                request.TelefoneVisivel,
-                request.Estado,
-                request.Cidade,
-                request.Sobre,
-                request.ChavePix
+                request.IsPhoneNumberVisible,
+                request.State,
+                request.City,
+                request.About,
+                request.PixKey
             );
             UnitOfWork.Update(ngo);
         }
-        else if (user is Adopter adopter && request.UsuarioTipo == EPersonType.Adopter)
+        else if (user is Adopter adopter && request.PersonType == EPersonType.Adopter)
         {
             adopter.Update(
-                request.Nome,
-                request.Apelido,
+                request.Name,
+                request.Nickname,
                 request.Site,
-                request.Telefone,
+                request.PhoneNumber,
                 request.Email,
-                request.TelefoneVisivel,
-                request.Estado,
-                request.Cidade,
-                request.Sobre
+                request.IsPhoneNumberVisible,
+                request.State,
+                request.City,
+                request.About
             );
             UnitOfWork.Update(adopter);
         }

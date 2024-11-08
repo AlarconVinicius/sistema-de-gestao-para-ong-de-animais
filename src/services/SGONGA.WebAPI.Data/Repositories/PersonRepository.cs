@@ -21,7 +21,7 @@ public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPerson
         {
             bool exists = await DbSet.AnyAsync(q => q.Id == id &&
                                                 (tenantId == null || q.TenantId == tenantId) &&
-                                                q.UserType == tipo, cancellationToken);
+                                                q.PersonType == tipo, cancellationToken);
             if (exists)
                 return tipo;
         }
@@ -73,7 +73,7 @@ public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPerson
             q.TenantId,
             q.Name,
             q.Nickname,
-            q.UserType,
+            q.PersonType,
             q.Document,
             q.Site,
             q.PhoneNumber.Number,
@@ -108,7 +108,7 @@ public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPerson
             q.TenantId,
             q.Name,
             q.Nickname,
-            q.UserType,
+            q.PersonType,
             q.Document,
             q.Site,
             q.PhoneNumber.Number,
@@ -142,7 +142,7 @@ public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPerson
             q.TenantId,
             q.Name,
             q.Nickname,
-            q.UserType,
+            q.PersonType,
             q.Document,
             q.Site,
             q.PhoneNumber.Number,
@@ -188,7 +188,7 @@ public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPerson
             q.TenantId,
             q.Name,
             q.Nickname,
-            q.UserType,
+            q.PersonType,
             q.Document,
             q.Site,
             q.PhoneNumber.Number,

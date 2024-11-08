@@ -8,9 +8,9 @@ using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
 
 namespace SGONGA.WebAPI.API.People.Queries.GetById;
 
-public class GetUserByIdQueryHandler(IPersonRepository UserRepository, ITenantProvider TenantProvider) : IQueryHandler<GetUserByIdQuery, PersonResponse>
+public class GetPersonByIdQueryHandler(IPersonRepository UserRepository, ITenantProvider TenantProvider) : IQueryHandler<GetPersonByIdQuery, PersonResponse>
 {
-    public async Task<Result<PersonResponse>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<PersonResponse>> Handle(GetPersonByIdQuery request, CancellationToken cancellationToken)
     {
         Guid? tenantId = null;
         if (request.TenantFiltro)

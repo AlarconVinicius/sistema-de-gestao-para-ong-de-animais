@@ -19,7 +19,7 @@ public class PersonMapping : IEntityTypeConfiguration<Person>
         builder.Property(a => a.TenantId)
             .IsRequired();
 
-        builder.Property(o => o.UserType)
+        builder.Property(o => o.PersonType)
             .IsRequired();
 
         builder.Property(o => o.IsPhoneNumberVisible)
@@ -95,7 +95,8 @@ public class PersonMapping : IEntityTypeConfiguration<Person>
 
         builder.Property(e => e.About)
             .IsRequired(false)
-            .HasColumnType("text");
+            .HasMaxLength(500)
+            .HasColumnType("varchar(500)");
 
         builder.Property(c => c.BirthDate)
                 .IsRequired();

@@ -6,26 +6,27 @@ using SGONGA.WebAPI.Business.People.ValueObjects;
 namespace SGONGA.WebAPI.API.People.Commands;
 
 using SiteValueObject = Site;
+using DocumentValueObject = Document;
 
-public abstract record BaseUserCommand(
-        EPersonType UsuarioTipo,
-        string Nome,
-        string Apelido,
-        string Documento,
+public abstract record BasePersonCommand(
+        EPersonType PersonType,
+        string Name,
+        string Nickname,
+        string Document,
         string Site,
         string Email,
-        string Telefone,
-        bool TelefoneVisivel,
-        bool AssinarNewsletter,
-        DateTime DataNascimento,
-        string Estado,
-        string Cidade,
-        string? Sobre,
-        string? ChavePix) : BaseCommand
+        string PhoneNumber,
+        bool IsPhoneNumberVisible,
+        bool SubscribeToNewsletter,
+        DateTime BirthDate,
+        string State,
+        string City,
+        string? About,
+        string? PixKey) : BaseCommand
 {
-    public class BaseUserCommandValidator<T> : AbstractValidator<T> where T : BaseUserCommand
+    public class BasePersonCommandValidator<T> : AbstractValidator<T> where T : BasePersonCommand
     {
-
+        public const string IdRequired = "O Id é obrigatório.";
         public const string NameRequired = "O nome é obrigatório.";
         public const string NicknameRequired = "O apelido é obrigatório.";
         public const string DocumentRequired = "O documento é obrigatório.";
@@ -37,22 +38,22 @@ public abstract record BaseUserCommand(
         public const string MaxLengthExceeded = "O campo deve ter no máximo {0} caracteres.";
         public const string InvalidUrl = "URL inválida.";
         public const string UserTypeRequired = "O tipo de usuário é obrigatório.";
-        public const string ContactRequired = "As informações de contato são obrigatórias.";
+        public const string AboutMaxLength = "A sobre pode ter no máximo 500 caracteres.";
 
-        public BaseUserCommandValidator()
+        public BasePersonCommandValidator()
         {
-            RuleFor(c => c.UsuarioTipo)
+            RuleFor(c => c.PersonType)
                 .IsInEnum().WithMessage(UserTypeRequired);
 
-            RuleFor(c => c.Nome)
+            RuleFor(c => c.Name)
                 .NotEmpty().WithMessage(NameRequired)
                 .MaximumLength(100).WithMessage(MaxLengthExceeded);
 
-            RuleFor(c => c.Apelido)
+            RuleFor(c => c.Nickname)
                 .NotEmpty().WithMessage(NicknameRequired)
                 .MaximumLength(100).WithMessage(MaxLengthExceeded);
 
-            RuleFor(c => c.Documento)
+            RuleFor(c => c.Document)
                 .NotEmpty().WithMessage(DocumentRequired)
                 .Must(BeAValidDocument).WithMessage(DocumentInvalid);
 
@@ -61,22 +62,25 @@ public abstract record BaseUserCommand(
                 .MaximumLength(500).WithMessage(MaxLengthExceeded)
                 .Must(BeAValidUrl).WithMessage(InvalidUrl);
 
-            RuleFor(c => c.DataNascimento)
+            RuleFor(c => c.BirthDate)
                 .NotEmpty().WithMessage(BirthdateRequired);
 
-            RuleFor(c => c.Estado)
+            RuleFor(c => c.State)
                 .NotEmpty().WithMessage(StateRequired)
                 .MaximumLength(50).WithMessage(MaxLengthExceeded);
 
-            RuleFor(c => c.Cidade)
+            RuleFor(c => c.City)
                 .NotEmpty().WithMessage(CityRequired)
                 .MaximumLength(50).WithMessage(MaxLengthExceeded);
+
+            RuleFor(c => c.About)
+                .MaximumLength(500).WithMessage(AboutMaxLength);
         }
         private bool BeAValidDocument(string document)
         {
             try
             {
-                return Document.Validate(document);
+                return DocumentValueObject.Validate(document);
             }
             catch
             {

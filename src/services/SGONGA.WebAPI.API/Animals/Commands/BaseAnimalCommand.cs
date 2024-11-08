@@ -37,7 +37,6 @@ public abstract record BaseAnimalCommand(
         public const string SizeMaxLength = "O porte pode ter no máximo 50 caracteres.";
         public const string AgeMaxLength = "A idade pode ter no máximo 100 caracteres.";
         public const string DescriptionMaxLength = "A descrição pode ter no máximo 500 caracteres.";
-        public const string ObservationMaxLength = "A observação pode ter no máximo 500 caracteres.";
 
         public BaseAnimalCommandValidator()
         {

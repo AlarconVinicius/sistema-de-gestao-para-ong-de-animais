@@ -39,7 +39,7 @@ public class PeopleController(INotifier notifier, ISender sender) : ApiControlle
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpPost("/api/v1/usuarios")]
-    public async Task<IResult> Post(CreateUserCommand command, CancellationToken cancellationToken)
+    public async Task<IResult> Post(CreatePersonCommand command, CancellationToken cancellationToken)
     {
         var result = await Sender.Send(command, cancellationToken);
 
@@ -66,7 +66,7 @@ public class PeopleController(INotifier notifier, ISender sender) : ApiControlle
     [HttpGet("/api/v1/usuarios/{id:guid}")]
     public async Task<IResult> GetByIdPublic(Guid id, CancellationToken cancellationToken = default)
     {
-        GetUserByIdQuery query = new(id, false);
+        GetPersonByIdQuery query = new(id, false);
 
         var result = await Sender.Send(query, cancellationToken);
 
@@ -96,7 +96,7 @@ public class PeopleController(INotifier notifier, ISender sender) : ApiControlle
     [HttpGet("/api/v1/usuarios/adotantes")]
     public async Task<IResult> GetAllAdoptersPublic([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, [FromQuery] int tipo = 0, CancellationToken cancellationToken = default)
     {
-        GetAllUsersQuery query = new(EPersonType.Adopter, ps, page, q, false, false);
+        GetAllPeopleQuery query = new(EPersonType.Adopter, ps, page, q, false, false);
 
         var result = await Sender.Send(query, cancellationToken);
 
@@ -126,7 +126,7 @@ public class PeopleController(INotifier notifier, ISender sender) : ApiControlle
     [HttpGet("/api/v1/usuarios/ongs")]
     public async Task<IResult> GetAllNGOsPublic([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, [FromQuery] int tipo = 0, CancellationToken cancellationToken = default)
     {
-        GetAllUsersQuery query = new(EPersonType.NGO, ps, page, q, false, false);
+        GetAllPeopleQuery query = new(EPersonType.NGO, ps, page, q, false, false);
 
         var result = await Sender.Send(query, cancellationToken);
 
@@ -165,7 +165,7 @@ public class PeopleController(INotifier notifier, ISender sender) : ApiControlle
     [HttpGet("{id:guid}")]
     public async Task<IResult> GetById(Guid id, CancellationToken cancellationToken)
     {
-        GetUserByIdQuery query = new(id, true);
+        GetPersonByIdQuery query = new(id, true);
 
         var result = await Sender.Send(query, cancellationToken);
 
@@ -204,7 +204,7 @@ public class PeopleController(INotifier notifier, ISender sender) : ApiControlle
     [HttpGet]
     public async Task<IResult> GetAllNGO([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, [FromQuery] int tipo = 0, CancellationToken cancellationToken = default)
     {
-        GetAllUsersQuery query = new(EPersonType.NGO, ps, page, q, false, true);
+        GetAllPeopleQuery query = new(EPersonType.NGO, ps, page, q, false, true);
 
         var result = await Sender.Send(query, cancellationToken);
 
@@ -239,9 +239,9 @@ public class PeopleController(INotifier notifier, ISender sender) : ApiControlle
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [HttpPut("{id:guid}")]
-    public async Task<IResult> Update(Guid id, UpdateUserRequest request, CancellationToken cancellationToken = default)
+    public async Task<IResult> Update(Guid id, UpdatePersonRequest request, CancellationToken cancellationToken = default)
     {
-        UpdateUserCommand command = new(id, request.UsuarioTipo, request.Nome, request.Apelido, request.Documento, request.Site, request.Email, request.Telefone, request.TelefoneVisivel, request.AssinarNewsletter, request.DataNascimento, request.Estado, request.Estado, request.Sobre, request.ChavePix);
+        UpdatePersonCommand command = new(id, request.PersonType, request.Name, request.Nickname, request.Document, request.Site, request.Email, request.PhoneNumber, request.IsPhoneNumberVisible, request.SubscribeToNewsletter, request.BirthDate, request.State, request.City, request.About, request.PixKey);
 
         var result = await Sender.Send(command, cancellationToken);
 
@@ -277,7 +277,7 @@ public class PeopleController(INotifier notifier, ISender sender) : ApiControlle
     [HttpDelete("{id:guid}")]
     public async Task<IResult> Delete(Guid id, CancellationToken cancellationToken = default)
     {
-        DeleteUserCommand command = new(id);
+        DeletePersonCommand command = new(id);
 
         var result = await Sender.Send(command, cancellationToken);
 

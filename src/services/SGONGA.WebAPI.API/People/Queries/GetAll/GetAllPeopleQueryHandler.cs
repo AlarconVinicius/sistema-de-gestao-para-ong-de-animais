@@ -9,19 +9,19 @@ using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
 
 namespace SGONGA.WebAPI.API.People.Queries.GetAll;
 
-public class GetAllUsersQueryHandler(IPersonRepository UserRepository, ITenantProvider TenantProvider) : IQueryHandler<GetAllUsersQuery, BasePagedResponse<PersonResponse>>
+public class GetAllPeopleQueryHandler(IPersonRepository UserRepository, ITenantProvider TenantProvider) : IQueryHandler<GetAllPeopleQuery, BasePagedResponse<PersonResponse>>
 {
-    public async Task<Result<BasePagedResponse<PersonResponse>>> Handle(GetAllUsersQuery request, CancellationToken cancellationToken)
+    public async Task<Result<BasePagedResponse<PersonResponse>>> Handle(GetAllPeopleQuery request, CancellationToken cancellationToken)
     {
         Guid? tenantId = null;
-        if (request.TenantFiltro)
+        if (request.TenantFilter)
         {
             Result<Guid> tenantResult = await TenantProvider.GetTenantId();
             if (tenantResult.IsFailed)
                 return tenantResult.Errors;
             tenantId = tenantResult.Value;
         }
-        switch (request.UsuarioTipo)
+        switch (request.PersonType)
         {
             case EPersonType.Adopter:
                 return await UserRepository.GetAllAdoptersPagedAsync(tenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll, cancellationToken);

@@ -8,7 +8,7 @@ namespace SGONGA.WebAPI.Business.People.Entities;
 public abstract class Person : Entity
 {
     public Guid TenantId { get; init; }
-    public EPersonType UserType { get; protected set; }
+    public EPersonType PersonType { get; protected set; }
     public string Name { get; protected set; }
     public string Nickname { get; protected set; }
     public Slug Slug { get; protected set; }
@@ -27,7 +27,7 @@ public abstract class Person : Entity
 
     protected Person(Guid id) : base(id) { }
 
-    protected Person(Guid id, Guid tenantId, EPersonType userType, string name, string nickname, string document, string site, string email, string phoneNumber, bool isPhoneNumberVisible, bool subscribeToNewsletter, DateTime birthDate, string state, string city, string? about) : base(id)
+    protected Person(Guid id, Guid tenantId, EPersonType personType, string name, string nickname, string document, string site, string email, string phoneNumber, bool isPhoneNumberVisible, bool subscribeToNewsletter, DateTime birthDate, string state, string city, string? about) : base(id)
     {
         ValidateAge(birthDate);
         BirthDate = birthDate;
@@ -36,7 +36,7 @@ public abstract class Person : Entity
         PhoneNumber = phoneNumber;
         Slug = nickname;
         TenantId = tenantId;
-        UserType = userType;
+        PersonType = personType;
         Name = name;
         Nickname = nickname;
         Document = document;

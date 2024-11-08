@@ -3,4 +3,4 @@ using SGONGA.WebAPI.Business.People.Responses;
 
 namespace SGONGA.WebAPI.API.People.Queries.GetById;
 
-public record GetUserByIdQuery(Guid Id, bool TenantFiltro = false) : IQuery<PersonResponse>;
+public record GetPersonByIdQuery(Guid Id, bool TenantFiltro = false) : IQuery<PersonResponse>;

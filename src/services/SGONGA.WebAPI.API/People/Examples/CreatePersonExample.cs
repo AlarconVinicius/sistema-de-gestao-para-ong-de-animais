@@ -6,52 +6,52 @@ using System.Diagnostics.CodeAnalysis;
 namespace SGONGA.WebAPI.API.People.Examples;
 
 [ExcludeFromCodeCoverage]
-public class CreatePersonExample : IMultipleExamplesProvider<CreateUserCommand>
+public class CreatePersonExample : IMultipleExamplesProvider<CreatePersonCommand>
 {
-    IEnumerable<SwaggerExample<CreateUserCommand>> IMultipleExamplesProvider<CreateUserCommand>.GetExamples()
+    IEnumerable<SwaggerExample<CreatePersonCommand>> IMultipleExamplesProvider<CreatePersonCommand>.GetExamples()
     {
         yield return SwaggerExample.Create(
             "Cadastrar um adotante",
-            new CreateUserCommand(
-            UsuarioTipo: EPersonType.Adopter,
-            Nome: "João Silva Santos",
-            Apelido: "João Silva",
-            Documento: "12345678900",
+            new CreatePersonCommand(
+            PersonType: EPersonType.Adopter,
+            Name: "João Silva Santos",
+            Nickname: "João Silva",
+            Document: "12345678900",
             Site: "www.joaosilva.com.br",
-            Telefone: "11987654321",
+            PhoneNumber: "11987654321",
             Email: "joao.silva@email.com",
-            Senha: "Senha@123456",
-            ConfirmarSenha: "Senha@123456",
-            TelefoneVisivel: true,
-            AssinarNewsletter: true,
-            DataNascimento: new DateTime(1990, 5, 15),
-            Estado: "SP",
-            Cidade: "São Paulo",
-            Sobre: "Profissional com mais de 10 anos de experiência em desenvolvimento de software.",
-            ChavePix: null
+            Password: "Senha@123456",
+            ConfirmPassword: "Senha@123456",
+            IsPhoneNumberVisible: true,
+            SubscribeToNewsletter: true,
+            BirthDate: new DateTime(1990, 5, 15),
+            State: "SP",
+            City: "São Paulo",
+            About: "Profissional com mais de 10 anos de experiência em desenvolvimento de software.",
+            PixKey: null
         ));
 
         yield return SwaggerExample.Create(
             "Cadastrar uma ONG",
-            new CreateUserCommand(
-                UsuarioTipo: EPersonType.NGO,
-                Nome: "Amigos dos Animais Proteção e Bem-estar",
-                Apelido: "Amigos dos Animais",
-                Documento: "12345678000199",
+            new CreatePersonCommand(
+                PersonType: EPersonType.NGO,
+                Name: "Amigos dos Animais Proteção e Bem-estar",
+                Nickname: "Amigos dos Animais",
+                Document: "12345678000199",
                 Site: "www.amigosdosanimais.org.br",
-                Telefone: "11987654321",
+                PhoneNumber: "11987654321",
                 Email: "joao.silva@email.com",
-                Senha: "Senha@123456",
-                ConfirmarSenha: "Senha@123456",
-                TelefoneVisivel: true,
-                AssinarNewsletter: true,
-                DataNascimento: new DateTime(2010, 3, 20),
-                Estado: "SP",
-                Cidade: "São Paulo",
-                Sobre: "ONG dedicada ao resgate, reabilitação e adoção responsável de cães e gatos. " +
+                Password: "Senha@123456",
+                ConfirmPassword: "Senha@123456",
+                IsPhoneNumberVisible: true,
+                SubscribeToNewsletter: true,
+                BirthDate: new DateTime(2010, 3, 20),
+                State: "SP",
+                City: "São Paulo",
+                About: "ONG dedicada ao resgate, reabilitação e adoção responsável de cães e gatos. " +
                       "Atuamos desde 2010 na região metropolitana de São Paulo, " +
                       "promovendo feiras de adoção e campanhas de conscientização.",
-                ChavePix: "12345678000199"
+                PixKey: "12345678000199"
         ));
     }
 }

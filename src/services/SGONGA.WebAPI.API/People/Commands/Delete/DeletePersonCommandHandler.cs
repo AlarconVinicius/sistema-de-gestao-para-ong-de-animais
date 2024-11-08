@@ -12,11 +12,11 @@ using SGONGA.WebAPI.Business.Users.Requests;
 
 namespace SGONGA.WebAPI.API.People.Commands.Delete;
 
-internal sealed class DeleteUserCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRepository UserRepository, ITenantProvider TenantProvider, IIdentityHandler IdentityHandler, IAspNetUser AppUser) : ICommandHandler<DeleteUserCommand>
+internal sealed class DeletePersonCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRepository UserRepository, ITenantProvider TenantProvider, IIdentityHandler IdentityHandler, IAspNetUser AppUser) : ICommandHandler<DeletePersonCommand>
 {
-    public async Task<Result> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeletePersonCommand request, CancellationToken cancellationToken)
     {
-        if (AppUser.GetUserId() != request.Id && EhSuperAdmin().IsFailed)
+        if (AppUser.GetUserId() != request.Id && IsSuperAdmin().IsFailed)
             return Error.AccessDenied;
 
         Result<Guid> tenantResult = await TenantProvider.GetTenantId();
@@ -55,7 +55,7 @@ internal sealed class DeleteUserCommandHandler(IGenericUnitOfWork UnitOfWork, IP
         return Result.Ok();
     }
 
-    private Result EhSuperAdmin()
+    private Result IsSuperAdmin()
     {
         if (AppUser.HasClaim("Permissions", "SuperAdmin"))
         {
