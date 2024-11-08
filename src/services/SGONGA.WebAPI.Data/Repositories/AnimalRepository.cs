@@ -15,7 +15,7 @@ internal sealed class AnimalRepository(ONGDbContext db) : Repository<Animal>(db)
         CancellationToken cancellationToken = default)
     {
         var queryable = DbSet
-            .Include(q => q.ONG)
+            .Include(q => q.Ngo)
             .AsNoTracking();
 
         if (tenantId.HasValue)
@@ -28,20 +28,21 @@ internal sealed class AnimalRepository(ONGDbContext db) : Repository<Animal>(db)
             .Select(a => new AnimalResponse(
                 a.Id,
                 a.TenantId,
-                a.Nome,
-                a.Especie,
-                a.Raca,
-                a.Sexo,
-                a.Castrado,
-                a.Cor,
-                a.Porte,
-                a.Idade,
-                a.ONG.Name,
-                $"{a.ONG.State}, {a.ONG.City}",
-                a.Descricao,
-                a.Observacao,
-                a.ChavePix,
-                a.Foto,
+                a.Name,
+                a.Species,
+                a.Breed,
+                a.Gender,
+                a.Neutered,
+                a.Color,
+                a.Size,
+                a.Age,
+                a.Ngo.Name,
+                a.Ngo.State, 
+                a.Ngo.City,
+                a.Description,
+                a.Note,
+                a.PixKey,
+                a.Photo,
                 a.CreatedAt,
                 a.UpdatedAt
             ))
@@ -58,7 +59,7 @@ internal sealed class AnimalRepository(ONGDbContext db) : Repository<Animal>(db)
         bool returnAll = false,
         CancellationToken cancellationToken = default)
     {
-        var queryable = DbSet.Include(q => q.ONG)
+        var queryable = DbSet.Include(q => q.Ngo)
             .AsNoTracking()
             .AsQueryable();
 
@@ -68,38 +69,39 @@ internal sealed class AnimalRepository(ONGDbContext db) : Repository<Animal>(db)
         }
         if (!string.IsNullOrEmpty(query))
         {
-            queryable = queryable.Where(q => q.Nome.Contains(query) || q.ONG!.Name.Contains(query));
+            queryable = queryable.Where(q => q.Name.Contains(query) || q.Ngo!.Name.Contains(query));
         }
 
         queryable = queryable.OrderByDescending(q => q.UpdatedAt)
-            .ThenBy(q => q.Nome);
+            .ThenBy(q => q.Name);
 
-        var animalResponses = queryable.Select(a => new AnimalResponse(
+        var animalResponse = queryable.Select(a => new AnimalResponse(
             a.Id,
             a.TenantId,
-            a.Nome,
-            a.Especie,
-            a.Raca,
-            a.Sexo,
-            a.Castrado,
-            a.Cor,
-            a.Porte,
-            a.Idade,
-            a.ONG.Name,
-            $"{a.ONG.State}, {a.ONG.City}",
-            a.Descricao,
-            a.Observacao,
-            a.ChavePix,
-            a.Foto,
+            a.Name,
+            a.Species,
+            a.Breed,
+            a.Gender,
+            a.Neutered,
+            a.Color,
+            a.Size,
+            a.Age,
+            a.Ngo.Name,
+            a.Ngo.State,
+            a.Ngo.City,
+            a.Description,
+            a.Note,
+            a.PixKey,
+            a.Photo,
             a.CreatedAt,
             a.UpdatedAt
         ));
         var totalResults = await queryable.CountAsync(cancellationToken);
         if (!returnAll)
         {
-            animalResponses = animalResponses.Skip((page - 1) * pageSize).Take(pageSize);
+            animalResponse = animalResponse.Skip((page - 1) * pageSize).Take(pageSize);
         }
-        var list = await animalResponses.ToListAsync(cancellationToken);
+        var list = await animalResponse.ToListAsync(cancellationToken);
 
         return new BasePagedResponse<AnimalResponse>()
         {

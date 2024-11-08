@@ -20,7 +20,7 @@ internal sealed class DeleteAnimalCommandHandler(IGenericUnitOfWork UnitOfWork, 
         if (tenantId.IsFailed)
             return tenantId.Errors;
 
-        if ((await AnimalExiste(command.Id, tenantId.Value)).IsFailed)
+        if ((await AnimalExists(command.Id, tenantId.Value)).IsFailed)
             return AnimalErrors.AnimalNotFound(command.Id);
 
         UnitOfWork.Delete(new Animal { Id = command.Id });
@@ -29,10 +29,10 @@ internal sealed class DeleteAnimalCommandHandler(IGenericUnitOfWork UnitOfWork, 
 
         return Result.Ok();
     }
-    private async Task<Result> AnimalExiste(Guid id, Guid tenantId)
+    private async Task<Result> AnimalExists(Guid id, Guid tenantId)
     {
-        return await AnimalRepository.ExistsAsync(q => q.Id == id && q.TenantId == tenantId) 
-            ? Result.Ok() 
+        return await AnimalRepository.ExistsAsync(q => q.Id == id && q.TenantId == tenantId)
+            ? Result.Ok()
             : Error.NullValue;
     }
 }

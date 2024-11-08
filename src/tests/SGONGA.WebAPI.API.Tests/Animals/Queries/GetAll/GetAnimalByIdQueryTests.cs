@@ -29,7 +29,7 @@ public class GetAllAnimalsQueryTests
         var actualQuery = new GetAllAnimalsQuery(50, 1, null, false, false);
 
         // Assert
-        actualQuery.TenantFiltro.Should().BeFalse();
+        actualQuery.TenantFilter.Should().BeFalse();
         actualQuery.Should().BeEquivalentTo(expectedQuery);
     }
 }

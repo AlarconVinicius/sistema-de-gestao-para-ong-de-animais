@@ -17,18 +17,18 @@ public sealed class AnimalTests
         // Assert
         animal.Should().NotBeNull();
         animal.TenantId.Should().Be(Guid.Empty);
-        animal.Nome.Should().BeEmpty();
-        animal.Especie.Should().BeEmpty();
-        animal.Raca.Should().BeEmpty();
-        animal.Sexo.Should().BeFalse();
-        animal.Castrado.Should().BeFalse();
-        animal.Cor.Should().BeEmpty();
-        animal.Porte.Should().BeEmpty();
-        animal.Idade.Should().BeEmpty();
-        animal.Descricao.Should().BeEmpty();
-        animal.Observacao.Should().BeEmpty();
-        animal.ChavePix.Should().BeEmpty();
-        animal.ONG.Should().BeNull();
+        animal.Name.Should().BeEmpty();
+        animal.Species.Should().BeEmpty();
+        animal.Breed.Should().BeEmpty();
+        animal.Gender.Should().BeFalse();
+        animal.Neutered.Should().BeFalse();
+        animal.Color.Should().BeEmpty();
+        animal.Size.Should().BeEmpty();
+        animal.Age.Should().BeEmpty();
+        animal.Description.Should().BeEmpty();
+        animal.Note.Should().BeEmpty();
+        animal.PixKey.Should().BeEmpty();
+        animal.Ngo.Should().BeNull();
     }
 
     [Fact(DisplayName = "Create returns animal when called with valid parameters")]
@@ -40,18 +40,18 @@ public sealed class AnimalTests
         // Act
         var actualAnimal = Animal.Create(
             expectedAnimal.TenantId,
-            expectedAnimal.Nome,
-            expectedAnimal.Especie,
-            expectedAnimal.Raca,
-            expectedAnimal.Sexo,
-            expectedAnimal.Castrado,
-            expectedAnimal.Cor,
-            expectedAnimal.Porte,
-            expectedAnimal.Idade,
-            expectedAnimal.Descricao,
-            expectedAnimal.Observacao,
-            expectedAnimal.Foto,
-            expectedAnimal.ChavePix
+            expectedAnimal.Name,
+            expectedAnimal.Species,
+            expectedAnimal.Breed,
+            expectedAnimal.Gender,
+            expectedAnimal.Neutered,
+            expectedAnimal.Color,
+            expectedAnimal.Size,
+            expectedAnimal.Age,
+            expectedAnimal.Description,
+            expectedAnimal.Note,
+            expectedAnimal.Photo,
+            expectedAnimal.PixKey
         );
 
         // Assert
@@ -110,18 +110,18 @@ public sealed class AnimalTests
 
         // Act
         actualAnimal.Update(
-            expectedAnimal.Nome,
-            expectedAnimal.Especie,
-            expectedAnimal.Raca,
-            expectedAnimal.Sexo,
-            expectedAnimal.Castrado,
-            expectedAnimal.Cor,
-            expectedAnimal.Porte,
-            expectedAnimal.Idade,
-            expectedAnimal.Descricao,
-            expectedAnimal.Observacao,
-            expectedAnimal.Foto,
-            expectedAnimal.ChavePix
+            expectedAnimal.Name,
+            expectedAnimal.Species,
+            expectedAnimal.Breed,
+            expectedAnimal.Gender,
+            expectedAnimal.Neutered,
+            expectedAnimal.Color,
+            expectedAnimal.Size,
+            expectedAnimal.Age,
+            expectedAnimal.Description,
+            expectedAnimal.Note,
+            expectedAnimal.Photo,
+            expectedAnimal.PixKey
         );
 
         // Assert

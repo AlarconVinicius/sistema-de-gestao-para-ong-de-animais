@@ -22,18 +22,18 @@ internal sealed class CreateAnimalCommandHandler(IGenericUnitOfWork UnitOfWork, 
 
         Animal animal = Animal.Create(
             tenantId.Value, 
-            command.Nome, 
-            command.Especie, 
-            command.Raca, 
-            command.Sexo, 
-            command.Castrado, 
-            command.Cor, 
-            command.Porte, 
-            command.Idade, 
-            command.Descricao, 
-            command.Observacao, 
-            command.Foto, 
-            command.ChavePix);
+            command.Name, 
+            command.Species, 
+            command.Breed, 
+            command.Gender, 
+            command.Neutered, 
+            command.Color, 
+            command.Size, 
+            command.Age, 
+            command.Description, 
+            command.Note, 
+            command.Photo, 
+            command.PixKey);
 
         await UnitOfWork.InsertAsync(animal, cancellationToken);
 

@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.API.Animals.Commands.Create;
 using SGONGA.WebAPI.API.Animals.Commands.Update;
 using SGONGA.WebAPI.Business.Abstractions;
@@ -19,18 +20,18 @@ public class UpdateAnimalCommandTests
         // Act
         var actualCommand = new UpdateAnimalCommand(
             animalId,
-            expectedCommand.Nome,
-            expectedCommand.Especie,
-            expectedCommand.Raca,
-            expectedCommand.Sexo,
-            expectedCommand.Castrado,
-            expectedCommand.Cor,
-            expectedCommand.Porte,
-            expectedCommand.Idade,
-            expectedCommand.Descricao,
-            expectedCommand.Observacao,
-            expectedCommand.Foto,
-            expectedCommand.ChavePix
+            expectedCommand.Name,
+            expectedCommand.Species,
+            expectedCommand.Breed,
+            expectedCommand.Gender,
+            expectedCommand.Neutered,
+            expectedCommand.Color,
+            expectedCommand.Size,
+            expectedCommand.Age,
+            expectedCommand.Description,
+            expectedCommand.Note,
+            expectedCommand.Photo,
+            expectedCommand.PixKey
         );
 
         // Assert
@@ -45,18 +46,18 @@ public class UpdateAnimalCommandTests
         var baseCommand = AnimalDataFaker.GenerateValidCreateAnimalCommand();
         var command = new UpdateAnimalCommand(
             Guid.NewGuid(),
-            baseCommand.Nome,
-            baseCommand.Especie,
-            baseCommand.Raca,
-            baseCommand.Sexo,
-            baseCommand.Castrado,
-            baseCommand.Cor,
-            baseCommand.Porte,
-            baseCommand.Idade,
-            baseCommand.Descricao,
-            baseCommand.Observacao,
-            baseCommand.Foto,
-            baseCommand.ChavePix
+            baseCommand.Name,
+            baseCommand.Species,
+            baseCommand.Breed,
+            baseCommand.Gender,
+            baseCommand.Neutered,
+            baseCommand.Color,
+            baseCommand.Size,
+            baseCommand.Age,
+            baseCommand.Description,
+            baseCommand.Note,
+            baseCommand.Photo,
+            baseCommand.PixKey
         );
 
         // Act
@@ -74,18 +75,18 @@ public class UpdateAnimalCommandTests
         var baseCommand = AnimalDataFaker.GenerateInvalidCreateAnimalCommand();
         var command = new UpdateAnimalCommand(
             Guid.NewGuid(),
-            baseCommand.Nome,
-            baseCommand.Especie,
-            baseCommand.Raca,
-            baseCommand.Sexo,
-            baseCommand.Castrado,
-            baseCommand.Cor,
-            baseCommand.Porte,
-            baseCommand.Idade,
-            baseCommand.Descricao,
-            baseCommand.Observacao,
-            baseCommand.Foto,
-            baseCommand.ChavePix
+            baseCommand.Name,
+            baseCommand.Species,
+            baseCommand.Breed,
+            baseCommand.Gender,
+            baseCommand.Neutered,
+            baseCommand.Color,
+            baseCommand.Size,
+            baseCommand.Age,
+            baseCommand.Description,
+            baseCommand.Note,
+            baseCommand.Photo,
+            baseCommand.PixKey
         );
 
         // Act
@@ -104,7 +105,7 @@ public class UpdateAnimalCommandTests
             Error.Validation(UpdateAnimalCommandValidator.SizeRequired),
             Error.Validation(UpdateAnimalCommandValidator.AgeRequired),
             Error.Validation(UpdateAnimalCommandValidator.DescriptionRequired),
-            Error.Validation(UpdateAnimalCommandValidator.ObservationRequired),
+            Error.Validation(UpdateAnimalCommandValidator.NoteMaxLength),
             Error.Validation(UpdateAnimalCommandValidator.PhotoRequired)
         });
     }

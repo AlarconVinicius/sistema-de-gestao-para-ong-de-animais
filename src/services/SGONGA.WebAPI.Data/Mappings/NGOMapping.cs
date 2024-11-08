@@ -16,7 +16,7 @@ public class NGOMapping : IEntityTypeConfiguration<NGO>
                .HasColumnType("varchar(100)");
 
         builder.HasMany(o => o.Animals)
-            .WithOne(a => a.ONG)
+            .WithOne(a => a.Ngo)
             .HasPrincipalKey(a => a.TenantId)
             .HasForeignKey(a => a.TenantId);
     }

@@ -31,7 +31,7 @@ public class GetAnimalByIdQueryTests
         var actualQuery = new GetAnimalByIdQuery(id);
 
         // Assert
-        actualQuery.TenantFiltro.Should().BeFalse();
+        actualQuery.TenantFilter.Should().BeFalse();
         actualQuery.Should().BeEquivalentTo(expectedQuery);
     }
 }

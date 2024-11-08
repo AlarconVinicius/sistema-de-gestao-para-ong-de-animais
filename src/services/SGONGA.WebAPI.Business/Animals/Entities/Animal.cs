@@ -1,116 +1,111 @@
-﻿using SGONGA.WebAPI.Business.People.Entities;
+﻿using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.Animals.Exceptions;
+using SGONGA.WebAPI.Business.People.Entities;
 using SGONGA.WebAPI.Business.Shared.Entities;
-using SGONGA.WebAPI.Business.Shared.Exceptions;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SGONGA.WebAPI.Business.Animals.Entities;
 
 public sealed class Animal : Entity
 {
     public Guid TenantId { get; init; }
-    public string Nome { get; private set; } = string.Empty;
-    public string Especie { get; private set; } = string.Empty;
-    public string Raca { get; private set; } = string.Empty;
-    public bool Sexo { get; private set; }
-    public bool Castrado { get; private set; }
-    public string Cor { get; private set; } = string.Empty;
-    public string Porte { get; private set; } = string.Empty;
-    public string Idade { get; private set; } = string.Empty;
-    public string Descricao { get; private set; } = string.Empty;
-    public string Observacao { get; private set; } = string.Empty;
-    public string ChavePix { get; private set; } = string.Empty;
-    public string Foto { get; private set; } = string.Empty;
-    //public bool Adotado { get; set; }
+    public string Name { get; private set; }
+    public string Species { get; private set; }
+    public string Breed { get; private set; }
+    public bool Gender { get; private set; }
+    public bool Neutered { get; private set; }
+    public string Color { get; private set; }
+    public string Size { get; private set; }
+    public string Age { get; private set; }
+    public string Description { get; private set; }
+    public string? Note { get; private set; }
+    public string? PixKey { get; private set; }
+    public string Photo { get; private set; }
+    public bool Adopted { get; private set; }
 
-    [ForeignKey(nameof(TenantId))]
-    public NGO ONG { get; private set; } = null!;
+    public NGO Ngo { get; private set; }
 
     public Animal() { }
 
-    private Animal(Guid id, Guid tenantId, string nome, string especie, string raca, bool sexo, bool castrado, string cor, string porte, string idade, string descricao, string observacao, string foto, string chavePix = "") : base(id)
+    private Animal(Guid id, Guid tenantId, string name, string species, string breed, bool gender, bool neutered, string color, string size, string age, string description, string? note, string photo, string? pixKey) : base(id)
     {
         var errors = new List<string>();
 
         if (tenantId == Guid.Empty)
             errors.Add("TenantId não pode ser vazio.");
-        if (string.IsNullOrWhiteSpace(nome))
+        if (string.IsNullOrWhiteSpace(name))
             errors.Add("Nome não pode ser nulo ou vazio.");
-        if (string.IsNullOrWhiteSpace(especie))
+        if (string.IsNullOrWhiteSpace(species))
             errors.Add("Espécie não pode ser nula ou vazia.");
-        if (string.IsNullOrWhiteSpace(raca))
+        if (string.IsNullOrWhiteSpace(breed))
             errors.Add("Raça não pode ser nula ou vazia.");
-        if (string.IsNullOrWhiteSpace(cor))
+        if (string.IsNullOrWhiteSpace(color))
             errors.Add("Cor não pode ser nula ou vazia.");
-        if (string.IsNullOrWhiteSpace(porte))
+        if (string.IsNullOrWhiteSpace(size))
             errors.Add("Porte não pode ser nulo ou vazio.");
-        if (string.IsNullOrWhiteSpace(descricao))
+        if (string.IsNullOrWhiteSpace(description))
             errors.Add("Descrição não pode ser nula ou vazia.");
-        if (string.IsNullOrWhiteSpace(observacao))
-            errors.Add("Observação não pode ser nula ou vazia.");
-        if (string.IsNullOrWhiteSpace(foto))
+        if (string.IsNullOrWhiteSpace(photo))
             errors.Add("Foto não pode ser nula ou vazia.");
-        if (string.IsNullOrWhiteSpace(idade))
+        if (string.IsNullOrWhiteSpace(age))
             errors.Add("Idade não pode ser nula ou vazia.");
 
-        if (errors.Any())
-            throw new DomainException(string.Join(Environment.NewLine, errors));
+        if (errors.Count != 0)
+            throw new AnimalValidationException(errors.Select(Error.Validation).ToArray());
 
         TenantId = tenantId;
-        Nome = nome;
-        Especie = especie;
-        Raca = raca;
-        Sexo = sexo;
-        Castrado = castrado;
-        Cor = cor;
-        Porte = porte;
-        Idade = idade;
-        Descricao = descricao;
-        Observacao = observacao;
-        ChavePix = chavePix;
-        Foto = foto;
+        Name = name;
+        Species = species;
+        Breed = breed;
+        Gender = gender;
+        Neutered = neutered;
+        Color = color;
+        Size = size;
+        Age = age;
+        Description = description;
+        Note = note;
+        PixKey = pixKey;
+        Photo = photo;
     }
-    public static Animal Create(Guid tenantId, string nome, string especie, string raca, bool sexo, bool castrado, string cor, string porte, string idade, string descricao, string observacao, string foto, string chavePix = "")
+    public static Animal Create(Guid tenantId, string name, string species, string breed, bool gender, bool neutered, string color, string size, string age, string description, string? note, string photo, string? pixKey)
     {
-        return new Animal(Guid.NewGuid(), tenantId, nome, especie, raca, sexo, castrado, cor, porte, idade, descricao, observacao, foto, chavePix);
+        return new Animal(Guid.NewGuid(), tenantId, name, species, breed, gender, neutered, color, size, age, description, note, photo, pixKey);
     }
 
-    public void Update(string nome, string especie, string raca, bool sexo, bool castrado, string cor, string porte, string idade, string descricao, string observacao, string foto, string chavePix)
+    public void Update(string name, string species, string breed, bool gender, bool neutered, string color, string size, string age, string description, string? note, string photo, string? pixKey)
     {
         var errors = new List<string>();
 
-        if (string.IsNullOrWhiteSpace(nome))
+        if (string.IsNullOrWhiteSpace(name))
             errors.Add("Nome não pode ser nulo ou vazio.");
-        if (string.IsNullOrWhiteSpace(especie))
+        if (string.IsNullOrWhiteSpace(species))
             errors.Add("Espécie não pode ser nula ou vazia.");
-        if (string.IsNullOrWhiteSpace(raca))
+        if (string.IsNullOrWhiteSpace(breed))
             errors.Add("Raça não pode ser nula ou vazia.");
-        if (string.IsNullOrWhiteSpace(cor))
+        if (string.IsNullOrWhiteSpace(color))
             errors.Add("Cor não pode ser nula ou vazia.");
-        if (string.IsNullOrWhiteSpace(porte))
+        if (string.IsNullOrWhiteSpace(size))
             errors.Add("Porte não pode ser nulo ou vazio.");
-        if (string.IsNullOrWhiteSpace(descricao))
+        if (string.IsNullOrWhiteSpace(description))
             errors.Add("Descrição não pode ser nula ou vazia.");
-        if (string.IsNullOrWhiteSpace(observacao))
-            errors.Add("Observação não pode ser nula ou vazia.");
-        if (string.IsNullOrWhiteSpace(foto))
+        if (string.IsNullOrWhiteSpace(photo))
             errors.Add("Foto não pode ser nula ou vazia.");
-        if (string.IsNullOrWhiteSpace(idade))
+        if (string.IsNullOrWhiteSpace(age))
             errors.Add("Idade não pode ser nula ou vazia.");
 
-        if (errors.Any())
-            throw new DomainException(string.Join(Environment.NewLine, errors));
+        if (errors.Count != 0)
+            throw new AnimalValidationException(errors.Select(Error.Validation).ToArray());
 
-        Nome = nome;
-        Especie = especie;
-        Raca = raca;
-        Sexo = sexo;
-        Castrado = castrado;
-        Cor = cor;
-        Porte = porte;
-        Idade = idade;
-        Descricao = descricao;
-        Observacao = observacao;
-        Foto = foto;
-        ChavePix = chavePix;
+        Name = name;
+        Species = species;
+        Breed = breed;
+        Gender = gender;
+        Neutered = neutered;
+        Color = color;
+        Size = size;
+        Age = age;
+        Description = description;
+        Note = note;
+        Photo = photo;
+        PixKey = pixKey;
     }
 }

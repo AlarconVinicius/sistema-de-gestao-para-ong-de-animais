@@ -17,7 +17,7 @@ public class ONGDbContext : DbContext
     public DbSet<Person> People { get; set; }
     public DbSet<Adopter> Adopters { get; set; }
     public DbSet<NGO> NGOs { get; set; }
-    public DbSet<Animal> Animais { get; set; }
+    public DbSet<Animal> Animals { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

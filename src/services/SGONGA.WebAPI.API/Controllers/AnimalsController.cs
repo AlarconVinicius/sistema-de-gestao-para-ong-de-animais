@@ -218,7 +218,7 @@ public class AnimalsController(INotifier notifier, ISender sender) : ApiControll
     [HttpPut("{id:guid}")]
     public async Task<IResult> Update(Guid id, [FromBody] UpdateAnimalRequest request, CancellationToken cancellationToken)
     {
-        UpdateAnimalCommand command = new (id, request.Nome, request.Especie, request.Raca, request.Sexo, request.Castrado, request.Cor, request.Porte, request.Idade, request.Descricao, request.Observacao, request.Foto, request.ChavePix);
+        UpdateAnimalCommand command = new (id, request.Name, request.Species, request.Breed, request.Gender, request.Neutered, request.Color, request.Size, request.Age, request.Description, request.Note, request.Photo, request.PixKey);
 
         var result = await Sender.Send(command, cancellationToken);
 

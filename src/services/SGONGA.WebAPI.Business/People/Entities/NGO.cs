@@ -1,6 +1,7 @@
-﻿using SGONGA.WebAPI.Business.Animals.Entities;
+﻿using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.Animals.Entities;
 using SGONGA.WebAPI.Business.People.Enum;
-using SGONGA.WebAPI.Business.Shared.Exceptions;
+using SGONGA.WebAPI.Business.People.Exceptions;
 
 namespace SGONGA.WebAPI.Business.People.Entities;
 
@@ -70,7 +71,7 @@ public sealed class NGO : Person
             errors.Add("Cidade não pode ser nula ou vazia.");
 
         if (errors.Count != 0)
-            throw new DomainException(string.Join(Environment.NewLine, errors));
+            throw new PersonValidationException(errors.Select(Error.Validation).ToArray());
 
         Name = name;
         Nickname = nickname;

@@ -48,7 +48,7 @@ public class CreateAnimalCommandHandlerTests
             Error.Validation(CreateAnimalCommandValidator.SizeRequired),
             Error.Validation(CreateAnimalCommandValidator.AgeRequired),
             Error.Validation(CreateAnimalCommandValidator.DescriptionRequired),
-            Error.Validation(CreateAnimalCommandValidator.ObservationRequired),
+            Error.Validation(CreateAnimalCommandValidator.NoteMaxLength),
             Error.Validation(CreateAnimalCommandValidator.PhotoRequired)
         });
     }

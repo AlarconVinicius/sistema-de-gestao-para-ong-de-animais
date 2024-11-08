@@ -12,7 +12,7 @@ internal sealed class GetAnimalByIdQueryHandler(IAnimalRepository AnimalReposito
     public async Task<Result<AnimalResponse>> Handle(GetAnimalByIdQuery request, CancellationToken cancellationToken)
     {
         Guid? tenantId = null;
-        if (request.TenantFiltro)
+        if (request.TenantFilter)
         {
             Result<Guid> tenantResult = await TenantProvider.GetTenantId();
             if (tenantResult.IsFailed)

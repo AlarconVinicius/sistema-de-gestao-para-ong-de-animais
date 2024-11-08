@@ -34,18 +34,18 @@ public class UpdateAnimalCommandHandlerTests
         var baseCommand = AnimalDataFaker.GenerateInvalidCreateAnimalCommand();
         var command = new UpdateAnimalCommand(
             Guid.NewGuid(),
-            baseCommand.Nome,
-            baseCommand.Especie,
-            baseCommand.Raca,
-            baseCommand.Sexo,
-            baseCommand.Castrado,
-            baseCommand.Cor,
-            baseCommand.Porte,
-            baseCommand.Idade,
-            baseCommand.Descricao,
-            baseCommand.Observacao,
-            baseCommand.Foto,
-            baseCommand.ChavePix
+            baseCommand.Name,
+            baseCommand.Species,
+            baseCommand.Breed,
+            baseCommand.Gender,
+            baseCommand.Neutered,
+            baseCommand.Color,
+            baseCommand.Size,
+            baseCommand.Age,
+            baseCommand.Description,
+            baseCommand.Note,
+            baseCommand.Photo,
+            baseCommand.PixKey
         );
         UpdateAnimalCommandHandler handler = new(_unitOfWorkMock.Object, _animalRepositoryMock.Object, _tenantProvider.Object);
 
@@ -65,7 +65,7 @@ public class UpdateAnimalCommandHandlerTests
             Error.Validation(UpdateAnimalCommandValidator.SizeRequired),
             Error.Validation(UpdateAnimalCommandValidator.AgeRequired),
             Error.Validation(UpdateAnimalCommandValidator.DescriptionRequired),
-            Error.Validation(UpdateAnimalCommandValidator.ObservationRequired),
+            Error.Validation(UpdateAnimalCommandValidator.NoteMaxLength),
             Error.Validation(UpdateAnimalCommandValidator.PhotoRequired)
         });
     }
@@ -77,18 +77,18 @@ public class UpdateAnimalCommandHandlerTests
         var baseCommand = AnimalDataFaker.GenerateValidCreateAnimalCommand();
         var command = new UpdateAnimalCommand(
             Guid.NewGuid(),
-            baseCommand.Nome,
-            baseCommand.Especie,
-            baseCommand.Raca,
-            baseCommand.Sexo,
-            baseCommand.Castrado,
-            baseCommand.Cor,
-            baseCommand.Porte,
-            baseCommand.Idade,
-            baseCommand.Descricao,
-            baseCommand.Observacao,
-            baseCommand.Foto,
-            baseCommand.ChavePix
+            baseCommand.Name,
+            baseCommand.Species,
+            baseCommand.Breed,
+            baseCommand.Gender,
+            baseCommand.Neutered,
+            baseCommand.Color,
+            baseCommand.Size,
+            baseCommand.Age,
+            baseCommand.Description,
+            baseCommand.Note,
+            baseCommand.Photo,
+            baseCommand.PixKey
         );
         UpdateAnimalCommandHandler handler = new(_unitOfWorkMock.Object, _animalRepositoryMock.Object, _tenantProvider.Object);
 
@@ -116,18 +116,18 @@ public class UpdateAnimalCommandHandlerTests
         var baseCommand = AnimalDataFaker.GenerateValidCreateAnimalCommand();
         var command = new UpdateAnimalCommand(
             Guid.NewGuid(),
-            baseCommand.Nome,
-            baseCommand.Especie,
-            baseCommand.Raca,
-            baseCommand.Sexo,
-            baseCommand.Castrado,
-            baseCommand.Cor,
-            baseCommand.Porte,
-            baseCommand.Idade,
-            baseCommand.Descricao,
-            baseCommand.Observacao,
-            baseCommand.Foto,
-            baseCommand.ChavePix
+            baseCommand.Name,
+            baseCommand.Species,
+            baseCommand.Breed,
+            baseCommand.Gender,
+            baseCommand.Neutered,
+            baseCommand.Color,
+            baseCommand.Size,
+            baseCommand.Age,
+            baseCommand.Description,
+            baseCommand.Note,
+            baseCommand.Photo,
+            baseCommand.PixKey
         );
         UpdateAnimalCommandHandler handler = new(_unitOfWorkMock.Object, _animalRepositoryMock.Object, _tenantProvider.Object);
 
@@ -160,18 +160,18 @@ public class UpdateAnimalCommandHandlerTests
         var baseCommand = AnimalDataFaker.GenerateValidCreateAnimalCommand();
         var command = new UpdateAnimalCommand(
             oldAnimal.Id,
-            baseCommand.Nome,
-            baseCommand.Especie,
-            baseCommand.Raca,
-            baseCommand.Sexo,
-            baseCommand.Castrado,
-            baseCommand.Cor,
-            baseCommand.Porte,
-            baseCommand.Idade,
-            baseCommand.Descricao,
-            baseCommand.Observacao,
-            baseCommand.Foto,
-            baseCommand.ChavePix
+            baseCommand.Name,
+            baseCommand.Species,
+            baseCommand.Breed,
+            baseCommand.Gender,
+            baseCommand.Neutered,
+            baseCommand.Color,
+            baseCommand.Size,
+            baseCommand.Age,
+            baseCommand.Description,
+            baseCommand.Note,
+            baseCommand.Photo,
+            baseCommand.PixKey
         );
         UpdateAnimalCommandHandler handler = new(_unitOfWorkMock.Object, _animalRepositoryMock.Object, _tenantProvider.Object);
 

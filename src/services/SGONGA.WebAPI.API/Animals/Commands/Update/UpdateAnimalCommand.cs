@@ -7,18 +7,18 @@ public sealed record UpdateAnimalCommand : BaseAnimalCommand
 {
     public UpdateAnimalCommand(
         Guid id,
-        string Nome,
-        string Especie,
-        string Raca,
-        bool Sexo,
-        bool Castrado,
-        string Cor,
-        string Porte,
-        string Idade,
-        string Descricao,
-        string Observacao,
-        string Foto,
-        string ChavePix = "") : base(Nome, Especie, Raca, Sexo, Castrado, Cor, Porte, Idade, Descricao, Observacao, Foto, ChavePix)
+        string Name,
+        string Species,
+        string Breed,
+        bool Gender,
+        bool Neutered,
+        string Color,
+        string Size,
+        string Age,
+        string Description,
+        string? Note,
+        string Photo,
+        string? PixKey) : base(Name, Species, Breed, Gender, Neutered, Color, Size, Age, Description, Note, Photo, PixKey)
     {
         Id = id;
     }
@@ -37,7 +37,6 @@ public sealed record UpdateAnimalCommand : BaseAnimalCommand
 
     public class UpdateAnimalCommandValidator : BaseAnimalCommandValidator<UpdateAnimalCommand>
     {
-        public const string IdRequired = "O Id é obrigatório.";
         public UpdateAnimalCommandValidator()
         {
             RuleFor(x => x.Id).NotEmpty().WithMessage(IdRequired);

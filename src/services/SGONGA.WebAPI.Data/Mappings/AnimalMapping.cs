@@ -8,7 +8,7 @@ public class AnimalMapping : IEntityTypeConfiguration<Animal>
 {
     public void Configure(EntityTypeBuilder<Animal> builder)
     {
-        builder.ToTable("tbl_animais");
+        builder.ToTable("tbl_animals");
 
         builder.HasKey(a => a.Id);
 
@@ -21,62 +21,62 @@ public class AnimalMapping : IEntityTypeConfiguration<Animal>
         builder.Property(a => a.TenantId)
             .IsRequired();
 
-        builder.Property(a => a.Nome)
+        builder.Property(a => a.Name)
             .IsRequired()
             .HasMaxLength(100)
             .HasColumnType("varchar(100)");
 
-        builder.Property(a => a.Especie)
+        builder.Property(a => a.Species)
             .IsRequired()
             .HasMaxLength(50)
             .HasColumnType("varchar(50)");
 
-        builder.Property(a => a.Raca)
+        builder.Property(a => a.Breed)
             .IsRequired()
             .HasMaxLength(50)
             .HasColumnType("varchar(50)");
 
-        builder.Property(a => a.Sexo)
+        builder.Property(a => a.Gender)
             .IsRequired()
             .HasColumnType("bit");
 
-        builder.Property(a => a.Castrado)
+        builder.Property(a => a.Neutered)
             .IsRequired()
             .HasColumnType("bit");
 
-        builder.Property(a => a.Cor)
+        builder.Property(a => a.Color)
             .IsRequired()
             .HasMaxLength(50)
             .HasColumnType("varchar(50)");
 
-        builder.Property(a => a.Porte)
+        builder.Property(a => a.Size)
             .IsRequired()
             .HasMaxLength(50)
             .HasColumnType("varchar(50)");
 
-        builder.Property(a => a.Idade)
+        builder.Property(a => a.Age)
             .IsRequired()
             .HasMaxLength(100)
             .HasColumnType("varchar(100)");
 
-        builder.Property(a => a.Descricao)
+        builder.Property(a => a.Description)
             .IsRequired()
             .HasMaxLength(500)
             .HasColumnType("varchar(500)");
 
-        builder.Property(a => a.Observacao)
+        builder.Property(a => a.Note)
             .HasMaxLength(500)
             .HasColumnType("varchar(500)");
 
-        builder.Property(a => a.ChavePix)
+        builder.Property(a => a.PixKey)
             .HasMaxLength(100)
             .HasColumnType("varchar(100)");
 
-        builder.Property(a => a.Foto)
+        builder.Property(a => a.Photo)
             .IsRequired()
             .HasColumnType("text");
 
-        builder.HasOne(a => a.ONG)
+        builder.HasOne(a => a.Ngo)
             .WithMany(o => o.Animals)
             .HasForeignKey(a => a.TenantId);
     }

@@ -2,7 +2,6 @@
 using SGONGA.WebAPI.API.Animals.Commands.Create;
 using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Mocks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using static SGONGA.WebAPI.API.Animals.Commands.Create.CreateAnimalCommand;
 
 namespace SGONGA.WebAPI.API.Tests.Animals.Command.Create;
@@ -18,18 +17,18 @@ public class CreateAnimalCommandTests
 
         // Act
         var actualCommand = new CreateAnimalCommand(
-            expectedCommand.Nome,
-            expectedCommand.Especie,
-            expectedCommand.Raca,
-            expectedCommand.Sexo,
-            expectedCommand.Castrado,
-            expectedCommand.Cor,
-            expectedCommand.Porte,
-            expectedCommand.Idade,
-            expectedCommand.Descricao,
-            expectedCommand.Observacao,
-            expectedCommand.Foto,
-            expectedCommand.ChavePix
+            expectedCommand.Name,
+            expectedCommand.Species,
+            expectedCommand.Breed,
+            expectedCommand.Gender,
+            expectedCommand.Neutered,
+            expectedCommand.Color,
+            expectedCommand.Size,
+            expectedCommand.Age,
+            expectedCommand.Description,
+            expectedCommand.Note,
+            expectedCommand.Photo,
+            expectedCommand.PixKey
         );
 
         // Assert
@@ -44,21 +43,22 @@ public class CreateAnimalCommandTests
 
         // Act
         var actualCommand = new CreateAnimalCommand(
-            expectedCommand.Nome,
-            expectedCommand.Especie,
-            expectedCommand.Raca,
-            expectedCommand.Sexo,
-            expectedCommand.Castrado,
-            expectedCommand.Cor,
-            expectedCommand.Porte,
-            expectedCommand.Idade,
-            expectedCommand.Descricao,
-            expectedCommand.Observacao,
-            expectedCommand.Foto
+            expectedCommand.Name,
+            expectedCommand.Species,
+            expectedCommand.Breed,
+            expectedCommand.Gender,
+            expectedCommand.Neutered,
+            expectedCommand.Color,
+            expectedCommand.Size,
+            expectedCommand.Age,
+            expectedCommand.Description,
+            expectedCommand.Note,
+            expectedCommand.Photo,
+            expectedCommand.PixKey
         );
 
         // Assert
-        actualCommand.ChavePix.Should().Be(string.Empty);
+        actualCommand.PixKey.Should().Be(string.Empty);
     }
 
     [Fact(DisplayName = "IsValid Return Success")]
@@ -97,7 +97,7 @@ public class CreateAnimalCommandTests
             Error.Validation(CreateAnimalCommandValidator.SizeRequired),
             Error.Validation(CreateAnimalCommandValidator.AgeRequired),
             Error.Validation(CreateAnimalCommandValidator.DescriptionRequired),
-            Error.Validation(CreateAnimalCommandValidator.ObservationRequired),
+            Error.Validation(CreateAnimalCommandValidator.NoteMaxLength),
             Error.Validation(CreateAnimalCommandValidator.PhotoRequired)
         });
     }

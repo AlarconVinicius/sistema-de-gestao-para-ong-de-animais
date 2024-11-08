@@ -27,18 +27,18 @@ internal sealed class UpdateAnimalCommandHandler(IGenericUnitOfWork UnitOfWork, 
 
 
         animal.Update(
-            command.Nome, 
-            command.Especie, 
-            command.Raca, 
-            command.Sexo, 
-            command.Castrado, 
-            command.Cor, 
-            command.Porte, 
-            command.Idade, 
-            command.Descricao, 
-            command.Observacao, 
-            command.Foto, 
-            command.ChavePix);
+            command.Name, 
+            command.Species, 
+            command.Breed, 
+            command.Gender, 
+            command.Neutered, 
+            command.Color, 
+            command.Size, 
+            command.Age, 
+            command.Description, 
+            command.Note, 
+            command.Photo, 
+            command.PixKey);
 
         UnitOfWork.Update(animal);
 

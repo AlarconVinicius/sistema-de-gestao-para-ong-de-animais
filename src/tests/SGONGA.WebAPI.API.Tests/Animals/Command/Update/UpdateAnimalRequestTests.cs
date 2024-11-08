@@ -16,18 +16,18 @@ public class UpdateAnimalRequestTests
 
         // Act
         var actualCommand = new UpdateAnimalRequest(
-            expectedCommand.Nome,
-            expectedCommand.Especie,
-            expectedCommand.Raca,
-            expectedCommand.Sexo,
-            expectedCommand.Castrado,
-            expectedCommand.Cor,
-            expectedCommand.Porte,
-            expectedCommand.Idade,
-            expectedCommand.Descricao,
-            expectedCommand.Observacao,
-            expectedCommand.Foto,
-            expectedCommand.ChavePix
+            expectedCommand.Name,
+            expectedCommand.Species,
+            expectedCommand.Breed,
+            expectedCommand.Gender,
+            expectedCommand.Neutered,
+            expectedCommand.Color,
+            expectedCommand.Size,
+            expectedCommand.Age,
+            expectedCommand.Description,
+            expectedCommand.Note,
+            expectedCommand.Photo,
+            expectedCommand.PixKey
         );
 
         // Assert
