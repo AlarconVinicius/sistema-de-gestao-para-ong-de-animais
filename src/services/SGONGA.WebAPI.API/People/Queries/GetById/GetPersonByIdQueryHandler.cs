@@ -8,7 +8,7 @@ using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
 
 namespace SGONGA.WebAPI.API.People.Queries.GetById;
 
-public class GetPersonByIdQueryHandler(IPersonRepository UserRepository, ITenantProvider TenantProvider) : IQueryHandler<GetPersonByIdQuery, PersonResponse>
+public class GetPersonByIdQueryHandler(IPersonRepository PersonRepository, ITenantProvider TenantProvider) : IQueryHandler<GetPersonByIdQuery, PersonResponse>
 {
     public async Task<Result<PersonResponse>> Handle(GetPersonByIdQuery request, CancellationToken cancellationToken)
     {
@@ -21,17 +21,17 @@ public class GetPersonByIdQueryHandler(IPersonRepository UserRepository, ITenant
             tenantId = tenantResult.Value;
         }
 
-        var userType = await UserRepository.IdentifyUserType(request.Id, tenantId, cancellationToken);
-        if (userType.IsFailed)
-            return userType.Errors;
+        var personType = await PersonRepository.IdentifyPersonType(request.Id, tenantId, cancellationToken);
+        if (personType.IsFailed)
+            return personType.Errors;
 
-        switch (userType.Value)
+        switch (personType.Value)
         {
             case EPersonType.Adopter:
-                return await UserRepository.GetAdopterByIdAsync(request.Id, tenantId, cancellationToken);
+                return await PersonRepository.GetAdopterByIdAsync(request.Id, tenantId, cancellationToken);
 
-            case EPersonType.NGO:
-                return await UserRepository.GetNGOByIdAsync(request.Id, tenantId, cancellationToken);
+            case EPersonType.Organization:
+                return await PersonRepository.GetOrganizationByIdAsync(request.Id, tenantId, cancellationToken);
 
             default:
                 return PersonErrors.NaoFoiPossivelRecuperarUsuario;

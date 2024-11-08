@@ -16,7 +16,7 @@ public sealed class AnimalResponseTests
         // Act
         var actualAnimal = new AnimalResponse(
             expectedAnimal.Id,
-            expectedAnimal.NgoId,
+            expectedAnimal.OrganizationId,
             expectedAnimal.Name,
             expectedAnimal.Species,
             expectedAnimal.Breed,
@@ -25,7 +25,7 @@ public sealed class AnimalResponseTests
             expectedAnimal.Color,
             expectedAnimal.Size,
             expectedAnimal.Age,
-            expectedAnimal.NgoName,
+            expectedAnimal.OrganizationName,
             expectedAnimal.State,
             expectedAnimal.City,
             expectedAnimal.Description,

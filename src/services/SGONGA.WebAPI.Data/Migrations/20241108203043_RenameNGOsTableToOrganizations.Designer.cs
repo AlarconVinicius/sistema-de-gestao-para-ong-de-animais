@@ -12,8 +12,8 @@ using SGONGA.WebAPI.Data.Context;
 namespace SGONGA.WebAPI.Data.Migrations
 {
     [DbContext(typeof(OrganizationDbContext))]
-    [Migration("20241108163122_RenameAnimaisTableToAnimalsAndTranslateColumnsToEnglish")]
-    partial class RenameAnimaisTableToAnimalsAndTranslateColumnsToEnglish
+    [Migration("20241108203043_RenameNGOsTableToOrganizations")]
+    partial class RenameNGOsTableToOrganizations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,7 +110,8 @@ namespace SGONGA.WebAPI.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("About")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
@@ -136,6 +137,9 @@ namespace SGONGA.WebAPI.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<int>("PersonType")
+                        .HasColumnType("int");
+
                     b.Property<string>("State")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -149,9 +153,6 @@ namespace SGONGA.WebAPI.Data.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("UserType")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -167,7 +168,7 @@ namespace SGONGA.WebAPI.Data.Migrations
                     b.ToTable("tbl_adopters", (string)null);
                 });
 
-            modelBuilder.Entity("SGONGA.WebAPI.Business.People.Entities.NGO", b =>
+            modelBuilder.Entity("SGONGA.WebAPI.Business.People.Entities.Organization", b =>
                 {
                     b.HasBaseType("SGONGA.WebAPI.Business.People.Entities.Person");
 
@@ -175,18 +176,18 @@ namespace SGONGA.WebAPI.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.ToTable("tbl_ngos", (string)null);
+                    b.ToTable("tbl_organizations", (string)null);
                 });
 
             modelBuilder.Entity("SGONGA.WebAPI.Business.Animals.Entities.Animal", b =>
                 {
-                    b.HasOne("SGONGA.WebAPI.Business.People.Entities.NGO", "Ngo")
+                    b.HasOne("SGONGA.WebAPI.Business.People.Entities.Organization", "Organization")
                         .WithMany("Animals")
                         .HasForeignKey("TenantId")
                         .HasPrincipalKey("TenantId")
                         .IsRequired();
 
-                    b.Navigation("Ngo");
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("SGONGA.WebAPI.Business.People.Entities.Person", b =>
@@ -311,16 +312,16 @@ namespace SGONGA.WebAPI.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SGONGA.WebAPI.Business.People.Entities.NGO", b =>
+            modelBuilder.Entity("SGONGA.WebAPI.Business.People.Entities.Organization", b =>
                 {
                     b.HasOne("SGONGA.WebAPI.Business.People.Entities.Person", null)
                         .WithOne()
-                        .HasForeignKey("SGONGA.WebAPI.Business.People.Entities.NGO", "Id")
+                        .HasForeignKey("SGONGA.WebAPI.Business.People.Entities.Organization", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SGONGA.WebAPI.Business.People.Entities.NGO", b =>
+            modelBuilder.Entity("SGONGA.WebAPI.Business.People.Entities.Organization", b =>
                 {
                     b.Navigation("Animals");
                 });

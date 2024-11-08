@@ -9,7 +9,7 @@ public class PersonMapping : IEntityTypeConfiguration<Person>
 {
     public void Configure(EntityTypeBuilder<Person> builder)
     {
-        builder.ToTable("tbl_people");
+        builder.ToTable("People");
 
         builder.HasKey(a => a.Id);
 

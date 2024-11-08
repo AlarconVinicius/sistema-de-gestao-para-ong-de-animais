@@ -4,11 +4,11 @@ using SGONGA.WebAPI.Business.People.Entities;
 
 namespace SGONGA.WebAPI.Data.Mappings;
 
-public class NGOMapping : IEntityTypeConfiguration<NGO>
+public class OrganizationMapping : IEntityTypeConfiguration<Organization>
 {
-    public void Configure(EntityTypeBuilder<NGO> builder)
+    public void Configure(EntityTypeBuilder<Organization> builder)
     {
-        builder.ToTable("tbl_ngos");
+        builder.ToTable("Organizations");
 
         builder.Property(o => o.PixKey)
                .IsRequired(false)
@@ -16,7 +16,7 @@ public class NGOMapping : IEntityTypeConfiguration<NGO>
                .HasColumnType("varchar(100)");
 
         builder.HasMany(o => o.Animals)
-            .WithOne(a => a.Ngo)
+            .WithOne(a => a.Organization)
             .HasPrincipalKey(a => a.TenantId)
             .HasForeignKey(a => a.TenantId);
     }

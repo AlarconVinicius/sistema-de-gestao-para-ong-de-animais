@@ -34,7 +34,7 @@ public class CreatePersonExample : IMultipleExamplesProvider<CreatePersonCommand
         yield return SwaggerExample.Create(
             "Cadastrar uma ONG",
             new CreatePersonCommand(
-                PersonType: EPersonType.NGO,
+                PersonType: EPersonType.Organization,
                 Name: "Amigos dos Animais Proteção e Bem-estar",
                 Nickname: "Amigos dos Animais",
                 Document: "12345678000199",

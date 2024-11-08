@@ -28,7 +28,7 @@ public sealed class AnimalTests
         animal.Description.Should().BeEmpty();
         animal.Note.Should().BeEmpty();
         animal.PixKey.Should().BeEmpty();
-        animal.Ngo.Should().BeNull();
+        animal.Organization.Should().BeNull();
     }
 
     [Fact(DisplayName = "Create returns animal when called with valid parameters")]

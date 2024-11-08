@@ -124,9 +124,9 @@ public class PeopleController(INotifier notifier, ISender sender) : ApiControlle
     [ProducesResponseType(typeof(BasePagedResponse<PersonResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [HttpGet("/api/v1/usuarios/ongs")]
-    public async Task<IResult> GetAllNGOsPublic([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, [FromQuery] int tipo = 0, CancellationToken cancellationToken = default)
+    public async Task<IResult> GetAllOrganizationsPublic([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, [FromQuery] int tipo = 0, CancellationToken cancellationToken = default)
     {
-        GetAllPeopleQuery query = new(EPersonType.NGO, ps, page, q, false, false);
+        GetAllPeopleQuery query = new(EPersonType.Organization, ps, page, q, false, false);
 
         var result = await Sender.Send(query, cancellationToken);
 
@@ -202,9 +202,9 @@ public class PeopleController(INotifier notifier, ISender sender) : ApiControlle
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     [HttpGet]
-    public async Task<IResult> GetAllNGO([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, [FromQuery] int tipo = 0, CancellationToken cancellationToken = default)
+    public async Task<IResult> GetAllOrganizations([FromQuery] int ps = ConfigurationDefault.DefaultPageSize, [FromQuery] int page = ConfigurationDefault.DefaultPageNumber, [FromQuery] string q = null!, [FromQuery] int tipo = 0, CancellationToken cancellationToken = default)
     {
-        GetAllPeopleQuery query = new(EPersonType.NGO, ps, page, q, false, true);
+        GetAllPeopleQuery query = new(EPersonType.Organization, ps, page, q, false, true);
 
         var result = await Sender.Send(query, cancellationToken);
 

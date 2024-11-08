@@ -16,7 +16,7 @@ internal sealed class TenantProvider(IPersonRepository PersonRepository) : ITena
         if (TenantId == Guid.Empty)
             return Error.NotFound("TENANT_ID_NOT_FOUND", "O Tenant ID não foi encontrado. Certifique-se de que o cabeçalho 'TenantId' está presente na requisição e tente novamente.");
 
-        return await PersonRepository.ExistsAsync(q => q.TenantId == TenantId && q.PersonType == EPersonType.NGO)
+        return await PersonRepository.ExistsAsync(q => q.TenantId == TenantId && q.PersonType == EPersonType.Organization)
             ? TenantId
             : Error.NotFound("INVALID_TENANT_ID", "TenantId não encontrado.");
     }

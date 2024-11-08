@@ -8,9 +8,9 @@ namespace SGONGA.WebAPI.Data.Repositories;
 
 internal sealed class GenericUnitOfWork : IGenericUnitOfWork
 {
-    private readonly ONGDbContext _context;
+    private readonly OrganizationDbContext _context;
 
-    public GenericUnitOfWork(ONGDbContext context)
+    public GenericUnitOfWork(OrganizationDbContext context)
     {
         _context = context;
     }

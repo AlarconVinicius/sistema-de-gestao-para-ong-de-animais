@@ -9,7 +9,7 @@ using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
 
 namespace SGONGA.WebAPI.API.People.Queries.GetAll;
 
-public class GetAllPeopleQueryHandler(IPersonRepository UserRepository, ITenantProvider TenantProvider) : IQueryHandler<GetAllPeopleQuery, BasePagedResponse<PersonResponse>>
+public class GetAllPeopleQueryHandler(IPersonRepository PersonRepository, ITenantProvider TenantProvider) : IQueryHandler<GetAllPeopleQuery, BasePagedResponse<PersonResponse>>
 {
     public async Task<Result<BasePagedResponse<PersonResponse>>> Handle(GetAllPeopleQuery request, CancellationToken cancellationToken)
     {
@@ -24,10 +24,10 @@ public class GetAllPeopleQueryHandler(IPersonRepository UserRepository, ITenantP
         switch (request.PersonType)
         {
             case EPersonType.Adopter:
-                return await UserRepository.GetAllAdoptersPagedAsync(tenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll, cancellationToken);
+                return await PersonRepository.GetAllAdoptersPagedAsync(tenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll, cancellationToken);
 
-            case EPersonType.NGO:
-                return await UserRepository.GetAllNGOsPagedAsync(tenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll, cancellationToken);
+            case EPersonType.Organization:
+                return await PersonRepository.GetAllOrganizationsPagedAsync(tenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll, cancellationToken);
             default:
                 return PersonErrors.NaoFoiPossivelRecuperarUsuarios;
         }

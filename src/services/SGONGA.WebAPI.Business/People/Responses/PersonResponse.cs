@@ -8,12 +8,12 @@ public class PersonResponse(
     Guid tenantId,
     string name,
     string nickname,
-    EPersonType userType,
+    EPersonType personType,
     string document,
-    string website,
+    string site,
     string email,
     string phoneNumber,
-    bool phoneVisible,
+    bool isPhoneNumberVisible,
     bool subscribeToNewsletter,
     DateTime birthDate,
     string state,
@@ -36,13 +36,13 @@ public class PersonResponse(
     public string Nickname { get; } = nickname;
 
     [DisplayName("Tipo de Usuário")]
-    public EPersonType UserType { get; } = userType;
+    public EPersonType PersonType { get; } = personType;
 
     [DisplayName("Documento")]
     public string Document { get; } = document;
 
     [DisplayName("Site")]
-    public string Website { get; } = website;
+    public string Site { get; } = site;
 
     [DisplayName("E=mail")]
     public string Email { get; } = email;
@@ -51,7 +51,7 @@ public class PersonResponse(
     public string PhoneNumber { get; } = phoneNumber;
 
     [DisplayName("Whatsapp Visível")]
-    public bool PhoneVisible { get; } = phoneVisible;
+    public bool IsPhoneNumberVisible { get; } = isPhoneNumberVisible;
 
     [DisplayName("Assinar Newsletter")]
     public bool SubscribeToNewsletter { get; } = subscribeToNewsletter;

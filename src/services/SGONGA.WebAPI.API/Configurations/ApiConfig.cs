@@ -81,7 +81,7 @@ public static class ApiConfig
     {
         using var scope = services.CreateScope();
         var identityDbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        var emsDbContext = scope.ServiceProvider.GetRequiredService<ONGDbContext>();
+        var emsDbContext = scope.ServiceProvider.GetRequiredService<OrganizationDbContext>();
         if (identityDbContext.Database.GetPendingMigrations().Any())
         {
             identityDbContext.Database.Migrate();

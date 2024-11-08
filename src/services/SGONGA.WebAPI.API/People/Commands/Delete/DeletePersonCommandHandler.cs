@@ -12,7 +12,7 @@ using SGONGA.WebAPI.Business.Users.Requests;
 
 namespace SGONGA.WebAPI.API.People.Commands.Delete;
 
-internal sealed class DeletePersonCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRepository UserRepository, ITenantProvider TenantProvider, IIdentityHandler IdentityHandler, IAspNetUser AppUser) : ICommandHandler<DeletePersonCommand>
+internal sealed class DeletePersonCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRepository PersonRepository, ITenantProvider TenantProvider, IIdentityHandler IdentityHandler, IAspNetUser AppUser) : ICommandHandler<DeletePersonCommand>
 {
     public async Task<Result> Handle(DeletePersonCommand request, CancellationToken cancellationToken)
     {
@@ -25,22 +25,22 @@ internal sealed class DeletePersonCommandHandler(IGenericUnitOfWork UnitOfWork, 
 
         Guid tenantId = tenantResult.Value;
 
-        var userType = await UserRepository.IdentifyUserType(request.Id, tenantId, cancellationToken);
-        if (userType.IsFailed)
-            return userType.Errors;
+        var personType = await PersonRepository.IdentifyPersonType(request.Id, tenantId, cancellationToken);
+        if (personType.IsFailed)
+            return personType.Errors;
 
         Result identityResult;
-        switch (userType.Value)
+        switch (personType.Value)
         {
             case EPersonType.Adopter:
                 UnitOfWork.Delete(Adopter.Create(request.Id));
                 break;
 
-            case EPersonType.NGO:
-                var NGOResult = await UserRepository.GetNGOByIdWithAnimalsAsync(request.Id, tenantId, cancellationToken);
+            case EPersonType.Organization:
+                var OrganizationResult = await PersonRepository.GetOrganizationByIdWithAnimalsAsync(request.Id, tenantId, cancellationToken);
 
-                UnitOfWork.DeleteRange(NGOResult.Animals);
-                UnitOfWork.Delete(NGOResult);
+                UnitOfWork.DeleteRange(OrganizationResult.Animals);
+                UnitOfWork.Delete(OrganizationResult);
                 break;
             default:
                 return PersonErrors.NaoFoiPossivelDeletarUsuario;

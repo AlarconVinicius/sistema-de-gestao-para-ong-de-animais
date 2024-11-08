@@ -7,7 +7,7 @@ using SGONGA.WebAPI.Data.Context;
 
 namespace SGONGA.WebAPI.Data.Repositories;
 
-internal sealed class AnimalRepository(ONGDbContext db) : Repository<Animal>(db), IAnimalRepository
+internal sealed class AnimalRepository(OrganizationDbContext db) : Repository<Animal>(db), IAnimalRepository
 {
     public async Task<AnimalResponse> GetByIdAsync(
         Guid id, 
@@ -15,7 +15,7 @@ internal sealed class AnimalRepository(ONGDbContext db) : Repository<Animal>(db)
         CancellationToken cancellationToken = default)
     {
         var queryable = DbSet
-            .Include(q => q.Ngo)
+            .Include(q => q.Organization)
             .AsNoTracking();
 
         if (tenantId.HasValue)
@@ -36,9 +36,9 @@ internal sealed class AnimalRepository(ONGDbContext db) : Repository<Animal>(db)
                 a.Color,
                 a.Size,
                 a.Age,
-                a.Ngo.Name,
-                a.Ngo.State, 
-                a.Ngo.City,
+                a.Organization.Name,
+                a.Organization.State, 
+                a.Organization.City,
                 a.Description,
                 a.Note,
                 a.PixKey,
@@ -59,7 +59,7 @@ internal sealed class AnimalRepository(ONGDbContext db) : Repository<Animal>(db)
         bool returnAll = false,
         CancellationToken cancellationToken = default)
     {
-        var queryable = DbSet.Include(q => q.Ngo)
+        var queryable = DbSet.Include(q => q.Organization)
             .AsNoTracking()
             .AsQueryable();
 
@@ -69,7 +69,7 @@ internal sealed class AnimalRepository(ONGDbContext db) : Repository<Animal>(db)
         }
         if (!string.IsNullOrEmpty(query))
         {
-            queryable = queryable.Where(q => q.Name.Contains(query) || q.Ngo!.Name.Contains(query));
+            queryable = queryable.Where(q => q.Name.Contains(query) || q.Organization!.Name.Contains(query));
         }
 
         queryable = queryable.OrderByDescending(q => q.UpdatedAt)
@@ -86,9 +86,9 @@ internal sealed class AnimalRepository(ONGDbContext db) : Repository<Animal>(db)
             a.Color,
             a.Size,
             a.Age,
-            a.Ngo.Name,
-            a.Ngo.State,
-            a.Ngo.City,
+            a.Organization.Name,
+            a.Organization.State,
+            a.Organization.City,
             a.Description,
             a.Note,
             a.PixKey,

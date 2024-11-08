@@ -8,7 +8,7 @@ public class AdopterMapping : IEntityTypeConfiguration<Adopter>
 {
     public void Configure(EntityTypeBuilder<Adopter> builder)
     {
-        builder.ToTable("tbl_adopters");
+        builder.ToTable("Adopters");
 
     }
 }

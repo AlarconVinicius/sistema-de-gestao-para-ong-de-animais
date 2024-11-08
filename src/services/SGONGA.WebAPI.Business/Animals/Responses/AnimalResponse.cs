@@ -2,7 +2,7 @@
 
 public record AnimalResponse(
     Guid Id,
-    Guid NgoId,
+    Guid OrganizationId,
     string Name,
     string Species,
     string Breed,
@@ -11,7 +11,7 @@ public record AnimalResponse(
     string Color,
     string Size,
     string Age,
-    string NgoName,
+    string OrganizationName,
     string State,
     string City,
     string Description,

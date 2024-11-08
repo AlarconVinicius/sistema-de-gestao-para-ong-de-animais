@@ -22,7 +22,7 @@ public sealed class Animal : Entity
     public string Photo { get; private set; }
     public bool Adopted { get; private set; }
 
-    public NGO Ngo { get; private set; }
+    public Organization Organization { get; private set; }
 
     public Animal() { }
 

@@ -11,7 +11,7 @@ using SGONGA.WebAPI.Data.Context;
 
 namespace SGONGA.WebAPI.Data.Migrations
 {
-    [DbContext(typeof(ONGDbContext))]
+    [DbContext(typeof(OrganizationDbContext))]
     [Migration("20240918220251_UpdateONGAndAnimalPrincipalKey")]
     partial class UpdateONGAndAnimalPrincipalKey
     {

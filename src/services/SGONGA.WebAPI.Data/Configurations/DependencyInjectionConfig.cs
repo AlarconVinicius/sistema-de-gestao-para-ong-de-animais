@@ -13,7 +13,7 @@ public static class DependencyInjectionConfig
 {
     public static IServiceCollection RegisterDataServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<ONGDbContext>(options =>
+        services.AddDbContext<OrganizationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection") ??
                 throw new InvalidOperationException("Connection String is not found")));
 

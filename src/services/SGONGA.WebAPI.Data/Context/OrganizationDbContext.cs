@@ -6,9 +6,9 @@ using SGONGA.WebAPI.Business.People.Entities;
 
 namespace SGONGA.WebAPI.Data.Context;
 
-public class ONGDbContext : DbContext
+public class OrganizationDbContext : DbContext
 {
-    public ONGDbContext(DbContextOptions<ONGDbContext> options) : base(options)
+    public OrganizationDbContext(DbContextOptions<OrganizationDbContext> options) : base(options)
     {
         ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         ChangeTracker.AutoDetectChangesEnabled = false;
@@ -16,7 +16,7 @@ public class ONGDbContext : DbContext
 
     public DbSet<Person> People { get; set; }
     public DbSet<Adopter> Adopters { get; set; }
-    public DbSet<NGO> NGOs { get; set; }
+    public DbSet<Organization> Organizations { get; set; }
     public DbSet<Animal> Animals { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,7 +26,7 @@ public class ONGDbContext : DbContext
                 .Where(p => p.ClrType == typeof(string))))
             property.SetColumnType("varchar(100)");
 
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ONGDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrganizationDbContext).Assembly);
 
         foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
 

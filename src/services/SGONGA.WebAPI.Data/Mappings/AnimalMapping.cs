@@ -8,7 +8,7 @@ public class AnimalMapping : IEntityTypeConfiguration<Animal>
 {
     public void Configure(EntityTypeBuilder<Animal> builder)
     {
-        builder.ToTable("tbl_animals");
+        builder.ToTable("Animals");
 
         builder.HasKey(a => a.Id);
 
@@ -76,7 +76,7 @@ public class AnimalMapping : IEntityTypeConfiguration<Animal>
             .IsRequired()
             .HasColumnType("text");
 
-        builder.HasOne(a => a.Ngo)
+        builder.HasOne(a => a.Organization)
             .WithMany(o => o.Animals)
             .HasForeignKey(a => a.TenantId);
     }

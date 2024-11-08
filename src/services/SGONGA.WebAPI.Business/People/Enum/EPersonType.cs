@@ -2,5 +2,5 @@
 public enum EPersonType
 {
     Adopter = 0,
-    NGO
+    Organization
 }

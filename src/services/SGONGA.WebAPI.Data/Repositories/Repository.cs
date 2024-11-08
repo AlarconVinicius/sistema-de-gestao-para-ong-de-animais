@@ -9,10 +9,10 @@ namespace SGONGA.WebAPI.Data.Repositories;
 
 public class Repository<T> : IRepository<T> where T : Entity
 {
-    protected readonly ONGDbContext Db;
+    protected readonly OrganizationDbContext Db;
     protected readonly DbSet<T> DbSet;
 
-    protected Repository(ONGDbContext db)
+    protected Repository(OrganizationDbContext db)
     {
         Db = db;
         DbSet = db.Set<T>();

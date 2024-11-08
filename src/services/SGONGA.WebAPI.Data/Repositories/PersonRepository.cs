@@ -11,9 +11,9 @@ using SGONGA.WebAPI.Data.Context;
 
 namespace SGONGA.WebAPI.Data.Repositories;
 
-public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPersonRepository
+public class PersonRepository(OrganizationDbContext db) : Repository<Person>(db), IPersonRepository
 {
-    public async Task<Result<EPersonType>> IdentifyUserType(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
+    public async Task<Result<EPersonType>> IdentifyPersonType(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
     {
         var tipos = (EPersonType[])Enum.GetValues(typeof(EPersonType));
 
@@ -28,9 +28,9 @@ public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPerson
 
         return PersonErrors.UsuarioNaoEncontrado(id);
     }
-    public async Task<NGO> GetNGOByIdWithAnimalsAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
+    public async Task<Organization> GetOrganizationByIdWithAnimalsAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
     {
-        var queryable = Db.Set<NGO>()
+        var queryable = Db.Set<Organization>()
                           .AsNoTracking()
                           .Include(c => c.Animals)
                           .AsQueryable();
@@ -42,9 +42,9 @@ public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPerson
         return await queryable.Where(q => q.Id == id)
                               .FirstOrDefaultAsync(cancellationToken) ?? null!;
     }
-    public async Task<Result<NGO>> GetBySlugAsync(string slug, Guid? tenantId, CancellationToken cancellationToken = default)
+    public async Task<Result<Organization>> GetBySlugAsync(string slug, Guid? tenantId, CancellationToken cancellationToken = default)
     {
-        var queryable = Db.Set<NGO>()
+        var queryable = Db.Set<Organization>()
                           .AsNoTracking()
                           .AsQueryable();
 
@@ -91,9 +91,9 @@ public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPerson
         .FirstOrDefaultAsync(cancellationToken) ?? null!;
     }
 
-    public async Task<PersonResponse> GetNGOByIdAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
+    public async Task<PersonResponse> GetOrganizationByIdAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
     {
-        var queryable = Db.Set<NGO>()
+        var queryable = Db.Set<Organization>()
                           .AsNoTracking()
                           .AsQueryable();
 
@@ -172,9 +172,9 @@ public class PersonRepository(ONGDbContext db) : Repository<Person>(db), IPerson
             PageSize = pageSize
         };
     }
-    public async Task<BasePagedResponse<PersonResponse>> GetAllNGOsPagedAsync(Guid? tenantId, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false, CancellationToken cancellationToken = default)
+    public async Task<BasePagedResponse<PersonResponse>> GetAllOrganizationsPagedAsync(Guid? tenantId, int page = 1, int pageSize = 10, string? query = null, bool returnAll = false, CancellationToken cancellationToken = default)
     {
-        var queryable = Db.Set<NGO>().AsNoTracking().AsQueryable();
+        var queryable = Db.Set<Organization>().AsNoTracking().AsQueryable();
 
         if (tenantId.HasValue)
         {

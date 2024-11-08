@@ -11,14 +11,14 @@ public static class SeedONGData
     {
         using (var scope = serviceProvider.CreateScope())
         {
-            var context = scope.ServiceProvider.GetRequiredService<ONGDbContext>();
-            var userId = Guid.Parse("2f805cb2-1c01-4d88-92ec-a989bad5b0af");
+            var context = scope.ServiceProvider.GetRequiredService<OrganizationDbContext>();
+            var personId = Guid.Parse("2f805cb2-1c01-4d88-92ec-a989bad5b0af");
             var tenantId = Guid.Parse("05bf1089-6015-4c2d-bf7c-1cbfa920ce23");
 
-            if (!context.NGOs.IgnoreQueryFilters().Any(o => o.Id == userId))
+            if (!context.Organizations.IgnoreQueryFilters().Any(o => o.Id == personId))
             {
-                var user = NGO.Create(
-                    id: userId,
+                var person = Organization.Create(
+                    id: personId,
                     tenantId: tenantId,
                     name: "Tenant Default",
                     nickname: "Tenant Default",
@@ -35,7 +35,7 @@ public static class SeedONGData
                     pixKey: "10136070078"
                 );
 
-                context.NGOs.Add(user);
+                context.Organizations.Add(person);
                 context.SaveChanges();
             }
         }

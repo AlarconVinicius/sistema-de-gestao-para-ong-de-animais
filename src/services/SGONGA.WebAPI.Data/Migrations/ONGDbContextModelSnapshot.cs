@@ -10,7 +10,7 @@ using SGONGA.WebAPI.Data.Context;
 
 namespace SGONGA.WebAPI.Data.Migrations
 {
-    [DbContext(typeof(ONGDbContext))]
+    [DbContext(typeof(OrganizationDbContext))]
     partial class ONGDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -97,7 +97,7 @@ namespace SGONGA.WebAPI.Data.Migrations
 
                     b.HasIndex("TenantId");
 
-                    b.ToTable("tbl_animals", (string)null);
+                    b.ToTable("Animals", (string)null);
                 });
 
             modelBuilder.Entity("SGONGA.WebAPI.Business.People.Entities.Person", b =>
@@ -107,7 +107,8 @@ namespace SGONGA.WebAPI.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("About")
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
 
                     b.Property<DateTime>("BirthDate")
                         .HasColumnType("datetime2");
@@ -133,6 +134,9 @@ namespace SGONGA.WebAPI.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<int>("PersonType")
+                        .HasColumnType("int");
+
                     b.Property<string>("State")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -147,12 +151,9 @@ namespace SGONGA.WebAPI.Data.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("UserType")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.ToTable("tbl_people", (string)null);
+                    b.ToTable("People", (string)null);
 
                     b.UseTptMappingStrategy();
                 });
@@ -161,10 +162,10 @@ namespace SGONGA.WebAPI.Data.Migrations
                 {
                     b.HasBaseType("SGONGA.WebAPI.Business.People.Entities.Person");
 
-                    b.ToTable("tbl_adopters", (string)null);
+                    b.ToTable("Adopters", (string)null);
                 });
 
-            modelBuilder.Entity("SGONGA.WebAPI.Business.People.Entities.NGO", b =>
+            modelBuilder.Entity("SGONGA.WebAPI.Business.People.Entities.Organization", b =>
                 {
                     b.HasBaseType("SGONGA.WebAPI.Business.People.Entities.Person");
 
@@ -172,18 +173,18 @@ namespace SGONGA.WebAPI.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.ToTable("tbl_ngos", (string)null);
+                    b.ToTable("Organizations", (string)null);
                 });
 
             modelBuilder.Entity("SGONGA.WebAPI.Business.Animals.Entities.Animal", b =>
                 {
-                    b.HasOne("SGONGA.WebAPI.Business.People.Entities.NGO", "Ngo")
+                    b.HasOne("SGONGA.WebAPI.Business.People.Entities.Organization", "Organization")
                         .WithMany("Animals")
                         .HasForeignKey("TenantId")
                         .HasPrincipalKey("TenantId")
                         .IsRequired();
 
-                    b.Navigation("Ngo");
+                    b.Navigation("Organization");
                 });
 
             modelBuilder.Entity("SGONGA.WebAPI.Business.People.Entities.Person", b =>
@@ -201,7 +202,7 @@ namespace SGONGA.WebAPI.Data.Migrations
 
                             b1.HasKey("PersonId");
 
-                            b1.ToTable("tbl_people");
+                            b1.ToTable("People");
 
                             b1.WithOwner()
                                 .HasForeignKey("PersonId");
@@ -220,7 +221,7 @@ namespace SGONGA.WebAPI.Data.Migrations
 
                             b1.HasKey("PersonId");
 
-                            b1.ToTable("tbl_people");
+                            b1.ToTable("People");
 
                             b1.WithOwner()
                                 .HasForeignKey("PersonId");
@@ -239,7 +240,7 @@ namespace SGONGA.WebAPI.Data.Migrations
 
                             b1.HasKey("PersonId");
 
-                            b1.ToTable("tbl_people");
+                            b1.ToTable("People");
 
                             b1.WithOwner()
                                 .HasForeignKey("PersonId");
@@ -258,7 +259,7 @@ namespace SGONGA.WebAPI.Data.Migrations
 
                             b1.HasKey("PersonId");
 
-                            b1.ToTable("tbl_people");
+                            b1.ToTable("People");
 
                             b1.WithOwner()
                                 .HasForeignKey("PersonId");
@@ -277,7 +278,7 @@ namespace SGONGA.WebAPI.Data.Migrations
 
                             b1.HasKey("PersonId");
 
-                            b1.ToTable("tbl_people");
+                            b1.ToTable("People");
 
                             b1.WithOwner()
                                 .HasForeignKey("PersonId");
@@ -308,16 +309,16 @@ namespace SGONGA.WebAPI.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SGONGA.WebAPI.Business.People.Entities.NGO", b =>
+            modelBuilder.Entity("SGONGA.WebAPI.Business.People.Entities.Organization", b =>
                 {
                     b.HasOne("SGONGA.WebAPI.Business.People.Entities.Person", null)
                         .WithOne()
-                        .HasForeignKey("SGONGA.WebAPI.Business.People.Entities.NGO", "Id")
+                        .HasForeignKey("SGONGA.WebAPI.Business.People.Entities.Organization", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("SGONGA.WebAPI.Business.People.Entities.NGO", b =>
+            modelBuilder.Entity("SGONGA.WebAPI.Business.People.Entities.Organization", b =>
                 {
                     b.Navigation("Animals");
                 });
