@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using Moq;
 using SGONGA.WebAPI.API.Animals.Commands.Update;
-using SGONGA.WebAPI.API.Animals.Errors;
 using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Animals.Entities;
+using SGONGA.WebAPI.Business.Animals.Errors;
 using SGONGA.WebAPI.Business.Animals.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Shared.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;

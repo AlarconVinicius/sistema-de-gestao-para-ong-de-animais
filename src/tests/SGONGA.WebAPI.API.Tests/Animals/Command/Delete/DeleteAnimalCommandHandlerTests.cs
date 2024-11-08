@@ -1,14 +1,12 @@
 ﻿using FluentAssertions;
 using Moq;
 using SGONGA.WebAPI.API.Animals.Commands.Delete;
-using SGONGA.WebAPI.API.Animals.Commands.Update;
-using SGONGA.WebAPI.API.Animals.Errors;
 using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Business.Animals.Entities;
+using SGONGA.WebAPI.Business.Animals.Errors;
 using SGONGA.WebAPI.Business.Animals.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Shared.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
-using SGONGA.WebAPI.Mocks;
 using System.Linq.Expressions;
 using static SGONGA.WebAPI.API.Animals.Commands.Delete.DeleteAnimalCommand;
 

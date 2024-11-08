@@ -1,6 +1,6 @@
 ﻿using SGONGA.WebAPI.API.Abstractions.Messaging;
-using SGONGA.WebAPI.API.Animals.Errors;
 using SGONGA.WebAPI.Business.Abstractions;
+using SGONGA.WebAPI.Business.Animals.Errors;
 using SGONGA.WebAPI.Business.Animals.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Animals.Responses;
 using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
