@@ -14,9 +14,7 @@ public sealed record Slug : ValueObject
     #region Constructors
     private Slug(string urlPath)
     {
-        if (string.IsNullOrEmpty(urlPath))
-            throw new PersonValidationException(Error.Validation("Slug inválida"));
-        if(urlPath.Length > MaxLength || urlPath.Length < MinLength)
+        if (string.IsNullOrWhiteSpace(urlPath) || urlPath.Length > MaxLength || urlPath.Length < MinLength)
             throw new PersonValidationException(Error.Validation($"Slug deve conter de {MinLength} à {MaxLength} caracteres"));
 
         UrlPath = urlPath.SlugifyString();

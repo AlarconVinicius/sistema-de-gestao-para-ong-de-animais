@@ -12,8 +12,17 @@ public sealed record Site : ValueObject
     #region Constructors
     private Site(string url)
     {
-        if(!IsValidUrl(url))
-            throw new PersonValidationException(Error.Validation("URL inválida.")); 
+        var errors = new List<string>();
+
+        if (string.IsNullOrWhiteSpace(url) || url.Length > MaxLength || url.Length < MinLength)
+            errors.Add($"URL deve conter entre {MinLength} e {MaxLength} caracteres.");
+
+        if (!IsValidUrl(url))
+            errors.Add("URL inválida. O formato esperado deve começar com 'http://' ou 'https://', seguido de um domínio válido, como 'https://site.com' ou 'http://site.com'.");
+
+        if (errors.Count > 0)
+            throw new PersonValidationException(errors.Select(Error.Validation).ToArray());
+
         Url = url;
     }
     #endregion
