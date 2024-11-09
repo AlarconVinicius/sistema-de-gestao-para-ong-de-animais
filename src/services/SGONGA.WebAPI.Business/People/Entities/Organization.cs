@@ -31,6 +31,7 @@ public sealed class Organization : Person
         string? pixKey) : base(id, tenantId, EPersonType.Organization, name, nickname, document, site, email, phoneNumber, isPhoneNumberVisible, subscribeToNewsletter, birthDate, state, city, about)
     {
         PixKey = string.IsNullOrEmpty(pixKey) ? document : pixKey;
+        Animals = new List<Animal>();
     }
     public static Organization Create(Guid id, Guid tenantId, string name, string nickname, string document, string site, string email, string phoneNumber, bool isPhoneNumberVisible, bool subscribeToNewsletter, DateTime birthDate, string state, string city, string? about, string? pixKey)
     {

@@ -29,6 +29,20 @@ public abstract class Person : Entity
 
     protected Person(Guid id, Guid tenantId, EPersonType personType, string name, string nickname, string document, string site, string email, string phoneNumber, bool isPhoneNumberVisible, bool subscribeToNewsletter, DateTime birthDate, string state, string city, string? about) : base(id)
     {
+        var errors = new List<string>();
+
+        if (string.IsNullOrWhiteSpace(name))
+            errors.Add("Nome não pode ser nulo ou vazio.");
+        if (string.IsNullOrWhiteSpace(nickname))
+            errors.Add("Apelido não pode ser nulo ou vazio.");
+        if (string.IsNullOrWhiteSpace(state))
+            errors.Add("Estado não pode ser nulo ou vazio.");
+        if (string.IsNullOrWhiteSpace(city))
+            errors.Add("Cidade não pode ser nula ou vazia.");
+
+        if (errors.Count != 0)
+            throw new PersonValidationException(errors.Select(Error.Validation).ToArray());
+
         ValidateAge(birthDate);
         BirthDate = birthDate;
         Site = site;
