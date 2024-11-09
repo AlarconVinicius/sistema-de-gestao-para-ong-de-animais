@@ -1,25 +1,24 @@
 ﻿using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.People.Entities;
 using SGONGA.WebAPI.Business.People.Enum;
 using SGONGA.WebAPI.Business.People.Exceptions;
 
-namespace SGONGA.WebAPI.Business.Models;
+namespace SGONGA.WebAPI.Business.People.Entities;
 public sealed class Adopter : Person
 {
     private Adopter() { }
     private Adopter(Guid id) : base(id) { }
 
     private Adopter(
-        Guid id, 
-        Guid tenantId, 
-        string name, 
-        string nickname, 
+        Guid id,
+        Guid tenantId,
+        string name,
+        string nickname,
         string document,
         string site,
-        string email, 
+        string email,
         string phoneNumber,
         bool isPhoneNumberVisible,
-        bool subscribeToNewsletter, 
+        bool subscribeToNewsletter,
         DateTime birthDate,
         string state,
         string city,

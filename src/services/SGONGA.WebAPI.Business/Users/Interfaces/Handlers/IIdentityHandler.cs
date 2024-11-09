@@ -1,7 +1,7 @@
 ﻿using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Responses;
 using SGONGA.WebAPI.Business.Shared.Responses;
 using SGONGA.WebAPI.Business.Users.Requests;
+using SGONGA.WebAPI.Business.Users.Responses;
 
 namespace SGONGA.WebAPI.Business.Users.Interfaces.Handlers;
 

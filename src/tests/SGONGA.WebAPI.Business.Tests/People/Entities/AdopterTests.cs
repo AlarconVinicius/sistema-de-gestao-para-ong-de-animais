@@ -1,6 +1,4 @@
-﻿using SGONGA.WebAPI.Business.Animals.Entities;
-using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.People.Entities;
+﻿using SGONGA.WebAPI.Business.People.Entities;
 using SGONGA.WebAPI.Business.People.Exceptions;
 
 namespace SGONGA.WebAPI.Business.Tests.People.Entities;

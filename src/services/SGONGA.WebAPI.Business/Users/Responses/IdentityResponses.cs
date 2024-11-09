@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace SGONGA.WebAPI.Business.Responses;
+namespace SGONGA.WebAPI.Business.Users.Responses;
 
 public class UserResponse
 {

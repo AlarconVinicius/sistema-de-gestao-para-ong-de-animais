@@ -1,15 +1,14 @@
 ﻿using SGONGA.Core.Extensions;
 using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Models;
 using SGONGA.WebAPI.Business.People.Entities;
 using SGONGA.WebAPI.Business.People.Enum;
 using SGONGA.WebAPI.Business.People.Errors;
 using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Responses;
 using SGONGA.WebAPI.Business.Shared.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Users.Interfaces.Handlers;
 using SGONGA.WebAPI.Business.Users.Requests;
+using SGONGA.WebAPI.Business.Users.Responses;
 
 namespace SGONGA.WebAPI.API.People.Commands.Create;
 

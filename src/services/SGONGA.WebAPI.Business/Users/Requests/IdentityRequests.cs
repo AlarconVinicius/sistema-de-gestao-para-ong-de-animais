@@ -1,5 +1,4 @@
-﻿using SGONGA.WebAPI.Business.Models;
-using SGONGA.WebAPI.Business.Responses;
+﻿using SGONGA.WebAPI.Business.Users.Responses;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 

@@ -2,7 +2,7 @@
 using SGONGA.WebAPI.Business.Animals.Responses;
 using SGONGA.WebAPI.Mocks;
 
-namespace SGONGA.WebAPI.Business.Tests.Animals.Models;
+namespace SGONGA.WebAPI.Business.Tests.Animals.Responses;
 
 [Trait("Animal", "Responses")]
 public sealed class AnimalResponseTests
