@@ -4,7 +4,7 @@ using SGONGA.WebAPI.Business.People.Exceptions;
 
 namespace SGONGA.WebAPI.Business.People.ValueObjects;
 
-public class Email
+public sealed record Email : ValueObject
 {
     #region Constants
     public const short MaxLength = 254;
@@ -12,9 +12,18 @@ public class Email
     #endregion
 
     #region Constructors
-    public Email(string address)
+    private Email(string address)
     {
-        ValidateEmail(address);
+        var errors = new List<string>();
+        if (string.IsNullOrWhiteSpace(address) || address.Length > MaxLength || address.Length < MinLength)
+            errors.Add($"E-mail deve conter entre {MinLength} e {MaxLength} caracteres.");
+
+        if (!IsValidEmail(address))
+            errors.Add("Email inválido");
+
+        if (errors.Count > 0)
+            throw new PersonValidationException(errors.Select(Error.Validation).ToArray());
+
         Address = address.ToLower();
     }
     #endregion
@@ -28,12 +37,11 @@ public class Email
     public static implicit operator Email(string url) => new(url);
     #endregion
     #region Methods
-    private static void ValidateEmail(string address)
+    private static bool IsValidEmail(string address)
     {
-        if (!RegexUtils.EmailRegex.IsMatch(address))
-        {
-            throw new PersonValidationException(Error.Validation("Email inválido"));
-        }
+        if (string.IsNullOrWhiteSpace(address))
+            return false;
+        return RegexUtils.EmailRegex.IsMatch(address);
     }
     #endregion
 }
