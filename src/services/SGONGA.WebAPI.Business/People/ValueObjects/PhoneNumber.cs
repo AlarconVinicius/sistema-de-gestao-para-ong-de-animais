@@ -5,7 +5,7 @@ using SGONGA.WebAPI.Business.People.Exceptions;
 
 namespace SGONGA.WebAPI.Business.People.ValueObjects;
 
-public class PhoneNumber
+public sealed record PhoneNumber : ValueObject
 {
     #region Constants
     public const short LengthWithDDD = 11;
@@ -13,7 +13,7 @@ public class PhoneNumber
     #endregion
 
     #region Constructors
-    public PhoneNumber(string number)
+    private PhoneNumber(string number)
     {
         var cleanNumber = number.OnlyNumbers();
         ValidatePhoneNumber(cleanNumber);
