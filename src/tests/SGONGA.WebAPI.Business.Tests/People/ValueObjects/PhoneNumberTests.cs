@@ -12,7 +12,7 @@ public class PhoneNumberTests
     [InlineData("12345-6789")]
     [InlineData("11987654321")]
     [InlineData("(11) 98765-4321")]
-    public void Constructor_ShouldInitialize_WhenCalledWithValidPhoneNumbers(string validPhoneNumber)
+    public void Constructor_Should_Initialize_WhenCalledWithValidPhoneNumbers(string validPhoneNumber)
     {
         // Arrange & Act
         PhoneNumber phoneNumber = validPhoneNumber;
@@ -28,7 +28,7 @@ public class PhoneNumberTests
     [InlineData("abcdefghijk")]
     [InlineData("112345678901")]
     [InlineData("11234567")]
-    public void Constructor_ShouldThrowException_WhenCalledWithInvalidPhoneNumbers(string invalidPhoneNumber)
+    public void Constructor_Should_ThrowException_WhenCalledWithInvalidPhoneNumbers(string invalidPhoneNumber)
     {
         // Arrange & Act & Assert
         var exception = Assert.Throws<PersonValidationException>(() =>

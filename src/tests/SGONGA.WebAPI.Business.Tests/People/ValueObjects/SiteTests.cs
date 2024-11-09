@@ -13,7 +13,7 @@ public class SiteTests
     [InlineData("http://mywebsite.com")]
     [InlineData("http://www.mywebsite.com")]
     [InlineData("http://mywebsite.com/sub-domain")]
-    public void Constructor_ShouldInitialize_WhenCalledWithValidUrls(string validSite)
+    public void Constructor_Should_Initialize_WhenCalledWithValidUrls(string validSite)
     {
         // Arrange & Act
         Site site = validSite;
@@ -28,7 +28,7 @@ public class SiteTests
     [InlineData("mywebsite.com")]
     [InlineData("www.mywebsite.com")]
     [InlineData("mywebsite.com/sub-domain")]
-    public void Constructor_ShouldInitialize_WhenCalledWithVInvalidUrls(string invalidSite)
+    public void Constructor_Should_ThrowException_WhenCalledWithVInvalidUrls(string invalidSite)
     {
         // Arrange & Act & Assert
         var exception = Assert.Throws<PersonValidationException>(() =>
@@ -45,7 +45,7 @@ public class SiteTests
     [InlineData(" ")]
     [InlineData("site")]
     [InlineData("site site site site site site site site site site site site site site site site site site site site site site site site site site site site site site site site  site  site  site  site  site  site site site")]
-    public void Constructor_ShouldThrowException_WhenCalledWithInvalidLength(string invalidSite)
+    public void Constructor_Should_ThrowException_WhenCalledWithInvalidLength(string invalidSite)
     {
         // Arrange & Act & Assert
         var exception = Assert.Throws<PersonValidationException>(() =>
