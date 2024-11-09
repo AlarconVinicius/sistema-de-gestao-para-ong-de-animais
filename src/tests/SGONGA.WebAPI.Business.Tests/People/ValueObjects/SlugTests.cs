@@ -22,23 +22,10 @@ public class SlugTests
         Assert.True(slug.UrlPath.Length > Slug.MinLength);
     }
 
-    [Fact]
-    public void Constructor_ShouldThrowException_WhenCalledWithInvalidSlug()
-    {
-        // Arrange
-        string invalidSlug = "";
-
-        // Act & Assert
-        var exception = Assert.Throws<PersonValidationException>(() =>
-        {
-            Slug slug = invalidSlug;
-        });
-
-        Assert.Equal("Slug inválida", exception.Errors.First().Message);
-        Assert.Single(exception.Errors);
-    }
-
     [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    [InlineData(" ")]
     [InlineData("sl")]
     [InlineData("slug slug slug slug slug slug slug slug slug slug slug slug slug slug slug slug slug slug slug slug slug")]
     public void Constructor_ShouldThrowException_WhenCalledWithInvalidLength(string invalidSlug)
@@ -49,7 +36,7 @@ public class SlugTests
             Slug slug = invalidSlug;
         });
 
-        Assert.Equal("Slug deve conter de 3 à 100 caracteres", exception.Errors.First().Message);
+        Assert.Equal($"Slug deve conter de {Slug.MinLength} à {Slug.MaxLength} caracteres", exception.Errors.First().Message);
         Assert.Single(exception.Errors);
     }
 }
