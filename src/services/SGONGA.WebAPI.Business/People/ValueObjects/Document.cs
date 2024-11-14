@@ -43,89 +43,52 @@ public sealed record Document : ValueObject
             : ValidateCnpj(cleanDocument);
     }
 
-    private static bool ValidateCpf(string cpf)
+    public static bool ValidateCpf(string cpf)
     {
-        if (cpf.Length != CpfLength)
+        cpf = cpf.OnlyNumbers();
+
+        if (cpf.Length != CpfLength || cpf.Distinct().Count() == 1 || cpf == "12345678909")
             return false;
 
-        var areAllDigitsEqual = true;
-        for (var i = 1; i < CpfLength && areAllDigitsEqual; i++)
-            if (cpf[i] != cpf[0])
-                areAllDigitsEqual = false;
+        int[] numbers = cpf.Select(c => c - '0').ToArray();
+        int sum = 0;
 
-        if (areAllDigitsEqual || cpf == "12345678909")
-            return false;
+        for (int i = 0; i < 9; i++)
+            sum += numbers[i] * (10 - i);
 
-        var numbers = new int[CpfLength];
-        for (var i = 0; i < CpfLength; i++)
-            numbers[i] = int.Parse(cpf[i].ToString());
-
-        var sum = 0;
-        for (var i = 0; i < CpfLength - 2; i++)
-            sum += (CpfLength - 1 - i) * numbers[i];
-
-        var result = sum % 11;
-        if (result == 1 || result == 0)
-        {
-            if (numbers[9] != 0)
-                return false;
-        }
-        else if (numbers[9] != 11 - result)
+        int result = sum % 11;
+        if (numbers[9] != (result < 2 ? 0 : 11 - result))
             return false;
 
         sum = 0;
-        for (var i = 0; i < CpfLength - 1; i++)
-            sum += (CpfLength - i) * numbers[i];
+        for (int i = 0; i < 10; i++)
+            sum += numbers[i] * (11 - i);
 
-        result = sum % 11;
-        if (result == 1 || result == 0)
-        {
-            if (numbers[10] != 0)
-                return false;
-        }
-        else if (numbers[10] != 11 - result)
-            return false;
-
-        return true;
+        result = sum % CpfLength;
+        return numbers[10] == (result < 2 ? 0 : 11 - result);
     }
 
-    private static bool ValidateCnpj(string cnpj)
+    public static bool ValidateCnpj(string cnpj)
     {
+        cnpj = cnpj.OnlyNumbers();
+
         if (cnpj.Length != CnpjLength)
             return false;
 
-        var areAllDigitsEqual = true;
-        for (var i = 1; i < CnpjLength && areAllDigitsEqual; i++)
-            if (cnpj[i] != cnpj[0])
-                areAllDigitsEqual = false;
-
-        if (areAllDigitsEqual)
+        if (cnpj.Distinct().Count() == 1)
             return false;
 
-        var numbers = new int[CnpjLength];
-        for (var i = 0; i < CnpjLength; i++)
-            numbers[i] = int.Parse(cnpj[i].ToString());
-
-        var multiplier1 = new int[12] { 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
-        var sum = 0;
-
-        for (var i = 0; i < 12; i++)
-            sum += numbers[i] * multiplier1[i];
-
-        var result = sum % 11;
-        var digit1 = result < 2 ? 0 : 11 - result;
+        int[] numbers = cnpj.Select(c => c - '0').ToArray();
+        int[] multiplier1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        int sum1 = numbers.Take(12).Select((num, i) => num * multiplier1[i]).Sum();
+        int digit1 = sum1 % 11 < 2 ? 0 : 11 - (sum1 % 11);
 
         if (numbers[12] != digit1)
             return false;
 
-        var multiplier2 = new int[13] { 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
-        sum = 0;
-
-        for (var i = 0; i < 13; i++)
-            sum += numbers[i] * multiplier2[i];
-
-        result = sum % 11;
-        var digit2 = result < 2 ? 0 : 11 - result;
+        int[] multiplier2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+        int sum2 = numbers.Take(13).Select((num, i) => num * multiplier2[i]).Sum();
+        int digit2 = sum2 % 11 < 2 ? 0 : 11 - (sum2 % 11);
 
         return numbers[13] == digit2;
     }
