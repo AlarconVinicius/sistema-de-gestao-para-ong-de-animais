@@ -1,4 +1,5 @@
-﻿using SGONGA.WebAPI.Business.People.ValueObjects;
+﻿using SGONGA.WebAPI.Business.People.Exceptions;
+using SGONGA.WebAPI.Business.People.ValueObjects;
 
 namespace SGONGA.WebAPI.Business.Tests.People.ValueObjects;
 
@@ -6,6 +7,32 @@ namespace SGONGA.WebAPI.Business.Tests.People.ValueObjects;
 public class DocumentTests
 {
     #region CPF Tests
+    [Fact]
+    public void Constructor_ShouldInitialize_WhenCalledWithValidCPF()
+    {
+        // Arrange
+        string validCpf = "62654441075";
+        // Act
+        Document document = validCpf;
+
+        // Assert
+        Assert.Equal(validCpf, document.Number);
+        Assert.True(document.IsCpf);
+        Assert.True(document.Number.Length == Document.CpfLength);
+    }
+
+    [Fact]
+    public void Constructor_ShouldThrowException_WhenCalledWithInvalidCPF()
+    {
+        // Arrange & Act & Assert
+        var exception = Assert.Throws<PersonValidationException>(() =>
+        {
+            Document document = "62654441065";
+        });
+
+        Assert.Contains(exception.Errors, e => e.Message == "Documento inválido: 62654441065");
+    }
+
     [Theory]
     [InlineData("12345678900")] // Invalid CPF
     [InlineData("11144477731")] // Invalid CPF with incorrect check digits
@@ -44,6 +71,32 @@ public class DocumentTests
     #endregion
 
     #region CNPJ Tests
+    [Fact]
+    public void Constructor_ShouldInitialize_WhenCalledWithValidCNPJ()
+    {
+        // Arrange
+        string validCnpj = "11444777000161";
+        // Act
+        Document document = validCnpj;
+
+        // Assert
+        Assert.Equal(validCnpj, document.Number);
+        Assert.True(document.IsCnpj);
+        Assert.True(document.Number.Length == Document.CnpjLength);
+    }
+
+    [Fact]
+    public void Constructor_ShouldThrowException_WhenCalledWithInvalidCNPJ()
+    {
+        // Arrange & Act & Assert
+        var exception = Assert.Throws<PersonValidationException>(() =>
+        {
+            Document document = "11444777000171";
+        });
+
+        Assert.Contains(exception.Errors, e => e.Message == "Documento inválido: 11444777000171");
+    }
+
     [Theory]
     [InlineData("11111111111111")] // CNPJ with all digits the same
     [InlineData("00000000000000")] // CNPJ with zeros
@@ -72,6 +125,45 @@ public class DocumentTests
 
         // Assert
         Assert.True(result);
+    }
+    #endregion
+
+    #region Document Formatting Tests
+    [Theory]
+    [InlineData("62654441075", "626.544.410-75")] // Valid CPF
+    [InlineData("82278834002", "822.788.340-02")] // Another valid CPF
+    [InlineData("29828241080", "298.282.410-80")] // Valid CPF with formatting
+    [InlineData("99311650064", "993.116.500-64")] // Another valid CPF with formatting
+    [InlineData("11444777000161", "11.444.777/0001-61")] // Valid CNPJ
+    [InlineData("62823257000109", "62.823.257/0001-09")] // Valid CNPJ
+    [InlineData("45997418000153", "45.997.418/0001-53")] // Valid CNPJ
+    public void DocumentFormat_Should_Return_Correct_Format(string documentNumber, string expectedFormat)
+    {
+        // Arrange
+        Document document = documentNumber;
+
+        // Act
+        var formatted = document.Format();
+
+        // Assert
+        Assert.Equal(expectedFormat, formatted);
+    }
+
+    [Theory]
+    [InlineData("62654441075", "626.544.410-75")] // Valid CPF
+    [InlineData("82278834002", "822.788.340-02")] // Another valid CPF
+    [InlineData("11444777000161", "11.444.777/0001-61")] // Valid CNPJ
+    [InlineData("62823257000109", "62.823.257/0001-09")] // Valid CNPJ
+    public void DocumentToString_Should_Return_Correct_Format(string documentNumber, string expectedFormat)
+    {
+        // Arrange
+        Document document = documentNumber;
+
+        // Act
+        var formatted = document.ToString();
+
+        // Assert
+        Assert.Equal(expectedFormat, formatted);
     }
     #endregion
 }
