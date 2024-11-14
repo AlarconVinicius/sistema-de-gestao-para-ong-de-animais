@@ -72,7 +72,7 @@ public class CreatePersonCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRe
                 break;
 
             default:
-                return PersonErrors.NaoFoiPossivelCriarUsuario;
+                return PersonErrors.FailedToCreateUser;
         }
 
         identityResult = await IdentityHandler.CreateAsync(new CreateUserRequest(newPersonId, command.Email, command.Password, command.ConfirmPassword));
@@ -88,13 +88,13 @@ public class CreatePersonCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRe
     private async Task<Result> CheckAvailabilityAsync(CreatePersonCommand command)
     {
         if ((await DocumentAvailable(command.Document, command.PersonType)).IsFailed)
-            return PersonErrors.DocumentoEmUso(command.Document);
+            return PersonErrors.DocumentInUse(command.Document);
 
         if ((await NicknameAvailable(command.Nickname, command.PersonType)).IsFailed)
-            return PersonErrors.ApelidoEmUso(command.Nickname);
+            return PersonErrors.NicknameInUse(command.Nickname);
 
         if ((await EmailAvailable(command.Email)).IsFailed)
-            return PersonErrors.EmailEmUso(command.Email);
+            return PersonErrors.EmailInUse(command.Email);
 
         return Result.Ok();
     }
@@ -103,20 +103,20 @@ public class CreatePersonCommandHandler(IGenericUnitOfWork UnitOfWork, IPersonRe
     {
         var available = !await PersonRepository.ExistsAsync(f => (f.Nickname == nickname || f.Slug == nickname.SlugifyString()) && f.PersonType == type);
 
-        return available ? Result.Ok() : PersonErrors.ApelidoEmUso(nickname);
+        return available ? Result.Ok() : PersonErrors.NicknameInUse(nickname);
     }
 
     private async Task<Result> DocumentAvailable(string document, EPersonType type)
     {
         var available = !await PersonRepository.ExistsAsync(f => f.Document == document && f.PersonType == type);
 
-        return available ? Result.Ok() : PersonErrors.DocumentoEmUso(document);
+        return available ? Result.Ok() : PersonErrors.DocumentInUse(document);
     }
 
     private async Task<Result> EmailAvailable(string email)
     {
         var available = !await PersonRepository.ExistsAsync(f => f.Email.Address == email);
 
-        return available ? Result.Ok() : PersonErrors.EmailEmUso(email);
+        return available ? Result.Ok() : PersonErrors.EmailInUse(email);
     }
 }

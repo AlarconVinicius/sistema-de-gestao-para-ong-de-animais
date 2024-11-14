@@ -43,7 +43,7 @@ internal sealed class DeletePersonCommandHandler(IGenericUnitOfWork UnitOfWork, 
                 UnitOfWork.Delete(OrganizationResult);
                 break;
             default:
-                return PersonErrors.NaoFoiPossivelDeletarUsuario;
+                return PersonErrors.FailedToDeleteUser;
         }
 
         identityResult = await IdentityHandler.DeleteAsync(new DeleteUserRequest(request.Id));

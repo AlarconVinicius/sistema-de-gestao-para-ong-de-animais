@@ -16,7 +16,7 @@ internal sealed class UpdatePersonCommandHandler(IGenericUnitOfWork UnitOfWork, 
     public async Task<Result> Handle(UpdatePersonCommand request, CancellationToken cancellationToken)
     {
         if (AppUser.GetUserId() != request.Id)
-            return PersonErrors.UsuarioNaoEncontrado(request.Id);
+            return PersonErrors.UserNotFound(request.Id);
 
         Result<Guid> tenantId = await TenantProvider.GetTenantId();
         if (tenantId.IsFailed)
@@ -50,22 +50,22 @@ internal sealed class UpdatePersonCommandHandler(IGenericUnitOfWork UnitOfWork, 
             case EPersonType.Adopter:
                 var adopter = await PersonRepository.SearchAsync(q => q.Id == personId && q.TenantId == tenantId && q.PersonType == EPersonType.Adopter, cancellationToken) as Adopter;
                 if (adopter is null)
-                    return PersonErrors.UsuarioNaoEncontrado(personId);
+                    return PersonErrors.UserNotFound(personId);
                 return adopter;
             case EPersonType.Organization:
                 var organization = await PersonRepository.SearchAsync(q => q.Id == personId && q.TenantId == tenantId && q.PersonType == EPersonType.Organization, cancellationToken) as Organization;
                 if (organization is null)
-                    return PersonErrors.UsuarioNaoEncontrado(personId);
+                    return PersonErrors.UserNotFound(personId);
                 return organization;
             default:
-                return PersonErrors.NaoFoiPossivelAtualizarUsuario;
+                return PersonErrors.FailedToUpdateUser;
         };
     }
     private async Task<Result> IsEmailAvailable(string email, EPersonType type)
     {
         var available = !await PersonRepository.ExistsAsync(f => f.Email.Address == email && f.PersonType == type);
 
-        return available ? Result.Ok() : PersonErrors.EmailEmUso(email);
+        return available ? Result.Ok() : PersonErrors.EmailInUse(email);
     }
     private void UpdatePerson(Person person, UpdatePersonCommand request)
     {

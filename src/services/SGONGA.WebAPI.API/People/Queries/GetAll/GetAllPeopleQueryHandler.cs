@@ -29,7 +29,7 @@ public class GetAllPeopleQueryHandler(IPersonRepository PersonRepository, ITenan
             case EPersonType.Organization:
                 return await PersonRepository.GetAllOrganizationsPagedAsync(tenantId, request.PageNumber, request.PageSize, request.Query, request.ReturnAll, cancellationToken);
             default:
-                return PersonErrors.NaoFoiPossivelRecuperarUsuarios;
+                return PersonErrors.FailedToRetrieveUsers;
         }
     }
 }

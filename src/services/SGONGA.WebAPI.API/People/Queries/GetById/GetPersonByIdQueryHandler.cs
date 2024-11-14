@@ -34,7 +34,7 @@ public class GetPersonByIdQueryHandler(IPersonRepository PersonRepository, ITena
                 return await PersonRepository.GetOrganizationByIdAsync(request.Id, tenantId, cancellationToken);
 
             default:
-                return PersonErrors.NaoFoiPossivelRecuperarUsuario;
+                return PersonErrors.FailedToRetrieveUser;
         }
     }
 }

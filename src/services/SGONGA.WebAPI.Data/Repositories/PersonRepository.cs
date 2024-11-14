@@ -25,7 +25,7 @@ public class PersonRepository(OrganizationDbContext db) : Repository<Person>(db)
                 return tipo;
         }
 
-        return PersonErrors.UsuarioNaoEncontrado(id);
+        return PersonErrors.UserNotFound(id);
     }
     public async Task<Organization> GetOrganizationByIdWithAnimalsAsync(Guid id, Guid? tenantId, CancellationToken cancellationToken = default)
     {
