@@ -15,7 +15,7 @@ public class Result
     protected Result(IEnumerable<Error> errors)
     {
         if (errors == null || !errors.Any())
-            throw new ArgumentException("A lista de erros não pode ser nula ou vazia para uma falha.");
+            throw new ArgumentNullException("A lista de erros não pode ser nula ou vazia para uma falha.");
 
         Errors.AddRange(errors);
     }
