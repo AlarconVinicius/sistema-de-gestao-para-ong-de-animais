@@ -4,8 +4,8 @@ using SGONGA.WebAPI.Business.People.ValueObjects;
 
 namespace SGONGA.WebAPI.Business.Tests.People.ValueObjects;
 
-[Trait("Person", "ValueObjects - PhoneNumber")]
-public class PhoneNumberTests
+[Trait("People", "ValueObjects")]
+public sealed class PhoneNumberTests
 {
     [Theory]
     [InlineData("123456789")]

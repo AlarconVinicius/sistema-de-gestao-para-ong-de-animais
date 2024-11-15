@@ -4,7 +4,7 @@ using SGONGA.WebAPI.Mocks;
 
 namespace SGONGA.WebAPI.Business.Tests.Animals.Responses;
 
-[Trait("Animal", "Responses")]
+[Trait("Animals", "Responses")]
 public sealed class AnimalResponseTests
 {
     [Fact(DisplayName = "Constructor Returns AnimalResponse")]

@@ -3,8 +3,8 @@ using SGONGA.WebAPI.Business.People.ValueObjects;
 
 namespace SGONGA.WebAPI.Business.Tests.People.ValueObjects;
 
-[Trait("Person", "ValueObjects - Site")]
-public class SiteTests
+[Trait("People", "ValueObjects")]
+public sealed class SiteTests
 {
     [Theory]
     [InlineData("https://mywebsite.com")]

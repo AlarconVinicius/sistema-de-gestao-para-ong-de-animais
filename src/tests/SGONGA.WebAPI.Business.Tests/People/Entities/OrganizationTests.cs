@@ -4,8 +4,8 @@ using SGONGA.WebAPI.Business.People.Exceptions;
 
 namespace SGONGA.WebAPI.Business.Tests.People.Entities;
 
-[Trait("Person", "Entities - Organization")]
-public class OrganizationTests
+[Trait("People", "Entities")]
+public sealed class OrganizationTests
 {
     [Fact]
     public void Constructor_Should_InitializeId_WhenCalledWithValidId()

@@ -1,6 +1,8 @@
 ﻿using SGONGA.WebAPI.Business.Shared.Exceptions;
 
 namespace SGONGA.WebAPI.Business.Tests.Shared.Exceptions;
+
+[Trait("Shared", "Exceptions")]
 public class DomainExceptionTests
 {
     [Fact]

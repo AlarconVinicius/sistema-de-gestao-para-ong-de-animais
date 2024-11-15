@@ -3,9 +3,9 @@ using SGONGA.WebAPI.Business.Animals.Entities;
 using SGONGA.WebAPI.Business.Shared.Exceptions;
 using SGONGA.WebAPI.Mocks;
 
-namespace SGONGA.WebAPI.Business.Tests.Animals.Models;
+namespace SGONGA.WebAPI.Business.Tests.Animals.Entities;
 
-[Trait("Animal", "Models")]
+[Trait("Animals", "Entities")]
 public sealed class AnimalTests
 {
     [Fact(DisplayName = "Constructor initializes with default values when called with no parameters")]

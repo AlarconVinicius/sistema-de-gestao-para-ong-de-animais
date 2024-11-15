@@ -3,8 +3,8 @@ using SGONGA.WebAPI.Business.People.Responses;
 
 namespace SGONGA.WebAPI.Business.Tests.People.Responses;
 
-[Trait("Person", "Responses - Person")]
-public class PersonResponseTests
+[Trait("People", "Responses")]
+public sealed class PersonResponseTests
 {
     [Fact]
     public void PersonResponse_Should_Initialize_Properties_Correctly()

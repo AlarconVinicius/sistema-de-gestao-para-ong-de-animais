@@ -3,8 +3,8 @@ using SGONGA.WebAPI.Business.People.Errors;
 
 namespace SGONGA.WebAPI.Business.Tests.People.Errors;
 
-[Trait("Person", "Errors")]
-public class PersonErrorsTests
+[Trait("People", "Errors")]
+public sealed class PersonErrorsTests
 {
     [Fact]
     public void UsuarioNaoEncontrado_ShouldReturnNotFoundError()

@@ -3,7 +3,7 @@
 namespace SGONGA.WebAPI.Business.Tests.Abstractions;
 
 [Trait("Abstractions", "Result")]
-public class ErrorTests
+public sealed class ErrorTests
 {
     [Fact]
     public void NotFound_Should_ReturnError_WithCorrectProperties()

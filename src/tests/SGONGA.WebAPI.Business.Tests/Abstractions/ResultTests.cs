@@ -3,7 +3,7 @@
 namespace SGONGA.WebAPI.Business.Tests.Abstractions;
 
 [Trait("Abstractions", "Result")]
-public class ResultTests
+public sealed class ResultTests
 {
     [Fact]
     public void Ok_Should_Return_SuccessfulResult()

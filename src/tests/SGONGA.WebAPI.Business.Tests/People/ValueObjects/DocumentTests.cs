@@ -3,8 +3,8 @@ using SGONGA.WebAPI.Business.People.ValueObjects;
 
 namespace SGONGA.WebAPI.Business.Tests.People.ValueObjects;
 
-[Trait("Person", "ValueObjects - Document")]
-public class DocumentTests
+[Trait("People", "ValueObjects")]
+public sealed class DocumentTests
 {
     #region CPF Tests
     [Fact]

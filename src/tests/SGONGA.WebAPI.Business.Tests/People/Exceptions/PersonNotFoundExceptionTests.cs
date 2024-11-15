@@ -2,8 +2,8 @@
 
 namespace SGONGA.WebAPI.Business.Tests.People.Exceptions;
 
-[Trait("Person", "Exceptions")]
-public class PersonNotFoundExceptionTests
+[Trait("People", "Exceptions")]
+public sealed class PersonNotFoundExceptionTests
 {
     [Fact]
     public async Task PersonNotFoundException_Should_Contain_Correct_Message()

@@ -3,8 +3,8 @@ using SGONGA.WebAPI.Business.People.ValueObjects;
 
 namespace SGONGA.WebAPI.Business.Tests.People.ValueObjects;
 
-[Trait("Person", "ValueObjects - Email")]
-public class EmailTests
+[Trait("People", "ValueObjects")]
+public sealed class EmailTests
 {
     [Fact]
     public void Constructor_Should_Initialize_WhenCalledWithValidEmails()

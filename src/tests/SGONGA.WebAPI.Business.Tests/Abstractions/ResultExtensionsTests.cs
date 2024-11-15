@@ -3,7 +3,7 @@
 namespace SGONGA.WebAPI.Business.Tests.Abstractions;
 
 [Trait("Abstractions", "Result")]
-public class ResultExtensionsTests
+public sealed class ResultExtensionsTests
 {
     [Fact]
     public void Match_Should_Invoke_OnSuccess_For_SuccessfulResult()

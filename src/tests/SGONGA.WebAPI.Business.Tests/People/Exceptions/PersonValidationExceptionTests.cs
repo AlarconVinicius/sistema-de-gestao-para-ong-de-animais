@@ -3,8 +3,8 @@ using SGONGA.WebAPI.Business.People.Exceptions;
 
 namespace SGONGA.WebAPI.Business.Tests.People.Exceptions;
 
-[Trait("Person", "Exceptions")]
-public class PersonValidationExceptionTests
+[Trait("People", "Exceptions")]
+public sealed class PersonValidationExceptionTests
 {
     [Fact]
     public async Task PersonValidationException_Should_Contain_Single_Error()

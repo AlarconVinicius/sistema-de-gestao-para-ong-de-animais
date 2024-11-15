@@ -3,8 +3,8 @@ using SGONGA.WebAPI.Business.People.ValueObjects;
 
 namespace SGONGA.WebAPI.Business.Tests.People.ValueObjects;
 
-[Trait("Person", "ValueObjects - Slug")]
-public class SlugTests
+[Trait("People", "ValueObjects")]
+public sealed class SlugTests
 {
 
     [Fact]
