@@ -6,9 +6,9 @@ using SGONGA.WebAPI.Business.People.Enum;
 using SGONGA.WebAPI.Business.People.Errors;
 using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Shared.Interfaces.Repositories;
-using SGONGA.WebAPI.Business.Users.Interfaces.Handlers;
-using SGONGA.WebAPI.Business.Users.Requests;
-using SGONGA.WebAPI.Business.Users.Responses;
+using SGONGA.WebAPI.Identity.Handlers;
+using SGONGA.WebAPI.Identity.Requests;
+using SGONGA.WebAPI.Identity.Responses;
 
 namespace SGONGA.WebAPI.API.People.Commands.Create;
 

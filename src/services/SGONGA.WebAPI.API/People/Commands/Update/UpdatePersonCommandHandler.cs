@@ -7,7 +7,7 @@ using SGONGA.WebAPI.Business.People.Errors;
 using SGONGA.WebAPI.Business.People.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Shared.Interfaces.Repositories;
 using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
-using SGONGA.WebAPI.Business.Users.Interfaces.Handlers;
+using SGONGA.WebAPI.Identity.Handlers;
 
 namespace SGONGA.WebAPI.API.People.Commands.Update;
 
