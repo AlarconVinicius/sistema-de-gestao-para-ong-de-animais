@@ -7,7 +7,7 @@ namespace SGONGA.WebAPI.Business.Tests.People.Errors;
 public sealed class PersonErrorsTests
 {
     [Fact]
-    public void UsuarioNaoEncontrado_ShouldReturnNotFoundError()
+    public void UserNotFound_ShouldReturnNotFoundError()
     {
         // Arrange
         var userId = Guid.NewGuid();
