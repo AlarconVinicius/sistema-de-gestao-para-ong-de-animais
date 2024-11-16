@@ -37,7 +37,7 @@ public sealed record Email : ValueObject
     public static implicit operator Email(string url) => new(url);
     #endregion
     #region Methods
-    private static bool IsValidEmail(string address)
+    public static bool IsValidEmail(string address)
     {
         if (string.IsNullOrWhiteSpace(address))
             return false;
