@@ -6,11 +6,11 @@ namespace SGONGA.WebAPI.Business.Animals.Exceptions;
 public sealed class AnimalValidationException : BadRequestException
 {
     public AnimalValidationException(Error[] errors)
-        : base("FALHA_AO_VALIDAR_ANIMAL", errors)
+        : base("ANIMAL_VALIDATION_FAILED", errors)
     {
     }
     public AnimalValidationException(Error errors)
-        : base("FALHA_AO_VALIDAR_ANIMAL", errors)
+        : base("ANIMAL_VALIDATION_FAILED", errors)
     {
     }
 }
