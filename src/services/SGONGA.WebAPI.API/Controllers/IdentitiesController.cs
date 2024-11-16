@@ -4,22 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using SGONGA.Core.Notifications;
 using SGONGA.WebAPI.API.Controllers.Shared;
 using SGONGA.WebAPI.API.Extensions;
+using SGONGA.WebAPI.API.Users.Commands.Login;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Users.Interfaces.Handlers;
-using SGONGA.WebAPI.Business.Users.Requests;
+using SGONGA.WebAPI.Identity.Responses;
 
 namespace SGONGA.WebAPI.API.Controllers;
 
 [Authorize]
 [Route("api/v1/identities/")]
-public class IdentitiesController : ApiController
+public class IdentitiesController(INotifier notifier, ISender sender) : ApiController(notifier, sender)
 {
-    public readonly IIdentityHandler _identityHandler;
-    public IdentitiesController(INotifier notifier, IIdentityHandler identityHandler, ISender sender) : base(notifier, sender)
-    {
-        _identityHandler = identityHandler;
-    }
-
     #region Public Methods
     /// <summary>
     /// Realiza o login de um usuário.
@@ -28,7 +22,8 @@ public class IdentitiesController : ApiController
     /// Este endpoint permite que um usuário faça login no sistema.
     /// Não é necessário fornecer cabeçalhos de autenticação ou identificação de locatário para este endpoint.
     /// </remarks>
-    /// <param name="request">Dados de login do usuário</param>
+    /// <param name="command">Dados de login do usuario</param>
+    /// <param name="cancellationToken">Ignored</param>
     /// <returns>Resposta com token de autenticação e detalhes do usuário</returns>
     /// <response code="200">Login realizado com sucesso</response>
     /// <response code="400">Retorna erros de validação</response>
@@ -36,15 +31,9 @@ public class IdentitiesController : ApiController
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(CustomResult), StatusCodes.Status400BadRequest)]
     [HttpPost("login")]
-    public async Task<IResult> Login(LoginUserRequest request)
+    public async Task<IResult> Login(LoginUserCommand command, CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid)
-        {
-            return ModelState.ToProblemDetails();
-        }
-
-        var result = await _identityHandler.LoginAsync(request);
-
+        Result<LoginUserResponse> result = await Sender.Send(command, cancellationToken);
         return result.Match(
             onSuccess: response => Results.Ok(response),
             onFailure: response => response.ToProblemDetails());
