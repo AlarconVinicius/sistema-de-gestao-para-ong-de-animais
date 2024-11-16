@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using SGONGA.Core.Configurations;
-using SGONGA.WebAPI.Business.Users.Interfaces.Handlers;
 using SGONGA.WebAPI.Identity.Context;
 using SGONGA.WebAPI.Identity.Extensions;
 using SGONGA.WebAPI.Identity.Handlers;

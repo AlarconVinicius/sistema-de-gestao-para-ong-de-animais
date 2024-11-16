@@ -5,12 +5,10 @@ using SGONGA.Core.Configurations;
 using SGONGA.Core.Notifications;
 using SGONGA.Core.User;
 using SGONGA.WebAPI.Business.Abstractions;
-using SGONGA.WebAPI.Business.Shared.Handlers;
 using SGONGA.WebAPI.Business.Shared.Responses;
-using SGONGA.WebAPI.Business.Users.Interfaces.Handlers;
-using SGONGA.WebAPI.Business.Users.Requests;
-using SGONGA.WebAPI.Business.Users.Responses;
 using SGONGA.WebAPI.Identity.Errors;
+using SGONGA.WebAPI.Identity.Requests;
+using SGONGA.WebAPI.Identity.Responses;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -123,7 +121,7 @@ public class IdentityHandler(INotifier notifier, IAspNetUser appUser, SignInMana
     public async Task<Result> DeleteAsync(DeleteUserRequest request)
     {
         var userId = request.Id;
-        if(AppUser.GetUserId() != userId && !EhSuperAdmin())
+        if (AppUser.GetUserId() != userId && !EhSuperAdmin())
             return Error.AccessDenied;
 
         if ((await UserExistsAsync(userId.ToString())).IsFailed)
