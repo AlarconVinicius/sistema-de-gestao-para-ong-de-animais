@@ -12,15 +12,18 @@ public interface ICommand :IRequest<Result>
 public interface ICommand<TResponse> : IRequest<Result<TResponse>>
 {
 }
-public abstract record BaseCommand : ICommand
+public abstract record Command
 {
     [JsonIgnore]
     public ValidationResult ValidationResult { get; set; } = new ValidationResult();
 
     public abstract Result IsValid();
 
-    protected BaseCommand() { }
+    protected Command() { }
 }
-public abstract record BaseCommand<TResponse> : BaseCommand, ICommand<TResponse>
+public abstract record BaseCommand : Command, ICommand
+{
+}
+public abstract record BaseCommand<TResponse> : Command, ICommand<TResponse>
 {
 }
