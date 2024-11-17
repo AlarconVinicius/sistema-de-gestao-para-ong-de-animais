@@ -27,7 +27,7 @@ jobs:
         run: dotnet restore ./SistemaDeGestaoParaONGsDeAnimais.sln
 
       - name: Build
-        run dotnet build ./SistemaDeGestaoParaONGsDeAnimais.sln --configuration Release --no-restore
+        run: dotnet build ./SistemaDeGestaoParaONGsDeAnimais.sln --configuration Release --no-restore
 
       - name: Test
         run: dotnet test ./SistemaDeGestaoParaONGsDeAnimais.sln --configuration Release --no-restore --no-build
