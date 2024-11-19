@@ -10,7 +10,7 @@ using SGONGA.WebAPI.Mocks;
 
 namespace SGONGA.WebAPI.API.Tests.Animals.Queries.GetAll;
 
-[Trait("Animal", "Handler - GetAll")]
+[Trait("Animals", "Handlers")]
 public class GetAllAnimalsQueryHandlerTests
 {
     private readonly Mock<IAnimalRepository> _animalRepositoryMock;

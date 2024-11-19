@@ -3,9 +3,9 @@ using SGONGA.WebAPI.API.Animals.Commands.Create;
 using SGONGA.WebAPI.API.Animals.Commands.Update;
 using SGONGA.WebAPI.Mocks;
 
-namespace SGONGA.WebAPI.API.Tests.Animals.Command.Update;
+namespace SGONGA.WebAPI.API.Tests.Animals.Commands.Update;
 
-[Trait("Animal", "Request - Update")]
+[Trait("Animals", "Requests")]
 public class UpdateAnimalRequestTests
 {
     [Fact(DisplayName = "Constructor Initialize All Properties")]

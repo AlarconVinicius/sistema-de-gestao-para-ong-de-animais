@@ -3,7 +3,7 @@ using SGONGA.WebAPI.API.Animals.Queries.GetById;
 
 namespace SGONGA.WebAPI.API.Tests.Animals.Queries.GetById;
 
-[Trait("Animal", "Query - GetById")]
+[Trait("Animals", "Queries")]
 public class GetAnimalByIdQueryTests
 {
     [Fact(DisplayName = "Constructor Initialize All Properties")]

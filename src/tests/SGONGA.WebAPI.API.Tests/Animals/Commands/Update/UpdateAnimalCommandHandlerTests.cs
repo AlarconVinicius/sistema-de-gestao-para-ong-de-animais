@@ -11,9 +11,9 @@ using SGONGA.WebAPI.Mocks;
 using System.Linq.Expressions;
 using static SGONGA.WebAPI.API.Animals.Commands.Update.UpdateAnimalCommand;
 
-namespace SGONGA.WebAPI.API.Tests.Animals.Command.Update;
+namespace SGONGA.WebAPI.API.Tests.Animals.Commands.Update;
 
-[Trait("Animal", "Handler - Update")]
+[Trait("Animals", "Handlers")]
 public class UpdateAnimalCommandHandlerTests
 {
     private readonly Mock<IGenericUnitOfWork> _unitOfWorkMock;

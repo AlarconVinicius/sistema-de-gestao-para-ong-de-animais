@@ -1,9 +1,9 @@
 ﻿using FluentAssertions;
 using SGONGA.WebAPI.API.Animals.Commands.Delete;
 
-namespace SGONGA.WebAPI.API.Tests.Animals.Command.Delete;
+namespace SGONGA.WebAPI.API.Tests.Animals.Commands.Delete;
 
-[Trait("Animal", "Command - Delete")]
+[Trait("Animals", "Commands")]
 public class DeleteAnimalCommandTests
 {
     [Fact(DisplayName = "Constructor Initialize All Properties")]

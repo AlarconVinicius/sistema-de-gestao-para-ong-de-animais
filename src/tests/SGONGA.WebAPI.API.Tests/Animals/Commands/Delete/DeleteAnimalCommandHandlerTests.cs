@@ -10,9 +10,9 @@ using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
 using System.Linq.Expressions;
 using static SGONGA.WebAPI.API.Animals.Commands.Delete.DeleteAnimalCommand;
 
-namespace SGONGA.WebAPI.API.Tests.Animals.Command.Delete;
+namespace SGONGA.WebAPI.API.Tests.Animals.Commands.Delete;
 
-[Trait("Animal", "Handler - Delete")]
+[Trait("Animals", "Handler")]
 public class DeleteAnimalCommandHandlerTests
 {
     private readonly Mock<IGenericUnitOfWork> _unitOfWorkMock;

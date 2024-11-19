@@ -4,9 +4,9 @@ using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Mocks;
 using static SGONGA.WebAPI.API.Animals.Commands.Create.CreateAnimalCommand;
 
-namespace SGONGA.WebAPI.API.Tests.Animals.Command.Create;
+namespace SGONGA.WebAPI.API.Tests.Animals.Commands.Create;
 
-[Trait("Animal", "Command - Create")]
+[Trait("Animals", "Commands")]
 public class CreateAnimalCommandTests
 {
     [Fact(DisplayName = "Constructor Initialize All Properties")]
@@ -54,11 +54,11 @@ public class CreateAnimalCommandTests
             expectedCommand.Description,
             expectedCommand.Note,
             expectedCommand.Photo,
-            expectedCommand.PixKey
+            null
         );
 
         // Assert
-        actualCommand.PixKey.Should().Be(string.Empty);
+        actualCommand.PixKey.Should().Be(null);
     }
 
     [Fact(DisplayName = "IsValid Return Success")]

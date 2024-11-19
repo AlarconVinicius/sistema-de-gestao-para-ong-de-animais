@@ -1,14 +1,13 @@
 ﻿using FluentAssertions;
-using SGONGA.WebAPI.API.Abstractions.Messaging;
 using SGONGA.WebAPI.API.Animals.Commands.Create;
 using SGONGA.WebAPI.API.Animals.Commands.Update;
 using SGONGA.WebAPI.Business.Abstractions;
 using SGONGA.WebAPI.Mocks;
 using static SGONGA.WebAPI.API.Animals.Commands.Update.UpdateAnimalCommand;
 
-namespace SGONGA.WebAPI.API.Tests.Animals.Command.Update;
+namespace SGONGA.WebAPI.API.Tests.Animals.Commands.Update;
 
-[Trait("Animal", "Command - Update")]
+[Trait("Animals", "Commands")]
 public class UpdateAnimalCommandTests
 {
     [Fact(DisplayName = "Constructor Initialize All Properties")]

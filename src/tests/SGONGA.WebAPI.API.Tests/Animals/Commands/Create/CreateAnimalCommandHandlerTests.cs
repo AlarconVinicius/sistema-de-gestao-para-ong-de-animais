@@ -9,9 +9,9 @@ using SGONGA.WebAPI.Business.Tenants.Interfaces.Handlers;
 using SGONGA.WebAPI.Mocks;
 using static SGONGA.WebAPI.API.Animals.Commands.Create.CreateAnimalCommand;
 
-namespace SGONGA.WebAPI.API.Tests.Animals.Command.Create;
+namespace SGONGA.WebAPI.API.Tests.Animals.Commands.Create;
 
-[Trait("Animal", "Handler - Create")]
+[Trait("Animals", "Handlers")]
 public class CreateAnimalCommandHandlerTests
 {
     private readonly Mock<IGenericUnitOfWork> _unitOfWorkMock;

@@ -3,7 +3,7 @@ using SGONGA.WebAPI.API.Animals.Queries.GetAll;
 
 namespace SGONGA.WebAPI.API.Tests.Animals.Queries.GetAll;
 
-[Trait("Animal", "Query - GetAll")]
+[Trait("Animals", "Queries")]
 public class GetAllAnimalsQueryTests
 {
     [Fact(DisplayName = "Constructor Initialize All Properties")]
