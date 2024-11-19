@@ -5,8 +5,8 @@ on:
   push:
     branches:
       - main
-      - release
       - develop
+      - release
 
 env:
   DOTNET_VERSION: "8.0.x"
@@ -23,11 +23,14 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
         
-      - name: Restore
+      - name: Restore Workloads
+        run: dotnet workload restore
+
+      - name: Restore Dependencies
         run: dotnet restore ./SistemaDeGestaoParaONGsDeAnimais.sln
 
-      - name: Build
+      - name: Build Solution
         run: dotnet build ./SistemaDeGestaoParaONGsDeAnimais.sln --configuration Release --no-restore
 
-      - name: Test
+      - name: Run Tests
         run: dotnet test ./SistemaDeGestaoParaONGsDeAnimais.sln --configuration Release --no-restore --no-build
